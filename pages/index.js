@@ -1,65 +1,36 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head' // Next-specific
+import Image from 'next/image';
+
+import styles from '../styles/Home.module.css' // Page-specific styles and assets (e.g. images)
+import BinaryTreeIcon from '../public/binary-tree.svg';
+
+import DataStructureSection from '../components/pages/index/DataStructureSection'; // Page components
+import DataStructureItem from '../components/pages/index/DataStructureItem';
 
 export default function Home() {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
+    <>
+        <Head>
+        <title>Data Structure Visualizer | Home</title>
         <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+        </Head>
+        <header>
+            <h1>Data Structure Visualizers</h1>
+            <p>This website is meant to provide interactive data structure visualizations, built with D3.js. 
+            Currently our MVP includes binary trees and binary search trees. To begin, choose a data structure from 
+            the options below.</p>
+        </header>
+        <main>
+            <DataStructureSection
+            title="Trees"
+            listLabel="Tree Data Structures">
+                <DataStructureItem 
+                title="Binary Tree"
+                img={<BinaryTreeIcon />}
+                description={`Build your own binary tree using interactive controls, or 
+                enter a tree string from popular programming challenge sites like LeetCode and Binarysearch.`} />
+            </DataStructureSection>
+        </main>
+    </>
   )
 }
