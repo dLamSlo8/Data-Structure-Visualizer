@@ -3,7 +3,6 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 import BinaryTreeIcon from '../../public/icons/binary-tree.svg';
 import BinarySearchTreeIcon from '../../public/icons/binary-search-tree.svg';
-import LeftIcon from '../../public/icons/chevron-left.svg';
 
 import DropdownItem from './DropdownItem';
 import DropdownList from './DropdownList';
@@ -14,25 +13,29 @@ export default function NavDropdown() {
     const [listHeight, setListHeight] = useState(null);
 
     const calcHeight = (el) => {
-        console.log(el);
         const height = el.scrollHeight;
 
         setListHeight(height);
     }
 
+    const handleDropdownClick = () => {
+        setDropdownOpen((dropdownOpen) => !dropdownOpen);
+        if (dropdownOpen) {
+            setActiveList('init');
+        }
+    }
     const dropdownRef = useRef(null);
 
 
     useEffect(() => {
         if (dropdownOpen) {
-            console.log(dropdownRef.current);
             setListHeight(dropdownRef.current.offsetHeight);
         }
     }, [dropdownOpen]);
 
     return (
         <nav className="relative">
-            <button className={`btn ${dropdownOpen ? 'btn--primary' : 'btn--secondary'}`} onClick={() => setDropdownOpen((dropdownOpen) => !dropdownOpen)}>Choose Data Structure</button>
+            <button className={`btn ${dropdownOpen ? 'btn--primary' : 'btn--secondary'}`} onClick={handleDropdownClick}>Choose Data Structure</button>
             <CSSTransition 
             in={dropdownOpen}
             classNames="lift"
@@ -66,7 +69,7 @@ export default function NavDropdown() {
                     unmountOnExit>
                         <DropdownList>
                             <DropdownItem 
-                            icon={<LeftIcon />}
+                            isReturn
                             title="Back to Data Structure Types"
                             handleClick={() => setActiveList('init')} />
                             <DropdownItem 

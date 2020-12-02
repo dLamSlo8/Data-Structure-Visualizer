@@ -7,7 +7,7 @@ export default function DataStructureLayout({ children }) {
                 {children[0]}
             </section>
             <section className="flex-grow py-5 px-8">
-                <h1 className="inline-block border-b-4 border-primary font-bold text-2xl">Visualizations</h1>
+                <h1 className="inline-block border-b-4 border-primary font-bold text-2xl">Visualization</h1>
                 {children[1]}
             </section>
         </main>

@@ -20,7 +20,8 @@ module.exports = {
             main: '0 3px 4px 2px rgba(0, 98, 255, 0.25)'
         },
         transitionProperty: {
-            'height': 'height'
+            'height': 'height',
+            'colors-shadow': 'background-color, border-color, color, fill, stroke, box-shadow'
         }
     },
   },
@@ -28,7 +29,9 @@ module.exports = {
     extend: {
         ringWidth: ['hover'],
         ringColor: ['hover'],
-        ringOpacity: ['hover']
+        ringOpacity: ['hover'],
+        textColor: ['group-focus'],
+        backgroundColor: ['group-focus']
     },
   },
   plugins: [],
