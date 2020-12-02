@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router'; // React/Next-specific
+import Link from 'next/link';
 
 import NavDropdown from './NavDropdown'; // Components
 
@@ -27,7 +28,11 @@ export default function NavHeader() {
             className="flex justify-between items-center max-w-container mx-auto"
             aria-label="Data Structure Page Header">
                 <li>
-                    <h1 className="font-bold text-3xl">DSV</h1>
+                    <h1 className="font-bold text-3xl">
+                        <Link href="/">
+                            <a>DSV</a>
+                        </Link>
+                    </h1>
                 </li>
                 <li className="flex flex-col items-center">
                     <h2 className="font-semibold text-gray-500">Current Data Structure</h2>
