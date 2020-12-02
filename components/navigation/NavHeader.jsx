@@ -6,6 +6,10 @@ import HelpIcon from '../../public/icons/help-circle.svg'; // Assets
 
 const INDEX_OF_PAGE_NAME = 2;
 
+/**
+ * 
+ * @param {String} str - Input string to capitalize. 
+ */
 const capitalize = (str) => {
     return `${str[0].toUpperCase()}${str.slice(1)}`;
 }
@@ -13,6 +17,7 @@ const capitalize = (str) => {
 export default function NavHeader() {
     const { pathname } = useRouter();
     
+    // Generate name through route segment.
     const pageName = pathname.split('/')[INDEX_OF_PAGE_NAME];
     const dataStructureName = pageName.split('-').map((word) => capitalize(word)).join(' ');
 

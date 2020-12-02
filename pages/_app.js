@@ -4,7 +4,7 @@ import DataStructureLayout from '../components/layouts/DataStructureLayout';
 
 function MyApp({ Component, pageProps, router }) {
     return (
-        router.pathname === '/' ? (
+        router.pathname === '/' || router.pathname === '/_error' ? (
             <Component {...pageProps} />
         ) : (
             <div className="flex flex-col min-h-screen">

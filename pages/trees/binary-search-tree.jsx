@@ -1,4 +1,5 @@
-export default () => {
+
+export default function BinarySearchTree() {
     return (
         <main>
             Binary search tree
