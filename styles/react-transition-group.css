@@ -1,0 +1,71 @@
+/* Used in NavDropdown */
+.lift-enter {
+    opacity: 0;
+    transform: translateY(2rem);
+}
+
+.lift-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.lift-exit {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.lift-exit-active {
+    opacity: 0;
+    transform: translateY(2rem);
+    transition: opacity 300ms, transform 300ms;
+}
+
+.fade-side-enter {
+    opacity: 0;
+    position: absolute;
+    width: 94%;
+    transform: translateX(-150%);
+}
+
+.fade-side-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.fade-side-exit {
+    opacity: 1;
+    width: 94%;
+    transform: translateX(0);
+    position: absolute;
+}
+
+.fade-side-exit-active {
+    opacity: 0;
+    transform: translateX(-150%);
+    transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.fade-side-reverse-enter {
+    opacity: 0;
+
+    transform: translateX(150%);
+}
+
+.fade-side-reverse-enter-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}
+
+.fade-side-reverse-exit {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.fade-side-reverse-exit-active {
+    opacity: 0;
+    transform: translateX(150%);
+    transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
+}

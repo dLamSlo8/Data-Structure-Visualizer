@@ -39,7 +39,7 @@ export default function NavHeader() {
                     <div className="relative">
                         <p className="font-bold text-2xl">{dataStructureName}</p>
                         <button className="absolute -right-10 top-1/2 transform -translate-y-1/2" aria-label="More information">
-                            <HelpIcon className="ml-3 text-primary" aria-hidden="true" />
+                            <HelpIcon className="text-primary" aria-hidden="true" />
                         </button>
                     </div>
                 </li>

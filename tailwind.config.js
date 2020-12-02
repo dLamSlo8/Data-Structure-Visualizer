@@ -18,6 +18,12 @@ module.exports = {
         },
         boxShadow: {
             main: '0 4px 4px 0 rgba(0, 98, 255, 0.25)'
+        },
+        transitionProperty: {
+            'height': 'height'
+        },
+        height: {
+            content: 'fit-content'
         }
     },
   },

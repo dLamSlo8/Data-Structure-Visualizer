@@ -1,6 +1,8 @@
-import '../styles/index.css';
 import NavHeader from '../components/navigation/NavHeader';
 import DataStructureLayout from '../components/layouts/DataStructureLayout';
+
+import '../styles/index.css';
+import '../styles/react-transition-group.css';
 
 function MyApp({ Component, pageProps, router }) {
     return (
