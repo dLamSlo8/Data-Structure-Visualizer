@@ -6,11 +6,11 @@ export default function DropdownItem({ icon, title, hasNestedDropdown, handleCli
             <button className="flex items-center w-full" onClick={handleClick}>
                 {icon}
                 <p className="ml-5 font-semibold">{title}</p>
-                {/* {
+                {
                     hasNestedDropdown && (
                         <RightIcon className="ml-auto hover:text-white" />
                     )
-                } */}
+                }
             </button>
         </li>
     )

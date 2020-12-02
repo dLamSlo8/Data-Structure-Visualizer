@@ -17,13 +17,10 @@ module.exports = {
             container: '1600px'
         },
         boxShadow: {
-            main: '0 4px 4px 0 rgba(0, 98, 255, 0.25)'
+            main: '0 3px 4px 2px rgba(0, 98, 255, 0.25)'
         },
         transitionProperty: {
             'height': 'height'
-        },
-        height: {
-            content: 'fit-content'
         }
     },
   },

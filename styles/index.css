@@ -800,7 +800,7 @@ h1, h2, h3, h4, h5, h6, p{
 }
 
 .shadow-main{
-  --tw-shadow: 0 4px 4px 0 rgba(0, 98, 255, 0.25);
+  --tw-shadow: 0 3px 4px 2px rgba(0, 98, 255, 0.25);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
