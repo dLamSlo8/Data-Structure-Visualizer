@@ -1,12 +1,11 @@
 import Head from 'next/head' // Next-specific
 import Image from 'next/image';
 
-import BinaryTreeIcon from '../public/binary-tree.svg';
-import BinarySearchTreeIcon from '../public/binary-search-tree.svg';
-
 import DataStructureSection from '../components/pages/index/DataStructureSection'; // Page components
 import DataStructureItem from '../components/pages/index/DataStructureItem';
 
+import BinaryTreeIcon from '../public/icons/binary-tree.svg'; // Assets
+import BinarySearchTreeIcon from '../public/icons/binary-search-tree.svg';
 
 export default function Home() {
   return (

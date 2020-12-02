@@ -1,7 +1,6 @@
-export default () => {
+
+export default function BinaryTree() {
     return (
-        <main>
-            Binary tree
-        </main>
+        <p>Binary tree</p>
     )
 }
