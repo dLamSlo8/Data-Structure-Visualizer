@@ -13,6 +13,10 @@
     p {
         @apply font-serif;
     }
+
+    button {
+        @apply text-left;
+    }
 }
 
 @layer components {
@@ -34,5 +38,9 @@
 
     .transition--colors-shadow {
         @apply transition-colors-shadow duration-200 ease-in-out;
+    }
+
+    .dropdown-wrapper {
+        @apply absolute rounded-lg shadow-main bg-white;
     }
 }

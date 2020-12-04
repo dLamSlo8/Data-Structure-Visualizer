@@ -24,15 +24,18 @@ export default function DropdownItem({ icon, title, description, hasNestedDropdo
                 {icon}
                 {
                     isReturn && (
-                        <LeftIcon className="group-hover:text-white group-focus:text-white transition--colors" />
+                        <LeftIcon className="group-hover:text-white group-focus:text-white transition--colors mr-5" />
                     )
                 }
-                <h3 className="ml-5 font-semibold group-hover:text-white group-focus:text-white transition--colors">{title}</h3>
-                {
-                    description && (
-                        <p className="mt-3 font-medium text-gray-500 group-hover:text-white group-focus:text-white transition--colors">{description}</p>
-                    )
-                }
+                <div>
+                    <h3 className="font-semibold text-lg group-hover:text-white group-focus:text-white transition--colors">{title}</h3>
+                    {
+                        description && (
+                            <p className="mt-2 font-medium text-gray-500 group-hover:text-white group-focus:text-white transition--colors">{description}</p>
+                        )
+                    }
+                </div>
+
                 {
                     hasNestedDropdown && (
                         <RightIcon className="ml-auto group-hover:text-white group-focus:text-white transition--colors" />

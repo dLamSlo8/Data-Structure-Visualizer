@@ -6,13 +6,13 @@ import BinarysearchTreeActions from '../../components/pages/binary-tree/actions/
 import CustomBinaryTreeActions from '../../components/pages/binary-tree/actions/CustomBinaryTreeActions';
 
 export default function BinaryTree() {
-    const [mode, setMode] = useState('binary-search');
+    const [mode, setMode] = useState('Binarysearch Input');
 
     return (
         <DataStructureLayout>
             <BinaryTreeActionLayout mode={mode} setMode={setMode}>
                 {
-                    mode === 'binary-search' ? (
+                    mode === 'Binarysearch Input' ? (
                         <BinarysearchTreeActions />
                     ) : (
                         <CustomBinaryTreeActions />
