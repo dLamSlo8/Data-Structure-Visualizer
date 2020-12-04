@@ -8,7 +8,7 @@ export default ({ title, img, description, routeName }) => {
                     <article className="flex flex-col items-center">
                         <h3 className="font-bold text-2xl text-center mb-5">{title}</h3>
                         {img}
-                        <p className="text-center italic mt-5">{description}</p>
+                        <p className="text-center mt-5">{description}</p>
                     </article>
                 </a>
             </Link>

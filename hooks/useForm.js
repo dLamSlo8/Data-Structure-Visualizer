@@ -62,5 +62,5 @@ export default ({ initValues, validationRules }) => {
     };
 
 
-    return { formData, setFormData, errorMapping, handleChange, handleSubmit };
+    return { formData, setFormData, errorMapping, setErrorMapping, handleChange, handleSubmit };
 }

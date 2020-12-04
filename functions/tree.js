@@ -396,14 +396,14 @@ export const nodeToD3 = (node) => {
  * @param node - root node of the tree structure
  * @param optimalWidth - width of frame (will be compared vs document width for mobile responsiveness)
  */
- export const generateD3Tree = (rootNode, optimalWidth) => {
+ export const generateD3Tree = (rootNode, optimalWidth, optimalHeight) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
     const data = nodeToD3(rootNode);
 
     // Generate binary tree using d3.
 
     const hierarchyNode = d3.hierarchy((data));
-    const width = hierarchyNode.height ? hierarchyNode.height * 200 : 50;
+    const width = optimalWidth;
     const height = hierarchyNode.height * 100;
 
     const tree = d3.tree().size([width, height])(d3.hierarchy(data));
@@ -411,8 +411,8 @@ export const nodeToD3 = (node) => {
         .append('svg')
         .attr('id', 'tree-svg')
         .attr('cursor', 'grab')
-        .attr('width', Math.min(width, optimalWidth - 50))
-        .attr('height', height + 50)
+        .attr('width', optimalWidth)
+        .attr('height', optimalHeight)
         .append('g')
         .attr('transform', 'translate(0, 22)');
 

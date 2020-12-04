@@ -63,13 +63,6 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
                     </div>
                 </CSSTransition>
             </div>
-
-            {/* {
-                !collapsed && (
- 
-                )
-            } */}
-
         </section>
     )
 }
