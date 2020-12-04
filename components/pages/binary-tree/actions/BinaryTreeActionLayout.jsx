@@ -5,7 +5,13 @@ export default function BinaryTreeActionLayout({ mode, setMode, children }) {
 
     return (
         <>
-            <ActionSubsection sectionTitle="Select Mode" sectionComponent={<ActionModeSection mode={mode} setMode={setMode} />} />
+            <ActionSubsection sectionTitle="Select Mode" propagateState>
+                {
+                    ({ collapsed }) => (
+                        <ActionModeSection mode={mode} setMode={setMode} sectionCollapsed={collapsed} />
+                    )
+                }
+            </ActionSubsection>
             {children}
         </>
     )

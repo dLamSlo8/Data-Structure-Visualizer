@@ -202,7 +202,9 @@ select { /* 1 */
 Correct the inability to style clickable types in iOS and Safari.
 */
 
-button {
+button,
+[type='button'],
+[type='submit'] {
   -webkit-appearance: button;
 }
 
@@ -243,6 +245,11 @@ Correct the cursor style of increment and decrement buttons in Safari.
 1. Correct the odd appearance in Chrome and Safari.
 2. Correct the outline style in Safari.
 */
+
+[type='search'] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
 
 /**
 Remove the inner padding in Chrome and Safari on macOS.
@@ -527,6 +534,7 @@ button {
   padding-bottom: 0.75rem;
   padding-left: 1.25rem;
   padding-right: 1.25rem;
+  text-align: center;
   transition-property: background-color, border-color, color, fill, stroke;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
@@ -598,6 +606,7 @@ button {
   position: absolute;
   --tw-shadow: 0 3px 4px 2px rgba(0, 98, 255, 0.25);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  z-index: 20;
 }
 
 .space-y-3 > :not([hidden]) ~ :not([hidden]){
@@ -646,7 +655,27 @@ button {
   border-color: rgba(107, 114, 128, var(--tw-border-opacity));
 }
 
+.border-red-500{
+  --tw-border-opacity: 1;
+  border-color: rgba(239, 68, 68, var(--tw-border-opacity));
+}
+
 .border-primary{
+  --tw-border-opacity: 1;
+  border-color: rgba(0, 98, 255, var(--tw-border-opacity));
+}
+
+.not\:first\:border-gray-300:not(:first-child){
+  --tw-border-opacity: 1;
+  border-color: rgba(209, 213, 219, var(--tw-border-opacity));
+}
+
+.hover\:border-primary:hover{
+  --tw-border-opacity: 1;
+  border-color: rgba(0, 98, 255, var(--tw-border-opacity));
+}
+
+.focus\:border-primary:focus{
   --tw-border-opacity: 1;
   border-color: rgba(0, 98, 255, var(--tw-border-opacity));
 }
@@ -671,6 +700,10 @@ button {
   border-bottom-width: 1px;
 }
 
+.not\:first\:border-t-2:not(:first-child){
+  border-top-width: 2px;
+}
+
 .block{
   display: block;
 }
@@ -689,6 +722,10 @@ button {
 
 .grid{
   display: grid;
+}
+
+.flex-row-reverse{
+  flex-direction: row-reverse;
 }
 
 .flex-col{
@@ -769,6 +806,10 @@ button {
   margin-top: 0.5rem;
 }
 
+.mr-2{
+  margin-right: 0.5rem;
+}
+
 .mt-3{
   margin-top: 0.75rem;
 }
@@ -789,12 +830,20 @@ button {
   margin-left: 1.25rem;
 }
 
+.mt-10{
+  margin-top: 2.5rem;
+}
+
 .mt-12{
   margin-top: 3rem;
 }
 
 .ml-auto{
   margin-left: auto;
+}
+
+.first\:mb-5:first-child{
+  margin-bottom: 1.25rem;
 }
 
 .max-w-5xl{
@@ -874,6 +923,10 @@ button {
   padding-bottom: 0px;
 }
 
+.not\:first\:pt-5:not(:first-child){
+  padding-top: 1.25rem;
+}
+
 .pointer-events-none{
   pointer-events: none;
 }
@@ -904,6 +957,10 @@ button {
 
 .top-1\/2{
   top: 50%;
+}
+
+.top-full{
+  top: 100%;
 }
 
 *{
@@ -961,6 +1018,11 @@ button {
 .text-gray-500{
   --tw-text-opacity: 1;
   color: rgba(107, 114, 128, var(--tw-text-opacity));
+}
+
+.text-red-500{
+  --tw-text-opacity: 1;
+  color: rgba(239, 68, 68, var(--tw-text-opacity));
 }
 
 .text-green-700{
@@ -1119,6 +1181,16 @@ button {
     -webkit-animation-timing-function: cubic-bezier(0,0,0.2,1);
             animation-timing-function: cubic-bezier(0,0,0.2,1);
   }
+}
+
+/* Custom CSS - May need new file if this section gets too big */
+
+.triangle-top {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid black;
 }
 
 @media (min-width: 640px){

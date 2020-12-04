@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 module.exports = {
   purge: ['./pages/**/*.jsx', './pages/**/*.js', './components/**/*.jsx', './components/**/*.js'],
   darkMode: false, // or 'media' or 'class'
@@ -31,8 +33,20 @@ module.exports = {
         ringColor: ['hover'],
         ringOpacity: ['hover'],
         textColor: ['group-focus'],
-        backgroundColor: ['group-focus']
+        backgroundColor: ['group-focus'],
+        borderWidth: ['not:first'],
+        borderColor: ['not:first'],
+        margin: ['not:first', 'first'],
+        padding: ['not:first']
     },
   },
-  plugins: [],
+  plugins: [
+      plugin(function({ addVariant, e }) {
+          addVariant('not:first', ({ modifySelectors, separator }) => {
+              modifySelectors(({ className }) => {
+                  return `.${e(`not:first${separator}${className}`)}:not(:first-child)`
+              })
+          })
+      })
+  ],
 }

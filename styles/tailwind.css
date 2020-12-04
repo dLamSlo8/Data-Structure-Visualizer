@@ -21,7 +21,7 @@
 
 @layer components {
     .btn {
-        @apply py-3 px-5 rounded-lg font-semibold transition-colors duration-200 ease-in-out;
+        @apply py-3 px-5 rounded-lg font-semibold text-center transition-colors duration-200 ease-in-out;
     }
 
     .btn--primary {
@@ -41,6 +41,15 @@
     }
 
     .dropdown-wrapper {
-        @apply absolute rounded-lg shadow-main bg-white;
+        @apply absolute rounded-lg shadow-main bg-white z-20;
     }
+}
+
+/* Custom CSS - May need new file if this section gets too big */
+.triangle-top {
+    width: 0;
+    height: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid black;
 }

@@ -4,14 +4,13 @@ import { CSSTransition } from 'react-transition-group';
 import CollapseIcon from '../public/icons/collapse.svg';
 import ExpandIcon from '../public/icons/expand.svg';
 
-export default function ActionSubsection({ sectionTitle, sectionDescription, sectionComponent }) {
+export default function ActionSubsection({ sectionTitle, sectionDescription, propagateState, children: sectionContent }) {
     const [collapsed, setCollapsed] = useState(false);
     const [height, setHeight] = useState(null);
     const sectionRef = useRef(null);
 
     console.log(height);
     useEffect(() => {
-        console.log(sectionRef.current.offsetHeight);
         setHeight(sectionRef.current.offsetHeight)
     }, []);
 
@@ -35,7 +34,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, sec
     }
 
     return (
-        <section className="relative">
+        <section className="relative first:mb-5 not:first:pt-5 not:first:border-t-2 not:first:border-gray-300">
             <header className="flex justify-between items-center">
                 <h3 className="font-semibold text-2xl">{sectionTitle}</h3>
                 <button aria-label={`${collapsed ? 'Expand' : 'Collapse'} Section Named ${sectionTitle}`} onClick={() => setCollapsed((collapsed) => !collapsed)}>
@@ -54,11 +53,13 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, sec
                 in={!collapsed}
                 timeout={300}
                 {...cssTransitionLifecycle}
-                unmountOnExit
+               
                 >
                     <div className="section-scroll">
-                        <p>{sectionDescription}</p>
-                        {sectionComponent}
+                        <p className="font-semibold text-gray-500">{sectionDescription}</p>
+                        {
+                            propagateState ? sectionContent({ collapsed }) : sectionContent
+                        }
                     </div>
                 </CSSTransition>
             </div>
