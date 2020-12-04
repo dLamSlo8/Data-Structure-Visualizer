@@ -1,14 +1,25 @@
 import { useState } from 'react';
 
-import BinaryTreeActions from '../../components/pages/binary-tree/actions/BinaryTreeActions';
-import BinaryTreeVisualization from '../../components/pages/binary-tree/visualization/BinaryTreeVisualization';
 import DataStructureLayout from '../../components/layouts/DataStructureLayout';
+import BinaryTreeActionLayout from '../../components/pages/binary-tree/actions/BinaryTreeActionLayout';
+import BinarysearchTreeActions from '../../components/pages/binary-tree/actions/BinarysearchTreeActions';
+import CustomBinaryTreeActions from '../../components/pages/binary-tree/actions/CustomBinaryTreeActions';
 
 export default function BinaryTree() {
+    const [mode, setMode] = useState('binary-search');
+
     return (
         <DataStructureLayout>
-            <BinaryTreeActions />
-            <BinaryTreeVisualization />
+            <BinaryTreeActionLayout mode={mode} setMode={setMode}>
+                {
+                    mode === 'binary-search' ? (
+                        <BinarysearchTreeActions />
+                    ) : (
+                        <CustomBinaryTreeActions />
+                    )
+                }
+            </BinaryTreeActionLayout>
+            <div>Visualization</div>
         </DataStructureLayout>
     )
 }

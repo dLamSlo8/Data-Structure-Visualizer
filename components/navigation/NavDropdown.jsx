@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { CSSTransition } from 'react-transition-group';
 
 import NavDropdownMenu from './NavDropdownMenu';
+import DropdownMenuOpener from '../dropdown/DropdownMenuOpener';
 
 export default function NavDropdown() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -13,13 +13,9 @@ export default function NavDropdown() {
     return (
         <nav className="relative">
             <button className={`btn ${dropdownOpen ? 'btn--primary' : 'btn--secondary'}`} onClick={handleDropdownClick}>Choose Data Structure</button>
-            <CSSTransition 
-            in={dropdownOpen}
-            classNames="lift"
-            timeout={300}
-            unmountOnExit>
-                <NavDropdownMenu dropdownOpen={dropdownOpen} />
-            </CSSTransition>
+            <DropdownMenuOpener open={dropdownOpen}>
+                <NavDropdownMenu dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} />
+            </DropdownMenuOpener>
         </nav>
     )
 }

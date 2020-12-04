@@ -4,10 +4,11 @@ import { CSSTransition } from 'react-transition-group';
 import BinaryTreeIcon from '../../public/icons/binary-tree.svg';
 import BinarySearchTreeIcon from '../../public/icons/binary-search-tree.svg';
 
-import DropdownItem from './DropdownItem';
-import DropdownList from './DropdownList';
+import DropdownItem from '../dropdown/DropdownItem';
+import DropdownMenu from '../dropdown/DropdownMenu';
+import NavDropdownItem from './NavDropdownItem';
 
-export default function NavDropdownMenu({ dropdownOpen }) {
+export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
     const [activeList, setActiveList] = useState('init');
     const [listHeight, setListHeight] = useState(null);
 
@@ -26,46 +27,57 @@ export default function NavDropdownMenu({ dropdownOpen }) {
     }, [dropdownOpen]);
 
     return (
-        <div ref={dropdownRef} className="absolute mt-3 right-0 w-96 rounded-lg shadow-main bg-white overflow-hidden transition-height duration-500 ease-in-out menu" style={{ height: listHeight }}>
+        <div ref={dropdownRef} className="absolute mt-3 right-0 w-96 rounded-lg shadow-main bg-white overflow-hidden transition-height duration-300 ease-in-out" style={{ height: listHeight }}>
             <CSSTransition
             in={activeList === 'init'}
-            timeout={500}
+            timeout={300}
             classNames="fade-side"
             onEnter={calcHeight}
             unmountOnExit>
-                <DropdownList>
-                    <DropdownItem 
-                    icon={<BinaryTreeIcon />} 
-                    title="Trees" 
-                    hasNestedDropdown
-                    handleClick={() => setActiveList('trees')} />
-                    <DropdownItem 
-                    icon={<BinaryTreeIcon />} 
-                    title="Graphs" 
-                    hasNestedDropdown
-                    handleClick={() => setActiveList('graphs')} />
-                </DropdownList>
+                <DropdownMenu>
+                    <li>
+                        <DropdownItem 
+                        icon={<BinaryTreeIcon />} 
+                        title="Trees" 
+                        hasNestedDropdown
+                        handleClick={() => setActiveList('trees')} />
+                    </li>
+                    <li>
+                        <DropdownItem 
+                        icon={<BinaryTreeIcon />} 
+                        title="Graphs" 
+                        hasNestedDropdown
+                        handleClick={() => setActiveList('graphs')} />
+                    </li>
+                </DropdownMenu>
             </CSSTransition>
             <CSSTransition
             in={activeList === 'trees'}
-            timeout={500}
+            timeout={300}
             onEnter={calcHeight}
             classNames="fade-side-reverse"
             unmountOnExit>
-                <DropdownList>
-                    <DropdownItem 
-                    isReturn
-                    title="Back to Data Structure Types"
-                    handleClick={() => setActiveList('init')} />
-                    <DropdownItem 
+                <DropdownMenu>
+                    <li>
+                        <DropdownItem 
+                        isReturn
+                        title="Back to Data Structure Types"
+                        handleClick={() => setActiveList('init')}
+                        rootClass="bg-gray-500" />
+                    </li>
+                    <NavDropdownItem 
                     icon={<BinaryTreeIcon />} 
-                    title="Trees" 
-                    handleClick={() => console.log('Selected binary tree!')} />
-                    <DropdownItem 
+                    title="Binary Tree" 
+                    isLink
+                    linkProps={{ href: '/trees/binary-tree' }}
+                    handleClick={() => setDropdownOpen(false)} />
+                    <NavDropdownItem 
                     icon={<BinarySearchTreeIcon />} 
                     title="Binary Search Tree" 
-                    handleClick={() => console.log('Selected binary search tree!')} />
-                </DropdownList>
+                    isLink
+                    linkProps={{ href: '/trees/binary-search-tree' }}
+                    handleClick={(e) => setDropdownOpen(false)} />
+                </DropdownMenu>
             </CSSTransition>
         </div>
     )
