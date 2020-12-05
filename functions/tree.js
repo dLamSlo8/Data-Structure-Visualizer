@@ -414,7 +414,7 @@ export const nodeToD3 = (node) => {
         .attr('width', optimalWidth)
         .attr('height', optimalHeight)
         .append('g')
-        .attr('transform', 'translate(0, 22)');
+        .attr('transform', 'translate(0, 30)');
 
     d3.select('#tree-svg').call(d3.zoom()
         .extent([[0, 0], [width, height + 50]])

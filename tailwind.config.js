@@ -34,8 +34,8 @@ module.exports = {
         ringOpacity: ['hover'],
         textColor: ['group-focus'],
         backgroundColor: ['group-focus'],
-        borderWidth: ['not:first'],
-        borderColor: ['not:first'],
+        borderWidth: ['not:first', 'hover'],
+        borderColor: ['not:first', 'hover'],
         margin: ['not:first', 'first'],
         padding: ['not:first']
     },
