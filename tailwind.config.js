@@ -24,6 +24,9 @@ module.exports = {
         transitionProperty: {
             'height': 'height',
             'colors-shadow': 'background-color, border-color, color, fill, stroke, box-shadow'
+        },
+        zIndex: {
+            'negative': '-1'
         }
     },
   },

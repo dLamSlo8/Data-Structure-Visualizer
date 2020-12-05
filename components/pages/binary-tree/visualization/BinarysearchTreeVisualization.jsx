@@ -10,11 +10,11 @@ function BinarysearchTreeVisualization({ rootNode, width, height }) {
 
     return (
             rootNode ? (
-                <>
+                <div className="group">
                     <div id="tree">
                     </div>
-                    <div className="absolute inset-0 border border-gray-400 rounded-lg pointer-events-none" aria-hidden="true" />
-                </>
+                    <div className="absolute inset-0 border border-gray-400 rounded-lg z-negative group-hover:border-primary" aria-hidden="true" />
+                </div>
             ) : (
                 <div className="h-full flex flex-col justify-center items-center px-20">
                     <div>

@@ -27,7 +27,7 @@ export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
     }, [dropdownOpen]);
 
     return (
-        <div ref={dropdownRef} className="absolute mt-3 right-0 w-96 rounded-lg shadow-main bg-white overflow-hidden transition-height duration-300 ease-in-out" style={{ height: listHeight }}>
+        <div ref={dropdownRef} className="absolute mt-3 right-0 w-96 z-20 rounded-lg shadow-main bg-white overflow-hidden transition-height duration-300 ease-in-out" style={{ height: listHeight }}>
             <CSSTransition
             in={activeList === 'init'}
             timeout={300}

@@ -675,6 +675,11 @@ button {
   border-color: rgba(209, 213, 219, var(--tw-border-opacity));
 }
 
+.group:hover .group-hover\:border-primary{
+  --tw-border-opacity: 1;
+  border-color: rgba(0, 98, 255, var(--tw-border-opacity));
+}
+
 .hover\:border-primary:hover{
   --tw-border-opacity: 1;
   border-color: rgba(0, 98, 255, var(--tw-border-opacity));
@@ -1101,6 +1106,14 @@ button {
 
 .w-full{
   width: 100%;
+}
+
+.z-20{
+  z-index: 20;
+}
+
+.z-negative{
+  z-index: -1;
 }
 
 .gap-5{
