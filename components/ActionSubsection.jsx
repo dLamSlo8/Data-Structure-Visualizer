@@ -15,7 +15,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
 
     const cssTransitionLifecycle = {
         onEnter: (node) => {
-            node.style.marginTop = `-${height}px`;
+            node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
             node.style.opacity = 0;
         },
         onEntering: (node) => {
@@ -27,13 +27,13 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
             node.style.opacity = 1;
         },
         onExiting: (node) => {
-            node.style.marginTop = `-${height}px`;
+            node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
             node.style.opacity = 0;
         }
     }
 
     return (
-        <section className="relative first:mb-5 not:first:pt-5 not:first:border-t-2 not:first:border-gray-300">
+        <section className="relative mb-5 not:first:pt-5 not:first:border-t-2 not:first:border-gray-300">
             <header className={`flex justify-between items-center ${!sectionDescription ? 'mb-3' : ''}`}>
                 <h3 className="font-semibold text-2xl">{sectionTitle}</h3>
                 <button aria-label={`${collapsed ? 'Expand' : 'Collapse'} Section Named ${sectionTitle}`} onClick={() => setCollapsed((collapsed) => !collapsed)}>
@@ -57,7 +57,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
                     <div className="section-scroll">
                         <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
                         {
-                            propagateState ? sectionContent({ collapsed }) : sectionContent
+                            propagateState ? sectionContent({ collapsed, setHeight, sectionRef }) : sectionContent
                         }
                     </div>
                 </CSSTransition>

@@ -100,7 +100,7 @@ export default function CustomBinaryTreeManageForm({ activeNode, handleUpdateVal
             </>
         ) : (
             <div className="mt-8">
-                <h3 className="font-semibold text-xl text-primary">No Active Node!</h3>
+                <h4 className="font-semibold text-xl text-primary">No Active Node!</h4>
                 <p className="font-semibold text-gray-500">Select a node from the tree to modify it.</p>
             </div>
         )

@@ -916,10 +916,6 @@ button {
   margin-left: auto;
 }
 
-.first\:mb-5:first-child{
-  margin-bottom: 1.25rem;
-}
-
 .max-h-data-structure-layout{
   max-height: calc(100vh - 89px);
 }

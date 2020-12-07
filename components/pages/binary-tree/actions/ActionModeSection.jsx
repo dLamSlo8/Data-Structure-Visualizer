@@ -5,8 +5,6 @@ import SelectableDropdownItem from '../../../dropdown/SelectableDropdownItem';
 import DropdownSelect from '../../../dropdown/DropdownSelect';
 
 export default function ActionModeSection({ mode, setMode, sectionCollapsed }) {
-    console.log(sectionCollapsed);
-    console.log('rendering');
     return (
         <DropdownSelect title="Mode" defaultValue={mode} dropdownWrapperClass="mt-1 w-full">
             {
