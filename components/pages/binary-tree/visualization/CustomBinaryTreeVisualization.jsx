@@ -1,22 +1,34 @@
 import { useEffect } from 'react';
-import { generateD3Tree } from '../../../../functions/tree';
 
-function CustomBinaryTreeVisualization({ rootNode }) {
+import { generateCustomizableD3Tree } from '../../../../functions/tree';
+
+import VisualizationLayout from '../../../VisualizationLayout';
+
+function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
+    const handleActiveNodeChange = (node) => {
+        setActiveNode(node);
+    }
+    
     useEffect(() => {
         if (rootNode) {
-            generateD3Tree(rootNode, document.documentElement.clientWidth);
+            generateCustomizableD3Tree(rootNode, width, height, activeUuid, handleActiveNodeChange);
         }
-    }, [rootNode]);
+    }, [rootNode, activeUuid]);
 
     return (
-        <div className="">
-        {
-            rootNode && (
+        rootNode ? (
+            <VisualizationLayout>
                 <div id="tree">
                 </div>
-            )
-        }
-        </div>
+            </VisualizationLayout>
+        ) : (
+            <div className="h-full flex flex-col justify-center items-center px-20">
+                <div>
+                    <h3 className="font-bold text-3xl mb-3">Your tree is empty.</h3>
+                    <p className="font-semibold text-lg leading-6 text-gray-500">Add a root value in the 'Actions' tab to begin.</p>
+                </div>
+            </div>
+        )
     )
 }
 

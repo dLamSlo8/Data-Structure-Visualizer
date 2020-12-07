@@ -9,7 +9,6 @@ export default function BinarysearchTreeMode({ mode, setMode }) {
     const [rootNode, setRootNode] = useState(null);
 
     const handleVisualize = (root) => {
-        console.log(root);
         setRootNode(root);
     }
 

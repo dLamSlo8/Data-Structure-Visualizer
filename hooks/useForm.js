@@ -40,7 +40,7 @@ export default ({ initValues, validationRules }) => {
     const handleSubmit = (e, handleSubmitSuccess) => {
         e.preventDefault();
         
-        if (Object.keys(validationRules).length) { // If no rules, no validate.
+        if (validationRules) { // If no rules, no validate.
             console.log('validating');
             if (validate()) {
                 handleSubmitSuccess();

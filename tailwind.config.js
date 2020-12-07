@@ -18,6 +18,9 @@ module.exports = {
         maxWidth: {
             container: '1600px'
         },
+        maxHeight: {
+            'data-structure-layout': 'calc(100vh - 89px)'
+        },
         boxShadow: {
             main: '0 3px 4px 2px rgba(0, 98, 255, 0.25)'
         },

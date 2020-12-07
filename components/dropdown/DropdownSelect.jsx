@@ -13,9 +13,9 @@ export default function DropdownSelect({ title, defaultValue, children: listChil
 
     return (
         <>
-            <h4 className="font-semibold text-lg text-gray-500 mt-3 mb-1">{title}</h4>
+            <h4 className="font-semibold text-lg text-gray-500 mb-1">{title}</h4>
             <button 
-            className="flex justify-between items-center w-full py-3 px-5 border-2 border-gray-500 rounded-lg"
+            className="flex justify-between items-center w-full py-3 px-5 border border-gray-500 rounded-lg"
             onClick={() => setOpen((open) => !open)}>
                 {selectedItem}
                 {

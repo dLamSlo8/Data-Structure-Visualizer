@@ -5,20 +5,7 @@ import FormInput from '../../../forms/FormInput';
 
 export default function BinarysearchTreeForm({ handleVisualize }) {
     const formValidationRules = {
-        binarysearchInput: [ValidationTypes.required, { 
-            test: (value) => {
-                try {
-                    let parsedValue = JSON.parse(value);
-                    parseTree(parsedValue);
-                }
-                catch (e) {
-                    return false;
-                }
-
-                return true;
-            },
-            error: 'The input is formatted incorrectly.' // Fix such that the error is the thrown error message rather than generic
-        }]
+        binarysearchInput: [ValidationTypes.required]
     };
 
     const { formData, handleChange, errorMapping, setErrorMapping, handleSubmit } = useForm({

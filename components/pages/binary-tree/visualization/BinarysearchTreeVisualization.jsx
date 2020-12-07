@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
+
 import { generateD3Tree } from '../../../../functions/tree';
+
+import VisualizationLayout from '../../../VisualizationLayout';
 
 function BinarysearchTreeVisualization({ rootNode, width, height }) {
     useEffect(() => {
@@ -10,11 +13,10 @@ function BinarysearchTreeVisualization({ rootNode, width, height }) {
 
     return (
             rootNode ? (
-                <div className="group">
+                <VisualizationLayout>
                     <div id="tree">
                     </div>
-                    <div className="absolute inset-0 border border-gray-400 rounded-lg z-negative group-hover:border-primary" aria-hidden="true" />
-                </div>
+                </VisualizationLayout>
             ) : (
                 <div className="h-full flex flex-col justify-center items-center px-20">
                     <div>

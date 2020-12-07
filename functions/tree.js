@@ -490,9 +490,9 @@ export const nodeToD3 = (node) => {
  * @param activeUuid - Uuid of active node. Will be styled accordingly
  * @param handleActiveNodeChange - Callback function for when the active node changes (circle selected).
  */
-export const generateCustomizableD3Tree = (node, optimalWidth, activeUuid, handleActiveNodeChange) => {
-    const { nodes } = generateD3Tree(node, optimalWidth); // Generates initial tree
-
+export const generateCustomizableD3Tree = (node, optimalWidth, optimalHeight, activeUuid, handleActiveNodeChange) => {
+    const { nodes } = generateD3Tree(node, optimalWidth, optimalHeight); // Generates initial tree
+    console.log(activeUuid);
     const circleNodes = d3.select('g.nodes') // Adds onClick listener!
         .selectAll('g.node')
         .data(nodes)
@@ -514,9 +514,15 @@ export const generateCustomizableD3Tree = (node, optimalWidth, activeUuid, handl
 
             handleActiveNodeChange(activeNode);
         })
-        
+    console.log(circleNodes);
     circleNodes // Styles active circle
-        .attr('class', (datum) => datum.data.uuid === activeUuid ? 'ct__active-node' : '');
+        .each(function (datum) {
+            if (datum.data.uuid === activeUuid) {
+                d3.select(this).select('circle').style('filter', 'drop-shadow(3px 3px 3px 3px rgba(0, 0, 0, 1)');
+                d3.select(this).select('circle').style('fill', '#0062FF').style('stroke', 'none');
+                d3.select(this).select('text').style('fill', 'white');
+            }
+        });
 
 
 }

@@ -9,7 +9,6 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
     const [height, setHeight] = useState(null);
     const sectionRef = useRef(null);
 
-    console.log(height);
     useEffect(() => {
         setHeight(sectionRef.current.offsetHeight)
     }, []);
@@ -35,7 +34,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
 
     return (
         <section className="relative first:mb-5 not:first:pt-5 not:first:border-t-2 not:first:border-gray-300">
-            <header className="flex justify-between items-center">
+            <header className={`flex justify-between items-center ${!sectionDescription ? 'mb-3' : ''}`}>
                 <h3 className="font-semibold text-2xl">{sectionTitle}</h3>
                 <button aria-label={`${collapsed ? 'Expand' : 'Collapse'} Section Named ${sectionTitle}`} onClick={() => setCollapsed((collapsed) => !collapsed)}>
                     {
@@ -56,7 +55,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
                
                 >
                     <div className="section-scroll">
-                        <p className="font-semibold text-gray-500">{sectionDescription}</p>
+                        <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
                         {
                             propagateState ? sectionContent({ collapsed }) : sectionContent
                         }
