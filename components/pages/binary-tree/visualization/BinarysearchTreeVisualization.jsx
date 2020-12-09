@@ -1,15 +1,21 @@
 import { useEffect } from 'react';
 
-import { generateD3Tree } from '../../../../functions/tree';
+import { drawD3Tree, generateD3Tree } from '../../../../functions/tree';
 
 import VisualizationLayout from '../../../VisualizationLayout';
 
-function BinarysearchTreeVisualization({ rootNode, width, height }) {
+function BinarysearchTreeVisualization({ rootNode, d3Tree, setD3Tree, width, height }) {
     useEffect(() => {
         if (rootNode) {
-            generateD3Tree(rootNode, width, height);
+            setD3Tree(generateD3Tree(rootNode, width, height));
         }
     }, [rootNode]);
+
+    useEffect(() => {
+        if (d3Tree) {
+            drawD3Tree(d3Tree, width, height);
+        }   
+    }, [d3Tree]);
 
     return (
             rootNode ? (

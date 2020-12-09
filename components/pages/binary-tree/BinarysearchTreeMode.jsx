@@ -7,6 +7,7 @@ import BinarysearchTreeVisualization from './visualization/BinarysearchTreeVisua
 
 export default function BinarysearchTreeMode({ mode, setMode }) {
     const [rootNode, setRootNode] = useState(null);
+    const [d3Tree, setD3Tree] = useState(null);
 
     const handleVisualize = (root) => {
         setRootNode(root);
@@ -20,7 +21,7 @@ export default function BinarysearchTreeMode({ mode, setMode }) {
                 <BinarysearchTreeActions handleVisualize={handleVisualize} />
             </BinaryTreeActionLayout>
         }
-        visualization={({ width, height }) => <BinarysearchTreeVisualization rootNode={rootNode} width={width} height={height} />}
+        visualization={({ width, height }) => <BinarysearchTreeVisualization rootNode={rootNode} width={width} d3Tree={d3Tree} setD3Tree={setD3Tree} height={height} />}
         >   
         </DataStructureLayout>
     )

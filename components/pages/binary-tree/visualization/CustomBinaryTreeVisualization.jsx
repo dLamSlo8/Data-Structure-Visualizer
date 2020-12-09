@@ -1,19 +1,36 @@
 import { useEffect } from 'react';
 
-import { generateCustomizableD3Tree } from '../../../../functions/tree';
+import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers } from '../../../../functions/tree';
 
 import VisualizationLayout from '../../../VisualizationLayout';
 
-function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
+function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, d3Tree, setD3Tree, setActiveNode }) {
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
     }
     
     useEffect(() => {
         if (rootNode) {
-            generateCustomizableD3Tree(rootNode, width, height, activeUuid, handleActiveNodeChange);
+            setD3Tree(generateD3Tree(rootNode, width, height));
         }
-    }, [rootNode, activeUuid]);
+    }, [rootNode]);
+
+    useEffect(() => {
+        if (d3Tree) {
+            drawD3Tree(d3Tree, width, height);
+            setClickHandlers(d3Tree, handleActiveNodeChange);
+        }
+    }, [d3Tree]);
+
+    useEffect(() => {
+        if (d3Tree?.height === 0) { // Will retry style if tree was just initialized. Kind of a hack. Don't know how to handle initial styling.
+            styleActiveNode(activeUuid);
+            return ;
+        }
+        if (activeUuid) { 
+            styleActiveNode(activeUuid);
+        }
+    }, [activeUuid, d3Tree]);
 
     return (
         rootNode ? (

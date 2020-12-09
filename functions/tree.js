@@ -244,6 +244,24 @@ export const preOrderTraversal = (node, l) => {
     return JSON.stringify(res);
 }
 
+export const preOrderTraversalD3 = (node) => {
+    function helper(node, l) {
+        if (!node) { // Node will be undefined
+            return;
+        }
+        
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
+    }
+    
+    let res = [];
+    helper(node, res);
+    return res;
+}
+
 
 /**
  * Returns the postorder traversal of a binary tree
@@ -390,14 +408,33 @@ export const nodeToD3 = (node) => {
     
     return data;
 }
+/**
+ * Styles the currently active node
+ * @param activeUuid - Uuid of active node
+ */
+export const styleActiveNode = (activeUuid) => {
+    console.log('styling active');
+    d3.select('g.nodes')
+        .selectAll('g.node') // Styles active circle
+        .each(function (datum) {
+            console.log(datum);
+            if (datum.data.uuid === activeUuid) {
+                d3.select(this).classed('active-node', true);
+            }
+            else {
+                d3.select(this).classed('active-node', false);
+            }
+        });
+
+
+}
 
 /**
- * Generates tree for #tree selector.
+ * Generates tree given rootNode.
  * @param node - root node of the tree structure
- * @param optimalWidth - width of frame (will be compared vs document width for mobile responsiveness)
+ * @param optimalWidth - width of frame
  */
- export const generateD3Tree = (rootNode, optimalWidth, optimalHeight) => {
-    d3.select('#tree-svg').remove(); // Remove previous tree if any. 
+export const generateD3Tree = (rootNode, optimalWidth) => {
     const data = nodeToD3(rootNode);
 
     // Generate binary tree using d3.
@@ -407,6 +444,18 @@ export const nodeToD3 = (node) => {
     const height = hierarchyNode.height * 100;
 
     const tree = d3.tree().size([width, height])(d3.hierarchy(data));
+    return tree;
+ }
+
+/**
+ * Draws tree for #tree selector.
+ * @param node - root node of the tree structure
+ * @param optimalWidth - width of frame
+ * @param optimalHeight - height of frame
+ */
+export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
+    d3.select('#tree-svg').remove(); // Remove previous tree if any. 
+
     const canvas = d3.select('#tree')
         .append('svg')
         .attr('id', 'tree-svg')
@@ -417,7 +466,7 @@ export const nodeToD3 = (node) => {
         .attr('transform', 'translate(0, 30)');
 
     d3.select('#tree-svg').call(d3.zoom()
-        .extent([[0, 0], [width, height + 50]])
+        .extent([[0, 0], [optimalWidth, optimalHeight + 50]])
         .scaleExtent([0.5, 8])
         .filter(function filter(event) {
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
@@ -435,7 +484,6 @@ export const nodeToD3 = (node) => {
         .attr('class', 'nodes');
 
     const nodes = tree.descendants().filter((node) => node.data.name !== null);
-    console.log(nodes)
     const links = tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
 
     canvas.select('g.links')
@@ -473,26 +521,24 @@ export const nodeToD3 = (node) => {
         .attr('text-anchor', 'middle')
         .attr('dy', '6')
         .attr('font-family', '"Lora", serif');
-    // canvas.select('g.nodes')
-    //     .selectAll('.text')
-    //     .data(nodes)
-    //     .enter()
-    //     .append('text')
 
 
     return { nodes };
- }
+}
 
+export const drawD3TreeWithActiveNode = (tree, optimalWidth, optimalHeight, activeUuid) => {
+    drawD3Tree(tree, optimalWidth, optimalHeight);
+
+    styleActiveNode(activeUuid);
+}
 /**
- * Generates tree for #tree selector with customizability.
- * @param node - root node of the tree structure
- * @param optimalWidth - width of frame (will be compared vs document width for mobile responsiveness)
- * @param activeUuid - Uuid of active node. Will be styled accordingly
- * @param handleActiveNodeChange - Callback function for when the active node changes (circle selected).
+ * 
+ * @param tree - D3 tree
+ * @param handleActiveNodeChange - Callback function for when active node changes
  */
-export const generateCustomizableD3Tree = (node, optimalWidth, optimalHeight, activeUuid, handleActiveNodeChange) => {
-    const { nodes } = generateD3Tree(node, optimalWidth, optimalHeight); // Generates initial tree
-    console.log(activeUuid);
+export const setClickHandlers = (tree, handleActiveNodeChange) => {
+    const nodes = tree.descendants().filter((node) => node.data.name !== null);
+
     const circleNodes = d3.select('g.nodes') // Adds onClick listener!
         .selectAll('g.node')
         .data(nodes)
@@ -513,16 +559,11 @@ export const generateCustomizableD3Tree = (node, optimalWidth, optimalHeight, ac
             }
 
             handleActiveNodeChange(activeNode);
-        })
-    console.log(circleNodes);
-    circleNodes // Styles active circle
-        .each(function (datum) {
-            if (datum.data.uuid === activeUuid) {
-                d3.select(this).select('circle').style('filter', 'drop-shadow(3px 3px 3px 3px rgba(0, 0, 0, 1)');
-                d3.select(this).select('circle').style('fill', '#0062FF').style('stroke', 'none');
-                d3.select(this).select('text').style('fill', 'white');
-            }
         });
+}
 
+export const addAnimationElement = () => {
+    const tree = d3.select('#tree-svg > g');
 
+    tree.append('animated.g');
 }

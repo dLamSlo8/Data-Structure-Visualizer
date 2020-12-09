@@ -10,13 +10,13 @@ import { memo } from 'react';
 const getStyleClass = (style) => {
     switch (style) {
         case 'primary':
-            return 'btn--primary';
+            return 'btn btn--primary';
         case 'secondary':
-            return 'btn--secondary';
+            return 'btn btn--secondary';
         case 'warning':
-            return 'btn--warning';
+            return 'btn btn--warning';
         case 'disabled':
-            return 'btn--disabled';
+            return 'btn btn--disabled';
         default: 
             return '';
     }
@@ -26,7 +26,7 @@ const getStyleClass = (style) => {
 export default memo(function Button({ btnStyle, children, rootClass, ...btnProps }) {
     
     return (
-        <button className={`btn ${getStyleClass(btnStyle)} ${rootClass ?? ''}`} {...btnProps}>
+        <button className={`${getStyleClass(btnStyle)} ${rootClass ?? ''}`} {...btnProps}>
             {children}
         </button>
     )
