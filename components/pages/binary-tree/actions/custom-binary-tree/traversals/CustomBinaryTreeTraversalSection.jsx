@@ -67,11 +67,15 @@ export default memo(function CustomBinaryTreeTraversalSection({ sectionCollapsed
     )
 }, (prev, next) => {
     return prev.sectionCollapsed === next.sectionCollapsed && 
-            compareTrees(prev.d3Tree.descendants(), next.d3Tree.descendants());
+            compareTrees(prev.d3Tree?.descendants(), next?.d3Tree.descendants());
 
 })
 
 function compareTrees(prev, next) {
+    if (!prev) {
+        return false;
+    }
+    
     if (prev.length !== next.length) { 
         return false;
     }
