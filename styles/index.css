@@ -646,6 +646,12 @@ button {
   margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
 }
 
+.space-x-3 > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
@@ -674,6 +680,10 @@ button {
 .focus\:bg-primary:focus{
   --tw-bg-opacity: 1;
   background-color: rgba(0, 98, 255, var(--tw-bg-opacity));
+}
+
+.bg-opacity-95{
+  --tw-bg-opacity: 0.95;
 }
 
 .border-gray-300{
@@ -953,6 +963,14 @@ button {
   padding: 0.75rem;
 }
 
+.p-4{
+  padding: 1rem;
+}
+
+.p-5{
+  padding: 1.25rem;
+}
+
 .p-6{
   padding: 1.5rem;
 }
@@ -996,11 +1014,6 @@ button {
   padding-right: 2rem;
 }
 
-.px-10{
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-}
-
 .px-12{
   padding-left: 3rem;
   padding-right: 3rem;
@@ -1013,6 +1026,10 @@ button {
 
 .pb-0{
   padding-bottom: 0px;
+}
+
+.pb-5{
+  padding-bottom: 1.25rem;
 }
 
 .not\:first\:pt-5:not(:first-child){
@@ -1038,8 +1055,16 @@ button {
   left: 0px;
 }
 
+.top-0{
+  top: 0px;
+}
+
 .right-0{
   right: 0px;
+}
+
+.bottom-1{
+  bottom: 0.25rem;
 }
 
 .top-2{
@@ -1309,6 +1334,16 @@ g.active-node > text {
 }
 
 @media (min-width: 768px){
+  .md\:space-y-0 > :not([hidden]) ~ :not([hidden]){
+    --tw-space-y-reverse: 0;
+    margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(0px * var(--tw-space-y-reverse));
+  }
+
+  .md\:flex-row{
+    flex-direction: row;
+  }
+
   .md\:w-4\/5{
     width: 80%;
   }

@@ -11,10 +11,13 @@ import CustomBinaryTreeAnimationElement from './CustomBinaryTreeAnimationElement
 export default memo(function CustomBinaryTreeTraversalSection({ sectionCollapsed, d3Tree }) {
     const [traversalType, setTraversalType] = useState('Preorder');
 
-    const { animationProps, running, setRunning, handleRun } = useAnimationControl({
+    const { animationProps, animationState, setAnimationState, handleRun, handlePause, handleSkipToEnd, handleReset, config, setConfig } = useAnimationControl({
         stepGenerator: () => preOrderTraversalD3(d3Tree),
-        initialProps: { x: 50, y: 50 }
+        initialProps: { xy: [50, 50] }
     });
+
+    console.log(animationProps);
+
 
 
     return (
@@ -57,17 +60,19 @@ export default memo(function CustomBinaryTreeTraversalSection({ sectionCollapsed
                     }
                 }
             </DropdownSelect>
-            <ControlSection rootClass="mt-3" running={running} handleRun={handleRun} />
+            <ControlSection rootClass="mt-3" running={animationState === 'running'} handleRun={handleRun} handlePause={handlePause} handleSkipToEnd={handleSkipToEnd} handleReset={handleReset} config={config} setConfig={setConfig} />
             {
-                running ? (
+                animationState ? (
                     <CustomBinaryTreeAnimationElement animationProps={animationProps} />
                 ) : null
             }
         </>
     )
 }, (prev, next) => {
+    console.log(prev);
+    console.log(next);
     return prev.sectionCollapsed === next.sectionCollapsed && 
-            compareTrees(prev.d3Tree?.descendants(), next?.d3Tree.descendants());
+            compareTrees(prev.d3Tree?.descendants(), next.d3Tree.descendants());
 
 })
 
@@ -75,7 +80,7 @@ function compareTrees(prev, next) {
     if (!prev) {
         return false;
     }
-    
+
     if (prev.length !== next.length) { 
         return false;
     }
