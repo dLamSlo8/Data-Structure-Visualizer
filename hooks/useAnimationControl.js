@@ -62,12 +62,11 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     const handleSkipRun = async (next, cancel) => {
         let { x, y } = steps[steps.length - 1];
 
-        await next({ xy: [x, y], immediate: true });
+        await next({ xy: [x, y], config: { duration: 0 }});
     }
 
     const handleResetScript = async (next, cancel) => {
-        await next({ duration: 0 });
-        await next({ to: initialProps });
+        await next({ to: initialProps, config: { duration: 0 } });
     };
 
     const handleSkipToEnd = () => {
