@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export const ValidationTypes = {
     required: {
-        test: (value) => value,
+        test: (value) => value || (typeof value === 'number' && value !== null),
         error: 'This is a required field'
     },
     emailFormat: {

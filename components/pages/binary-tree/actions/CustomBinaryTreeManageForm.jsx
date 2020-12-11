@@ -7,7 +7,7 @@ import Button from '../../../Button';
 // Responsibility: Render and handle form data. Doesn't care about the parent. Just calls the callbacks. Remember, Actions will handle data.
 export default function CustomBinaryTreeManageForm({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
     const currentFormValue = useMemo(() => (activeNode ? {
-        current: activeNode.current,
+        current: `${activeNode.current}`,
     } : null), [activeNode]);
 
     return (

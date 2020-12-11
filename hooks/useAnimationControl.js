@@ -12,7 +12,7 @@ import { Controller, useSpring, config } from '@react-spring/web';
  */
 export default function useAnimationControl({ stepGenerator, initialProps, initConfig }) {
     const [steps, setSteps] = useState(null);
-    const [currentStep, setCurrentStep] = useState(-1);
+    const [currentStep, setCurrentStep] = useState(0);
     const [animationState, setAnimationState] = useState(null);
     const [config, setConfig] = useState(initConfig ?? { 
         animationsOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
@@ -26,33 +26,19 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
         from: initialProps,
-        onRest: (e) => {
-            console.log(e);
-            if (e.finished) {
-                setCurrentStep((step) => step + 1)
-            }
-        },
-        config: config.molasses
     }));
 
 
-    const runAnimation = () => {
-        let idx = 0;
 
-        for (let stepIdx = currentStep; stepIdx < steps.length; stepIdx++, idx++) {
-            let { x, y } = steps[stepIdx];
-            // console.log(steps[stepIdx]);
-            // console.log(currentStep);
-            setAnimation({ xy: [x, y], delay: 1000 * idx });
-        }
-    }
 
     const handleAutoRun = async (next, cancel) => {
         console.log(steps);
         console.log(currentStep);
-        for (let idx = (currentStep === -1 ? currentStep + 1 : currentStep); idx < steps.length; idx++) {
+        for (let idx = currentStep; idx < steps.length; idx++) {
             let { x, y } = steps[idx];
-            await next({ xy: [x, y] });
+            await next({ xy: [x, y], config: { duration: undefined } });      
+            setCurrentStep((step) => step + 1);
+
         }
         // setAnimationState(null);
         setAnimationState('finished');
@@ -69,8 +55,14 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
         await next({ to: initialProps, config: { duration: 0 } });
     };
 
+    const handleResetAndPlayScript = async (next, cancel) => {
+        await next({ to: initialProps, config: { duration: 0 }});
+        await next({ to: handleAutoRun, delay: 500 });
+    }
+
     const handleSkipToEnd = () => {
         setAnimation({ to: handleSkipRun });
+        setCurrentStep(0);
         setAnimationState('finished');
     }
 
@@ -88,10 +80,10 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
         }
         else {
             if (animationState === 'finished') {
-                setAnimation({ to: handleAutoRun, reset: true });
+                setAnimation({ to: handleResetAndPlayScript });
             }
             else {
-                setAnimation({ to: handleAutoRun });
+                setAnimation({ to: handleAutoRun, delay: 500 });
             }
             console.log('yes!');
         }
@@ -100,14 +92,8 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
 
     const handlePause = () => {
-        console.log("huh");
         stopAnimation();
         setAnimationState('paused');
-
-        // spring.update({ reset: true })
-        // spring.start();
-        // setAnimation({ ...steps[currentStep] });
-        // setAnimation({ pause: true });
     }
 
 
@@ -120,7 +106,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
             //     setAnimation({ xy: [x, y], delay: 1000 * idx });
             // }        }
-            setAnimation({ to: handleAutoRun });
+            setAnimation({ to: handleAutoRun, delay: 500 });
         }
     }, [steps]);
 
