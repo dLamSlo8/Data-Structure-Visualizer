@@ -1,9 +1,13 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
+
 import AnimationContext from '../../contexts/AnimationContext';
+
+import CloseIcon from '../../public/icons/x-circle.svg';
+import Button from '../Button';
 
 export default function DataStructureLayout({ actions, visualization, visualizationDescription, propagateDimensions }) {
     const [mounted, setMounted] = useState(false);
-    const { isAnimatingMode } = useContext(AnimationContext);
+    const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
     const visualizationRef = useRef(null);
     const actionsRef = useRef(null);
 
@@ -22,10 +26,14 @@ export default function DataStructureLayout({ actions, visualization, visualizat
                 {
                     isAnimatingMode && mounted && (
                         <>
-                            <div className="absolute inset-0 bg-black bg-opacity-50" style={{height: actionsRef.current.scrollHeight }} aria-hidden="true">
-                                <div className="sticky top-2 left-3/4 transform -translate-x-1/4 inline-flex space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
+                            <div className="absolute inset-0 flex items-start justify-center bg-black bg-opacity-50" style={{height: actionsRef.current.scrollHeight }} aria-hidden="true">
+                                <div className="sticky top-2 inline-flex items-center space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
                                     <p className="font-semibold text-primary">Currently in animating mode</p>
+                                    <Button onClick={() => setAnimatingMode(false)}>
+                                        <CloseIcon />
+                                    </Button>
                                 </div>
+
                             </div>
 
                         </>

@@ -12,7 +12,7 @@ import RightsIcon from '../../../public/icons/chevrons-right.svg';
 import Button from '../../Button';
 
 export default function ControlSection({ running, handleReset, handleStepBack, handlePause, handleRun, handleStepForward, handleSkipToEnd, config, setConfig, extraSettings, rootClass }) {
-    const { setAnimatingMode } = useContext(AnimationContext);
+    const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
 
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
@@ -41,9 +41,14 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
     }
 
     return (
-        <section className={`${rootClass ?? ''}`}>
-            <h4 className="font-semibold text-lg text-gray-500 mb-1">Controls</h4>
-            <div className="p-5 border border-gray-400 rounded-lg">
+        <section className={`relative ${rootClass ?? ''} ${isAnimatingMode ? 'z-40' : ''}`}>
+            {
+                isAnimatingMode && (
+                    <div className="absolute z-negative bg-white rounded-lg shadow-lg"></div>
+                )
+            }
+            <h4 className={` font-semibold text-lg ${isAnimatingMode ? 'text-white' : 'text-gray-500'} mb-1`}>Controls</h4>
+            <div className={`p-5 border border-gray-400 rounded-lg ${isAnimatingMode ? 'bg-white' : ''}`}>
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
                     <Button type="button" onClick={handleReset}><ResetIcon /></Button>
                     <Button type="button" onClick={handleStepBack}><LeftIcon /></Button>

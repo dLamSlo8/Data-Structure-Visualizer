@@ -471,8 +471,9 @@ export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
-            d3.select('#tree-svg g')
-                .attr('transform', transform);
+            console.log(d3.selectAll('#tree-svg > g')
+                .attr('transform', transform));
+
         }))
 
 
