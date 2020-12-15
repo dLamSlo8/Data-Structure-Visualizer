@@ -1,9 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import AnimationContext from '../../contexts/AnimationContext';
 
 export default function DataStructureLayout({ actions, visualization, visualizationDescription, propagateDimensions }) {
     const [mounted, setMounted] = useState(false);
-
+    const { isAnimatingMode } = useContext(AnimationContext);
     const visualizationRef = useRef(null);
+    const actionsRef = useRef(null);
 
     // Need to wait for after initial mount to get ref information.
     useEffect(() => { 
@@ -12,11 +14,23 @@ export default function DataStructureLayout({ actions, visualization, visualizat
 
     return (
         <main className="flex-grow flex">
-            <section className="flex-none w-1/3 py-5 px-8 border-r border-gray-300 max-h-data-structure-layout overflow-y-auto">
+            <section className="relative flex-none w-1/3 py-5 px-8 border-r border-gray-300 max-h-data-structure-layout overflow-y-auto" ref={actionsRef}>
                 <h2 className="inline-block border-b-4 border-primary mb-5 font-bold text-2xl">Actions</h2>
                 <div> {/* This div is essential for styling the sections (uses first-child) */}
                     {actions}
                 </div>
+                {
+                    isAnimatingMode && mounted && (
+                        <>
+                            <div className="absolute inset-0 bg-black bg-opacity-50" style={{height: actionsRef.current.scrollHeight }} aria-hidden="true">
+                                <div className="sticky top-2 left-3/4 transform -translate-x-1/4 inline-flex space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
+                                    <p className="font-semibold text-primary">Currently in animating mode</p>
+                                </div>
+                            </div>
+
+                        </>
+                    )
+                }
             </section>
             <section className="flex-grow flex flex-col py-5 px-8">
                 <h2 className={`inline-block self-start border-b-4 border-primary font-bold text-2xl ${visualizationDescription ? 'mb-2' : 'mb-5'}`}>Visualization</h2>

@@ -16,48 +16,52 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     const [animationState, setAnimationState] = useState(null);
     const [config, setConfig] = useState(initConfig ?? { 
         animationsOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
-        autoPlay: true
+        autoPlay: true, 
+        animationSpeed: 1000
     });
-    // const spring = new Controller({
-    //     ...initialProps
-    // });
-
-    
 
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
-        from: initialProps,
+        from: initialProps
     }));
 
 
-
-
-    const handleAutoRun = async (next, cancel) => {
-        console.log(steps);
-        console.log(currentStep);
+    /**
+     * React-spring script for running an animation from its current step to the end.
+     */
+    const handleRunScript = async (next) => {
         for (let idx = currentStep; idx < steps.length; idx++) {
             let { x, y } = steps[idx];
-            await next({ xy: [x, y], config: { duration: undefined } });      
+            
+            await next({ xy: [x, y], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
-
         }
-        // setAnimationState(null);
+
         setAnimationState('finished');
         setCurrentStep(0);
     }
 
-    const handleSkipRun = async (next, cancel) => {
+    /**
+     * React-spring script that skips to the end of an animation (i.e. the last step of the animation)
+     */
+    const handleSkipRun = async (next) => {
         let { x, y } = steps[steps.length - 1];
 
         await next({ xy: [x, y], config: { duration: 0 }});
     }
 
-    const handleResetScript = async (next, cancel) => {
+    /**
+     * React-spring script that instantly resets the animation to its original position (from initialProps)
+     */
+    const handleResetScript = async (next) => {
         await next({ to: initialProps, config: { duration: 0 } });
     };
 
-    const handleResetAndPlayScript = async (next, cancel) => {
-        await next({ to: initialProps, config: { duration: 0 }});
-        await next({ to: handleAutoRun, delay: 500 });
+    /**
+     * React-spring script that resets an animation to its initial state before running to completion
+     */
+    const handleResetAndRunScript = async (next) => {
+        await next({ to: handleResetScript });
+        await next({ to: handleRunScript, delay: config.animationSpeed - 500 });
     }
 
     const handleSkipToEnd = () => {
@@ -79,11 +83,11 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             setSteps(steps);
         }
         else {
-            if (animationState === 'finished') {
-                setAnimation({ to: handleResetAndPlayScript });
+            if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
+                setAnimation({ to: handleResetAndRunScript });
             }
             else {
-                setAnimation({ to: handleAutoRun, delay: 500 });
+                setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });
             }
             console.log('yes!');
         }
@@ -106,7 +110,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
             //     setAnimation({ xy: [x, y], delay: 1000 * idx });
             // }        }
-            setAnimation({ to: handleAutoRun, delay: 500 });
+            setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });
         }
     }, [steps]);
 
@@ -119,7 +123,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     
 
     // const animationProps = useSpring({
-    //     to: config.autoPlay ? (steps ? handleAutoRun : initialProps) : (steps ? steps[currentStep] : initialProps), 
+    //     to: config.autoPlay ? (steps ? handleRunScript : initialProps) : (steps ? steps[currentStep] : initialProps), 
     //     from: animationState === 'paused' ? steps[currentStep] : initialProps,
     //     onStart: (animation) => console.log(animation)
     // });
@@ -128,5 +132,5 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
 
 
-    return { animationProps, config, setConfig, animationState, setAnimationState, handleRun, handleAutoRun, handlePause, handleSkipToEnd, handleReset };
+    return { animationProps, config, setConfig, animationState, setAnimationState, handleRun, handleRunScript, handlePause, handleSkipToEnd, handleReset };
 }                

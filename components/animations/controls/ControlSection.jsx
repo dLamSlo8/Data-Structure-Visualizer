@@ -1,14 +1,19 @@
+import { useContext } from 'react';
+
+import AnimationContext from '../../../contexts/AnimationContext';
+
 import ResetIcon from '../../../public/icons/rotate-ccw.svg';
 import LeftIcon from '../../../public/icons/chevron-left.svg';
 import PlayIcon from '../../../public/icons/play-circle.svg';
 import PauseIcon from '../../../public/icons/pause-circle.svg';
 import RightIcon from '../../../public/icons/chevron-right.svg';
 import RightsIcon from '../../../public/icons/chevrons-right.svg';
-import SettingsIcon from '../../../public/icons/settings.svg';
 
 import Button from '../../Button';
 
 export default function ControlSection({ running, handleReset, handleStepBack, handlePause, handleRun, handleStepForward, handleSkipToEnd, config, setConfig, extraSettings, rootClass }) {
+    const { setAnimatingMode } = useContext(AnimationContext);
+
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
             return ;
@@ -24,6 +29,17 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
         }
     }
 
+    const handlePlayPauseClick = () => {
+        setAnimatingMode(true);
+
+        if (running) {
+            handlePause();
+        }
+        else {
+            handleRun();
+        }
+    }
+
     return (
         <section className={`${rootClass ?? ''}`}>
             <h4 className="font-semibold text-lg text-gray-500 mb-1">Controls</h4>
@@ -31,7 +47,7 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
                     <Button type="button" onClick={handleReset}><ResetIcon /></Button>
                     <Button type="button" onClick={handleStepBack}><LeftIcon /></Button>
-                    <Button type="button" onClick={running ? handlePause : handleRun}>
+                    <Button type="button" onClick={handlePlayPauseClick}>
                         {
                             running ? (
                                 <PauseIcon />

@@ -246,7 +246,7 @@ export const preOrderTraversal = (node, l) => {
 
 export const preOrderTraversalD3 = (node) => {
     function helper(node, l) {
-        if (!node) { // Node will be undefined
+        if (!node.data.name) { 
             return;
         }
         
@@ -413,7 +413,6 @@ export const nodeToD3 = (node) => {
  * @param activeUuid - Uuid of active node
  */
 export const styleActiveNode = (activeUuid) => {
-    console.log('styling active');
     d3.select('g.nodes')
         .selectAll('g.node') // Styles active circle
         .each(function (datum) {
