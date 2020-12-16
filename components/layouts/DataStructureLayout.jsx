@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
+import { CSSTransition } from 'react-transition-group';
 
 import AnimationContext from '../../contexts/AnimationContext';
 
@@ -23,22 +24,21 @@ export default function DataStructureLayout({ actions, visualization, visualizat
                 <div> {/* This div is essential for styling the sections (uses first-child) */}
                     {actions}
                 </div>
-                {
-                    isAnimatingMode && mounted && (
-                        <>
-                            <div className="absolute inset-0 flex items-start justify-center bg-black bg-opacity-50" style={{height: actionsRef.current.scrollHeight }} aria-hidden="true">
-                                <div className="sticky top-2 inline-flex items-center space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
-                                    <p className="font-semibold text-primary">Currently in animating mode</p>
-                                    <Button onClick={() => setAnimatingMode(false)}>
-                                        <CloseIcon />
-                                    </Button>
-                                </div>
+                <CSSTransition 
+                in={isAnimatingMode && mounted}
+                classNames="lift-animating-actions"
+                timeout={300}
+                unmountOnExit>
+                    <div className="absolute inset-0 flex items-start justify-center bg-black bg-opacity-50" style={{height: actionsRef?.current?.scrollHeight }} aria-hidden="true">
+                        <div id="animating-label" className="sticky top-2 inline-flex items-center space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
+                                <p className="font-semibold text-primary">Currently in animating mode</p>
+                                <Button onClick={() => setAnimatingMode(false)}>
+                                    <CloseIcon />
+                                </Button>
+                        </div>
+                    </div>
+                </CSSTransition>
 
-                            </div>
-
-                        </>
-                    )
-                }
             </section>
             <section className="flex-grow flex flex-col py-5 px-8">
                 <h2 className={`inline-block self-start border-b-4 border-primary font-bold text-2xl ${visualizationDescription ? 'mb-2' : 'mb-5'}`}>Visualization</h2>

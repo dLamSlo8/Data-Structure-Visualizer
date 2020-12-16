@@ -77,21 +77,17 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     }
 
     const handleRun = () => {
-        if (!steps) { // Steps will be cached, so no need to do redo expensive calculations.
-            let steps = stepGenerator();
-            
-            setSteps(steps);
-        }
-        else {
+        if (steps) {
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
-                setAnimation({ to: handleResetAndRunScript });
+            setAnimation({ to: handleResetAndRunScript });
             }
             else {
                 setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });
             }
-            console.log('yes!');
+            setAnimationState('running');
         }
-        setAnimationState('running');
+
+        console.log('yes!');
     }
 
 
@@ -110,9 +106,18 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
             //     setAnimation({ xy: [x, y], delay: 1000 * idx });
             // }        }
-            setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });
+            setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
+            setAnimationState('running');
+
         }
     }, [steps]);
+
+    // useEffect(() => {
+    //     console.log(stepDependencies);
+    //     if (stepDependencies.every((dependency) => dependency)) {
+    //         setSteps(stepGenerator());
+    //     }
+    // }, [...stepDependencies]);
 
     // useEffect(() => {
     //     if (currentStep === steps.length - 1) {
@@ -132,5 +137,5 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
 
 
-    return { animationProps, config, setConfig, animationState, setAnimationState, handleRun, handleRunScript, handlePause, handleSkipToEnd, handleReset };
+    return { animationProps, setSteps, config, setConfig, animationState, setAnimationState, handleRun, handleRunScript, handlePause, handleSkipToEnd, handleReset };
 }                

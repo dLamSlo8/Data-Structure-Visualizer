@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { generateD3Tree } from '../../../functions/tree';
+import { resetD3Tree } from '../../../functions/tree';
 
 import DataStructureLayout from '../../layouts/DataStructureLayout';
 import BinaryTreeActionLayout from './actions/BinaryTreeActionLayout';
@@ -14,6 +14,14 @@ export default function CustomBinaryTreeMode({ mode, setMode }) {
     const [activeNode, setActiveNode] = useState(null);
     const [d3Tree, setD3Tree] = useState(null);
 
+    useEffect(() => {
+
+        return () => {
+            console.log('leaving custom binary tree mode. resetting tree');
+            resetD3Tree();
+        }
+    }, []);
+    
     return (
         <DataStructureLayout
         propagateDimensions
@@ -31,8 +39,8 @@ export default function CustomBinaryTreeMode({ mode, setMode }) {
             d3Tree={d3Tree}
             setD3Tree={setD3Tree}
             setActiveNode={setActiveNode} />)}
-        visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
-        The selected node is highlighted blue. ">
+            visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
+            The selected node is highlighted blue. ">
         </DataStructureLayout>
     )
 }

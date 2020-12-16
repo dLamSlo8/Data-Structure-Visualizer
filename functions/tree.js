@@ -18,6 +18,12 @@ export class Node {
     }
 }
 
+export let d3Tree = null;
+
+export const resetD3Tree = () => {
+    // d3Tree = null;
+};
+
 /**
  * Converts string representation of binary tree to node
  * @param s - string representation of binary tree
@@ -244,7 +250,7 @@ export const preOrderTraversal = (node, l) => {
     return JSON.stringify(res);
 }
 
-export const preOrderTraversalD3 = (node) => {
+export const preOrderTraversalD3 = () => {
     function helper(node, l) {
         if (!node.data.name) { 
             return;
@@ -258,7 +264,7 @@ export const preOrderTraversalD3 = (node) => {
     }
     
     let res = [];
-    helper(node, res);
+    helper(d3Tree, res);
     return res;
 }
 
@@ -443,7 +449,8 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
     const height = hierarchyNode.height * 100;
 
     const tree = d3.tree().size([width, height])(d3.hierarchy(data));
-    return tree;
+
+    d3Tree = tree;
  }
 
 /**
@@ -452,7 +459,7 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
  * @param optimalWidth - width of frame
  * @param optimalHeight - height of frame
  */
-export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
+export const drawD3Tree = (optimalWidth, optimalHeight) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
     const canvas = d3.select('#tree')
@@ -483,8 +490,8 @@ export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
     canvas.append('g')
         .attr('class', 'nodes');
 
-    const nodes = tree.descendants().filter((node) => node.data.name !== null);
-    const links = tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
+    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
+    const links = d3Tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
 
     canvas.select('g.links')
         .selectAll('.link')
@@ -526,18 +533,13 @@ export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
     return { nodes };
 }
 
-export const drawD3TreeWithActiveNode = (tree, optimalWidth, optimalHeight, activeUuid) => {
-    drawD3Tree(tree, optimalWidth, optimalHeight);
-
-    styleActiveNode(activeUuid);
-}
 /**
  * 
  * @param tree - D3 tree
  * @param handleActiveNodeChange - Callback function for when active node changes
  */
-export const setClickHandlers = (tree, handleActiveNodeChange) => {
-    const nodes = tree.descendants().filter((node) => node.data.name !== null);
+export const setClickHandlers = (handleActiveNodeChange) => {
+    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
 
     const circleNodes = d3.select('g.nodes') // Adds onClick listener!
         .selectAll('g.node')
@@ -562,8 +564,21 @@ export const setClickHandlers = (tree, handleActiveNodeChange) => {
         });
 }
 
+export const removeClickHandlers = () => {
+    d3.select('g.nodes')
+        .selectAll('g.node')
+        .on('click', null);
+}
+
 export const addAnimationElement = () => {
     const tree = d3.select('#tree-svg > g');
 
     tree.append('animated.g');
+}
+
+export const initD3Tree = (node, width, height, clickHandler) => {
+    generateD3Tree(node, width, height);
+    drawD3Tree(width, height);
+    setClickHandlers(clickHandler);
+    styleActiveNode(node.uuid);
 }

@@ -70,7 +70,7 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
                         <h5 className="font-semibold">Settings</h5>
                     </header>
                     <div className="flex flex-col md:flex-row space-y-3 md:space-y-0">
-                        <div className="w-full flex space-x-3">
+                        <div className="w-full flex items-start space-x-3">
                             <input 
                             name="animationsOff" 
                             id="animationOffCheckbox" 
@@ -79,7 +79,7 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
                             onChange={updateConfig} />
                             <label htmlFor="animationOffCheckbox" className="relative bottom-1 text-sm">Turn animations off<br /><span className="text-gray-500">(For reduced-motion users)</span></label>
                         </div>
-                        <div className="w-full flex space-x-3">
+                        <div className="w-full flex items-start space-x-3">
                             <input 
                             name="autoPlay"
                             id="autoPlayCheckbox" 

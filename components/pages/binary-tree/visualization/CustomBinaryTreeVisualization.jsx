@@ -1,36 +1,41 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 
-import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers } from '../../../../functions/tree';
+import AnimationContext from '../../../../contexts/AnimationContext';
+import { initD3Tree, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '../../../../functions/tree';
 
-import VisualizationLayout from '../../../VisualizationLayout';
+import VisualizationLayout from '../../../layouts/VisualizationLayout';
 
 function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, d3Tree, setD3Tree, setActiveNode }) {
+    const { isAnimatingMode } = useContext(AnimationContext);
+
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
     }
     
     useEffect(() => {
         if (rootNode) {
-            setD3Tree(generateD3Tree(rootNode, width, height));
+            generateD3Tree(rootNode, width, height);
+            drawD3Tree(width, height);
+            setClickHandlers(handleActiveNodeChange);
+
+            if (rootNode.left === null && rootNode.right === null) {
+                styleActiveNode(rootNode.uuid);
+            }
         }
     }, [rootNode]);
 
     useEffect(() => {
-        if (d3Tree) {
-            drawD3Tree(d3Tree, width, height);
-            setClickHandlers(d3Tree, handleActiveNodeChange);
-        }
-    }, [d3Tree]);
-
-    useEffect(() => {
-        if (d3Tree?.height === 0) { // Will retry style if tree was just initialized. Kind of a hack. Don't know how to handle initial styling.
-            styleActiveNode(activeUuid);
-            return ;
-        }
         if (activeUuid) { 
             styleActiveNode(activeUuid);
         }
-    }, [activeUuid, d3Tree]);
+    }, [rootNode, activeUuid]);
+
+    useEffect(() => {
+        if (isAnimatingMode) {
+            console.log('is animation mode!');
+            removeClickHandlers();
+        }
+    }, [isAnimatingMode]);
 
     return (
         rootNode ? (

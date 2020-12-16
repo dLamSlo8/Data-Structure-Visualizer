@@ -1,24 +1,43 @@
 /* Used in NavDropdown */
-.lift-enter {
+.lift-enter, .lift-animating-actions-enter > * {
     opacity: 0;
     transform: translateY(2rem);
 }
 
-.lift-enter-active {
+.lift-enter-active, .lift-animating-actions-enter-active > * {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 300ms, transform 300ms;
 }
 
-.lift-exit {
+.lift-exit, .lift-animating-actions-exit > * {
     opacity: 1;
     transform: translateY(0);
 }
 
-.lift-exit-active {
+.lift-exit-active, .lift-animating-actions-exit-active > * {
     opacity: 0;
     transform: translateY(2rem);
     transition: opacity 300ms, transform 300ms;
+}
+
+/* Actions */
+.lift-animating-actions-enter {
+    opacity: 0;
+}
+
+.lift-animating-actions-enter-active {
+    opacity: 1;
+    transition: opacity 300ms;
+}
+
+.lift-animating-actions-exit {
+    opacity: 1;
+}
+
+.lift-animating-actions-exit-active {
+    opacity: 0;
+    transition: opacity 300ms;
 }
 
 /* Dropdown */

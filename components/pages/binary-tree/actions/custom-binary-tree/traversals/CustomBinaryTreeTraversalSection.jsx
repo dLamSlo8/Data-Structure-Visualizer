@@ -1,23 +1,28 @@
-import { useState, useEffect, memo } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
+import AnimationContext from '../../../../../../contexts/AnimationContext';
 import { preOrderTraversalD3, generateD3Tree, addAnimationElement } from '../../../../../../functions/tree';
 import useAnimationControl from '../../../../../../hooks/useAnimationControl';
 
 import DropdownSelect from '../../../../../dropdown/DropdownSelect';
 import SelectableDropdownItem from '../../../../../dropdown/SelectableDropdownItem';
-import ControlSection from '../../../../../animations/controls/ControlSection';
+import ControlSection from '@components/animations/controls/ControlSection';
 import CustomBinaryTreeAnimationElement from './CustomBinaryTreeAnimationElement';
 
-export default memo(function CustomBinaryTreeTraversalSection({ sectionCollapsed, d3Tree }) {
+export default function CustomBinaryTreeTraversalSection({ sectionCollapsed, rootNode }) {
     const [traversalType, setTraversalType] = useState('Preorder');
-
-    const { animationProps, animationState, setAnimationState, handleRun, handlePause, handleSkipToEnd, handleReset, config, setConfig } = useAnimationControl({
-        stepGenerator: () => preOrderTraversalD3(d3Tree),
-        initialProps: { xy: [50, 50] }
+    const { isAnimatingMode } = useContext(AnimationContext);
+    const { animationProps, animationState, setAnimationState, handleRun, handlePause, handleSkipToEnd, handleReset, config, setConfig, setSteps } = useAnimationControl({
+        initialProps: { xy: [50, 50] },
     });
 
     console.log(animationProps);
 
+    useEffect(() => {
+        if (rootNode && isAnimatingMode) {
+            setSteps(preOrderTraversalD3())
+        }
+    }, [rootNode, isAnimatingMode]);
 
 
     return (
@@ -68,30 +73,4 @@ export default memo(function CustomBinaryTreeTraversalSection({ sectionCollapsed
             }
         </>
     )
-}, (prev, next) => {
-    console.log(prev);
-    console.log(next);
-    return prev.sectionCollapsed === next.sectionCollapsed && 
-            compareTrees(prev.d3Tree?.descendants(), next.d3Tree.descendants());
-
-})
-
-function compareTrees(prev, next) {
-    if (!prev) {
-        return false;
-    }
-
-    if (prev.length !== next.length) { 
-        return false;
-    }
-    let prevData = prev.map((node) => node.data);
-    let nextData = next.map((node) => node.data);
-
-    for (let idx = 0; idx < prevData.length; idx++) {
-        if (prevData[idx].name !== nextData[idx].name) {
-            return false;
-        }
-    }
-
-    return true;
 }

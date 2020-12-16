@@ -1,4 +1,4 @@
-import { Node, addNode, replaceNodeValue, deleteSubtree, preOrderTraversalD3 } from '../../../../functions/tree';
+import { Node, addNode, replaceNodeValue, deleteSubtree } from '../../../../functions/tree';
 
 import useAnimationControl from '../../../../hooks/useAnimationControl';
 
@@ -66,7 +66,7 @@ export default function CustomBinaryTreeActions({ rootNode, activeNode, setRootN
             sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation.">
                 {
                     rootNode ? (
-                        <CustomBinaryTreeTraversalSection d3Tree={d3Tree} />
+                        <CustomBinaryTreeTraversalSection rootNode={rootNode} />
                     ) : (
                         <div className="mt-8">
                             <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>

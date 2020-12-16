@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 import { drawD3Tree, generateD3Tree } from '../../../../functions/tree';
 
-import VisualizationLayout from '../../../VisualizationLayout';
+import VisualizationLayout from '../../../layouts/VisualizationLayout';
 
 function BinarysearchTreeVisualization({ rootNode, d3Tree, setD3Tree, width, height }) {
     useEffect(() => {
