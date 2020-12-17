@@ -16,9 +16,16 @@ export default function TreeTraversalSection({ sectionCollapsed, drewTree, setDr
         initialProps: { xy: [50, 50] },
     });
 
+    /**
+     * Effect
+     * Whenever animating mode is turned on and iff there is a new tree to be drawn,
+     * generate the steps for this new tree and toggle off drewTree such that if animating
+     * mode is toggled on and off and the tree hasn't changed, nothing will happen (as
+     * the steps are the exact same. This is great for performance as we don't need
+     * to do expensive calculations each time we turn on animating mode.)
+     */
     useEffect(() => {
         if (drewTree && isAnimatingMode) {
-            console.log('Recalculating steps!');
             setSteps(preOrderTraversalD3());
             setDrewTree(false);
         }

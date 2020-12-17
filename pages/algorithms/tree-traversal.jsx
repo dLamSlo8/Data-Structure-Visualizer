@@ -31,7 +31,7 @@ export default function TreeTraversal() {
             drewTree={drewTree}
             setDrewTree={setDrewTree} />
         }
-        visualization={({ width, height}) => (
+        visualization={({ width, height }) => (
             <TreeTraversalVisualization 
             rootNode={rootNode} 
             activeUuid={activeNode?.uuid} 
