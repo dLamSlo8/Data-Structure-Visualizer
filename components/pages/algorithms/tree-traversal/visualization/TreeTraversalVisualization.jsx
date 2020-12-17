@@ -1,17 +1,22 @@
 import { useEffect, useContext } from 'react';
 
-import AnimationContext from '../../../../contexts/AnimationContext';
-import { initD3Tree, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '../../../../functions/tree';
+import AnimationContext from '@contexts/AnimationContext';
+import { initD3Tree, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@functions/tree';
 
-import VisualizationLayout from '../../../layouts/VisualizationLayout';
+import VisualizationLayout from '@components/layouts/VisualizationLayout';
 
-function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, d3Tree, setD3Tree, setActiveNode }) {
+export default function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode, setDrewTree }) {
     const { isAnimatingMode } = useContext(AnimationContext);
 
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
     }
     
+    /**
+     * Effect 
+     * Draws the tree with d3 and applies appropriate click handlers, 
+     * and handles the initial node case
+     */
     useEffect(() => {
         if (rootNode) {
             generateD3Tree(rootNode, width, height);
@@ -20,19 +25,36 @@ function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, d3
 
             if (rootNode.left === null && rootNode.right === null) {
                 styleActiveNode(rootNode.uuid);
+                setActiveNode({
+                    uuid: rootNode.uuid,
+                    current: rootNode.value,
+                    left: '',
+                    right: ''
+                });
             }
+            setDrewTree(true);
         }
     }, [rootNode]);
 
+    /**
+     * Effect
+     * Styles the currently active node.
+     * 
+     * Dependency Reasoning
+     * rootNode - When the tree re-renders, active node is redrawn so it doesn't get overriden by re-render
+     */
     useEffect(() => {
         if (activeUuid) { 
             styleActiveNode(activeUuid);
         }
     }, [rootNode, activeUuid]);
 
+    /**
+     * Effect
+     * Removes click handlers when in animating mode
+     */
     useEffect(() => {
         if (isAnimatingMode) {
-            console.log('is animation mode!');
             removeClickHandlers();
         }
     }, [isAnimatingMode]);
@@ -54,4 +76,3 @@ function CustomBinaryTreeVisualization({ rootNode, activeUuid, width, height, d3
     )
 }
 
-export default CustomBinaryTreeVisualization;

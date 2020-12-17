@@ -12,7 +12,7 @@ export default function NavDropdown() {
 
     return (
         <nav className="relative">
-            <button className={`btn ${dropdownOpen ? 'btn--primary' : 'btn--secondary'}`} onClick={handleDropdownClick}>Choose Data Structure</button>
+            <button className={`btn ${dropdownOpen ? 'btn--primary' : 'btn--secondary'}`} onClick={handleDropdownClick}>Choose Visualizer</button>
             <DropdownMenuOpener open={dropdownOpen}>
                 <NavDropdownMenu dropdownOpen={dropdownOpen} setDropdownOpen={setDropdownOpen} />
             </DropdownMenuOpener>

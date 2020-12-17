@@ -1,28 +1,28 @@
 import { useState, useEffect, useContext } from 'react';
 
-import AnimationContext from '../../../../../../contexts/AnimationContext';
-import { preOrderTraversalD3, generateD3Tree, addAnimationElement } from '../../../../../../functions/tree';
-import useAnimationControl from '../../../../../../hooks/useAnimationControl';
+import AnimationContext from '@contexts/AnimationContext';
+import { preOrderTraversalD3, generateD3Tree, addAnimationElement } from '@functions/tree';
+import useAnimationControl from '@hooks/useAnimationControl';
 
-import DropdownSelect from '../../../../../dropdown/DropdownSelect';
-import SelectableDropdownItem from '../../../../../dropdown/SelectableDropdownItem';
+import DropdownSelect from '@components/dropdown/DropdownSelect';
+import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';
 import ControlSection from '@components/animations/controls/ControlSection';
-import CustomBinaryTreeAnimationElement from './CustomBinaryTreeAnimationElement';
+import TreeTraversalAnimationElement from '../visualization/TreeTraversalAnimationElement';
 
-export default function CustomBinaryTreeTraversalSection({ sectionCollapsed, rootNode }) {
+export default function TreeTraversalSection({ sectionCollapsed, drewTree, setDrewTree }) {
     const [traversalType, setTraversalType] = useState('Preorder');
     const { isAnimatingMode } = useContext(AnimationContext);
     const { animationProps, animationState, setAnimationState, handleRun, handlePause, handleSkipToEnd, handleReset, config, setConfig, setSteps } = useAnimationControl({
         initialProps: { xy: [50, 50] },
     });
 
-    console.log(animationProps);
-
     useEffect(() => {
-        if (rootNode && isAnimatingMode) {
-            setSteps(preOrderTraversalD3())
+        if (drewTree && isAnimatingMode) {
+            console.log('Recalculating steps!');
+            setSteps(preOrderTraversalD3());
+            setDrewTree(false);
         }
-    }, [rootNode, isAnimatingMode]);
+    }, [drewTree, isAnimatingMode]);
 
 
     return (
@@ -68,7 +68,7 @@ export default function CustomBinaryTreeTraversalSection({ sectionCollapsed, roo
             <ControlSection rootClass="mt-3" running={animationState === 'running'} handleRun={handleRun} handlePause={handlePause} handleSkipToEnd={handleSkipToEnd} handleReset={handleReset} config={config} setConfig={setConfig} />
             {
                 animationState ? (
-                    <CustomBinaryTreeAnimationElement animationProps={animationProps} />
+                    <TreeTraversalAnimationElement animationProps={animationProps} />
                 ) : null
             }
         </>

@@ -2,8 +2,7 @@ import ReactDOM from 'react-dom';
 
 import { animated } from '@react-spring/web';
 
-export default function CustomBinaryTreeAnimationElement({ animationProps }) {
-    console.log(animationProps);
+export default function TreeTraversalAnimationElement({ animationProps }) {
     return (
         ReactDOM.createPortal(
         <g id="animate-indicator" transform="translate(0, 30)">

@@ -87,7 +87,6 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             setAnimationState('running');
         }
 
-        console.log('yes!');
     }
 
 

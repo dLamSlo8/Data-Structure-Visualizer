@@ -264,6 +264,7 @@ export const preOrderTraversalD3 = () => {
     }
     
     let res = [];
+
     helper(d3Tree, res);
     return res;
 }
@@ -290,7 +291,6 @@ export const postOrderTraversal = (node, l) => {
     return JSON.stringify(res);
     
 }
-
 
 /**
  * Returns the level order traversal of a binary tree
@@ -422,7 +422,7 @@ export const styleActiveNode = (activeUuid) => {
     d3.select('g.nodes')
         .selectAll('g.node') // Styles active circle
         .each(function (datum) {
-            console.log(datum);
+            // console.log(datum);
             if (datum.data.uuid === activeUuid) {
                 d3.select(this).classed('active-node', true);
             }
@@ -478,8 +478,8 @@ export const drawD3Tree = (optimalWidth, optimalHeight) => {
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
-            console.log(d3.selectAll('#tree-svg > g')
-                .attr('transform', transform));
+            d3.selectAll('#tree-svg > g')
+                .attr('transform', transform);
 
         }))
 
@@ -545,7 +545,7 @@ export const setClickHandlers = (handleActiveNodeChange) => {
         .selectAll('g.node')
         .data(nodes)
         .on('click', function (_, datum) {
-            console.log(datum);
+            // console.log(datum);
             let activeNode = { 
                 uuid: datum.data.uuid,
                 current: datum.data.name    
@@ -574,11 +574,4 @@ export const addAnimationElement = () => {
     const tree = d3.select('#tree-svg > g');
 
     tree.append('animated.g');
-}
-
-export const initD3Tree = (node, width, height, clickHandler) => {
-    generateD3Tree(node, width, height);
-    drawD3Tree(width, height);
-    setClickHandlers(clickHandler);
-    styleActiveNode(node.uuid);
 }

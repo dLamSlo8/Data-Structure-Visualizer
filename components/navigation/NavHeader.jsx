@@ -5,6 +5,7 @@ import NavDropdown from './NavDropdown'; // Components
 
 import HelpIcon from '../../public/icons/help-circle.svg'; // Assets
 
+const INDEX_OF_PAGE_TYPE = 1;
 const INDEX_OF_PAGE_NAME = 2;
 
 /**
@@ -18,7 +19,8 @@ const capitalize = (str) => {
 export default function NavHeader() {
     const { pathname } = useRouter();
     
-    // Generate name through route segment.
+    // Generate name and type through route segments.
+    const pageType = pathname.split('/')[INDEX_OF_PAGE_TYPE];
     const pageName = pathname.split('/')[INDEX_OF_PAGE_NAME];
     const dataStructureName = pageName.split('-').map((word) => capitalize(word)).join(' ');
 
@@ -35,7 +37,7 @@ export default function NavHeader() {
                     </h1>
                 </li>
                 <li className="flex flex-col items-center">
-                    <h2 className="font-semibold text-gray-500">Current Data Structure</h2>
+                    <h2 className="font-semibold text-gray-500">Current {pageType === 'algorithms' ? 'Algorithm' : 'Data Structure'}</h2>
                     <div className="relative">
                         <p className="font-bold text-2xl">{dataStructureName}</p>
                         <button className="absolute -right-10 top-1/2 transform -translate-y-1/2" aria-label="More information">
