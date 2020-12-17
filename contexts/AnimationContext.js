@@ -6,7 +6,7 @@ const AnimationContext = createContext();
  * @state animating - Whether or not we are in animating mode.
  */
 export function AnimationContextProvider({ children }) {
-    const [isAnimatingMode, setAnimatingMode] = useState(false);
+    const [isAnimatingMode, setAnimatingMode] = useState(null);
 
     return (
         <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode }}>

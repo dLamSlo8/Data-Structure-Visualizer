@@ -116,10 +116,9 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
 
     /**
      * Effect
-     * Clears and resets animation when animating mode is turned off. When turned on,
-     * 
-     * Dependency reasoning
-     * 
+     * Clears and resets animation when animating mode is turned off. When turned on
+     * and steps are available, run animation. This is assuming that the only way to turn
+     * on animating mode is by 'playing' the animation.
      */
     useEffect(() => {
         if (!isAnimatingMode) {
@@ -133,31 +132,6 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             setAnimationState('running');
         }
     }, [isAnimatingMode, steps]);
-
-    // useEffect(() => {
-    //     console.log(stepDependencies);
-    //     if (stepDependencies.every((dependency) => dependency)) {
-    //         setSteps(stepGenerator());
-    //     }
-    // }, [...stepDependencies]);
-
-    // useEffect(() => {
-    //     if (currentStep === steps.length - 1) {
-            
-    //     }
-    // }, [currentStep]);
-
-    
-
-    // const animationProps = useSpring({
-    //     to: config.autoPlay ? (steps ? handleRunScript : initialProps) : (steps ? steps[currentStep] : initialProps), 
-    //     from: animationState === 'paused' ? steps[currentStep] : initialProps,
-    //     onStart: (animation) => console.log(animation)
-    // });
-
-    // console.log(animationProps);
-
-
 
     return { animationProps, setSteps, config, setConfig, animationState, setAnimationState, handleRun, handleRunScript, handlePause, handleSkipToEnd, handleReset };
 }                

@@ -54,8 +54,15 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
      * Removes click handlers when in animating mode
      */
     useEffect(() => {
-        if (isAnimatingMode) {
-            removeClickHandlers();
+        if (isAnimatingMode !== null) {
+            if (isAnimatingMode) {
+                console.log('animating, so removing click handlers');
+                removeClickHandlers();
+            }
+            else {
+                console.log('no longer animating, so add click handlers');
+                setClickHandlers(handleActiveNodeChange);
+            }
         }
     }, [isAnimatingMode]);
 
