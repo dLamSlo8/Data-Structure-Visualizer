@@ -7,6 +7,11 @@ module.exports = {
             test: /\.svg$/,
             use: ['@svgr/webpack']
         });
+
+        config.module.rules.push({
+            test: /react-spring/,
+            sideEffects: true
+        });
     
         // Important: return the modified config
         return config;
