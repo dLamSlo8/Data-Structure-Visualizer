@@ -1,12 +1,19 @@
-import { useEffect, useContext } from 'react';
+import { useEffect, useContext, useRef } from 'react';
 
+import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
-import { initD3Tree, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@functions/tree';
+import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers, preOrderTraversalD3 } from '@functions/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
+import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
-export default function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode, setDrewTree }) {
-    const { isAnimatingMode } = useContext(AnimationContext);
+export default function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode, drewTree, setDrewTree }) {
+    const { isAnimatingMode, animationState  } = useContext(AnimationContext);
+    const animationElementRef = useRef(null);
+    const { animationProps, setSteps } = useAnimationControl({
+        initialProps: { xy: [50, 50] },
+    }); // TO-DO: Maintain initialProps through a ref that will change based on pan and zoom of canvas! There's currently a bug where when we pan and zoom, then reset the animation, it will always be at [50, 50]!
+
 
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
@@ -20,7 +27,7 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
     useEffect(() => {
         if (rootNode) {
             generateD3Tree(rootNode, width, height);
-            drawD3Tree(width, height);
+            drawD3Tree(width, height, animationElementRef);
             setClickHandlers(handleActiveNodeChange);
 
             if (rootNode.left === null && rootNode.right === null) {
@@ -56,21 +63,39 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
     useEffect(() => {
         if (isAnimatingMode !== null) {
             if (isAnimatingMode) {
-                console.log('animating, so removing click handlers');
                 removeClickHandlers();
             }
             else {
-                console.log('no longer animating, so add click handlers');
                 setClickHandlers(handleActiveNodeChange);
             }
         }
     }, [isAnimatingMode]);
+
+    /**
+     * Effect
+     * Whenever animating mode is turned on and iff there is a new tree to be drawn,
+     * generate the steps for this new tree and toggle off drewTree such that if animating
+     * mode is toggled on and off and the tree hasn't changed, nothing will happen (as
+     * the steps are the exact same. This is great for performance as we don't need
+     * to do expensive calculations each time we turn on animating mode.)
+     */
+    useEffect(() => {
+        if (drewTree && isAnimatingMode) {
+            setSteps(preOrderTraversalD3());
+            setDrewTree(false);
+        }
+    }, [drewTree, isAnimatingMode]);
 
     return (
         rootNode ? (
             <VisualizationLayout>
                 <div id="tree">
                 </div>
+                {
+                    animationState ? (
+                        <TreeTraversalAnimationElement animationProps={animationProps} transform={animationElementRef.current} />
+                    ) : null
+                }
             </VisualizationLayout>
         ) : (
             <div className="h-full flex flex-col justify-center items-center px-20">

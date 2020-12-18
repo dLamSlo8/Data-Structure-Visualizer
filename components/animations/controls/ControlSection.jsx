@@ -11,8 +11,10 @@ import RightsIcon from '../../../public/icons/chevrons-right.svg';
 
 import Button from '../../Button';
 
-export default function ControlSection({ running, handleReset, handleStepBack, handlePause, handleRun, handleStepForward, handleSkipToEnd, config, setConfig, extraSettings, rootClass }) {
-    const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
+export default function ControlSection({ extraSettings, rootClass }) {
+    const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
+
+    const running = animationState === 'running';
 
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
@@ -33,10 +35,10 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
         setAnimatingMode(true);
 
         if (running) {
-            handlePause();
+            animationMethodsRef.current.handlePause();
         }
         else {
-            handleRun();
+            animationMethodsRef.current.handleRun();
         }
     }
 
@@ -50,8 +52,8 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
             <h4 className={` font-semibold text-lg ${isAnimatingMode ? 'text-white' : 'text-gray-500'} mb-1`}>Controls</h4>
             <div className={`p-5 border border-gray-400 rounded-lg ${isAnimatingMode ? 'bg-white' : ''}`}>
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
-                    <Button type="button" onClick={handleReset}><ResetIcon /></Button>
-                    <Button type="button" onClick={handleStepBack}><LeftIcon /></Button>
+                    <Button type="button" onClick={animationMethodsRef.current.handleReset}><ResetIcon /></Button>
+                    {/* <Button type="button" onClick={handleStepBack}><LeftIcon /></Button> */}
                     <Button type="button" onClick={handlePlayPauseClick}>
                         {
                             running ? (
@@ -61,8 +63,8 @@ export default function ControlSection({ running, handleReset, handleStepBack, h
                             )
                         }
                     </Button>
-                    <Button type="button" onClick={handleStepForward}><RightIcon /></Button>
-                    <Button type="button" onClick={handleSkipToEnd}><RightsIcon /></Button>
+                    {/* <Button type="button" onClick={handleStepForward}><RightIcon /></Button> */}
+                    <Button type="button" onClick={animationMethodsRef.current.handleSkipToEnd}><RightsIcon /></Button>
                 </section>
                 <section className="relative mt-3">
 

@@ -459,7 +459,7 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
  * @param optimalWidth - width of frame
  * @param optimalHeight - height of frame
  */
-export const drawD3Tree = (optimalWidth, optimalHeight) => {
+export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
     const canvas = d3.select('#tree')
@@ -478,6 +478,7 @@ export const drawD3Tree = (optimalWidth, optimalHeight) => {
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
+            animationElementRef.current = transform;
             d3.selectAll('#tree-svg > g')
                 .attr('transform', transform);
 
@@ -570,8 +571,3 @@ export const removeClickHandlers = () => {
         .on('click', null);
 }
 
-export const addAnimationElement = () => {
-    const tree = d3.select('#tree-svg > g');
-
-    tree.append('animated.g');
-}

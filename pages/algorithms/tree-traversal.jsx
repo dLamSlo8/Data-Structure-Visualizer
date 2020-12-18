@@ -12,7 +12,7 @@ export default function TreeTraversal() {
     const [rootNode, setRootNode] = useState(null);
     const [drewTree, setDrewTree] = useState(false);
     const [activeNode, setActiveNode] = useState(null);
-
+    
     useEffect(() => {
         return () => {
             resetD3Tree();
@@ -38,6 +38,7 @@ export default function TreeTraversal() {
             width={width} 
             height={height} 
             setActiveNode={setActiveNode}
+            drewTree={drewTree}
             setDrewTree={setDrewTree} />)}
             visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
             The selected node is highlighted blue." />

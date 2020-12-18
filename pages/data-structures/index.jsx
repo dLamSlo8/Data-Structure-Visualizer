@@ -1,9 +1,9 @@
 import Head from 'next/head'; // Next-specific
 
-import NavSection from '@components/pages/data-structures'; // Page-specific
-import NavSectionItem from '@components/pages/data-structures';
+import NavSection from '@components/navigation/NavSection'; // Page-specific
+import NavSectionItem from '@components/navigation/NavSectionItem';
 
-import BinarySearchTreeIcon from '../public/icons/binary-search-tree.svg'; // Assets
+import BinarySearchTreeIcon from '@icons/binary-search-tree.svg'; // Assets
 export default function DataStructures() {
     return (
     <>

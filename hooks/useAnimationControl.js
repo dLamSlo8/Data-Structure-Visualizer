@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
 import { Controller, useSpring, config } from '@react-spring/web';
 
 import AnimationContext from '@contexts/AnimationContext';
@@ -11,23 +11,16 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function useAnimationControl({ stepGenerator, initialProps, initConfig }) {
-    const { isAnimatingMode } = useContext(AnimationContext);
+export default function useAnimationControl({ initialProps, initConfig }) {
+    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
-    const [animationState, setAnimationState] = useState(null);
-    const [config, setConfig] = useState(initConfig ?? { 
-        animationsOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
-        autoPlay: true, 
-        animationSpeed: 1000
-    });
 
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
         from: initialProps
     }));
-    console.log(animationProps);
-
+    console.log(animationState);
     /**
      * React-spring script for running an animation from its current step to the end.
      */
@@ -38,7 +31,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             await next({ xy: [x, y], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
-
+        console.log('done running!');
         setAnimationState('finished');
         setCurrentStep(0);
     }
@@ -68,6 +61,8 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     }
 
     const handleSkipToEnd = () => {
+        console.log('handling skip to end');
+        console.log(steps);
         setAnimation({ to: handleSkipRun });
         setCurrentStep(0);
         setAnimationState('finished');
@@ -80,8 +75,13 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     }
 
     const handleRun = () => {
+        console.log(steps);
+        console.log(animationState);
+        console.log(currentStep);
         if (steps) {
+            console.log(animationState);
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
+                console.log('finished!!');
                 setAnimation({ to: handleResetAndRunScript });
             }
             else {
@@ -90,7 +90,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             setAnimationState('running');
         }
 
-    }
+    };
 
 
     const handlePause = () => {
@@ -99,7 +99,7 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
     }
 
 
-    
+
     // useEffect(() => {
     //     if (steps) {
     //         // for (let idx = 0; idx < steps.length; idx++) {
@@ -127,11 +127,16 @@ export default function useAnimationControl({ stepGenerator, initialProps, initC
             setCurrentStep(0);
         }
         else if (isAnimatingMode && steps) {
-            setAnimation({ to: initialProps, immediate: true })
+            console.log(steps);
+            setAnimation({ to: initialProps, config: { duration: 0 } })
             setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
             setAnimationState('running');
         }
     }, [isAnimatingMode, steps]);
+    
+    // Update animation methods to be used elsewhere.
+    animationMethodsRef.current = { handleRun, handlePause, handleSkipToEnd, handleReset, setSteps };
+    console.log(animationMethodsRef.current);
 
-    return { animationProps, setSteps, config, setConfig, animationState, setAnimationState, handleRun, handleRunScript, handlePause, handleSkipToEnd, handleReset };
+    return { animationProps, setSteps };
 }                
