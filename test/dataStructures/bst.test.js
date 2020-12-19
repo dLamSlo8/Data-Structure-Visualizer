@@ -1,5 +1,5 @@
-import { insertNode, deleteNode, findNode } from "../../functions/dataStructures/bst.js";
-import { Node } from "../../functions/dataStructures/bst.js";
+import { insertNode, deleteNode, findNode } from "../../functions/dataStructures/helper/bst.js";
+import { Node } from "../../functions/dataStructures/helper/bst.js";
 
 describe("Test insertNode function", () => {
     it ("Should create a new node if tree does not exist", () => {

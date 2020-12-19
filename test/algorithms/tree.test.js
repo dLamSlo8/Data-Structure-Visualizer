@@ -1,5 +1,5 @@
-import {nodeToString, parseTree, replaceNodeValue, updateId, inOrderTraversal, preOrderTraversal, postOrderTraversal, levelOrderTraversal, deleteSubtree, addNode} from "../../functions/algorithms/tree.js";
-import {Node} from "../../functions/algorithms/tree.js";
+import {nodeToString, parseTree, replaceNodeValue, updateId, inOrderTraversal, preOrderTraversal, postOrderTraversal, levelOrderTraversal, deleteSubtree, addNode} from "../../functions/algorithms/helper/tree.js";
+import {Node} from "../../functions/algorithms/helper/tree.js";
 
 describe("Test parseTree function", () => {
     it ("Should throw an error for non binary tree", () => {
