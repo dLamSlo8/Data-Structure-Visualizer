@@ -182,6 +182,13 @@ describe ("Test inorder traversal", () => {
 
 describe ("Test preorder traversal", () => {
     it ("Should give proper preorder traversal", () => {
+        var input = null;
+
+        var expected = "[]";
+        
+        var result = preOrderTraversal(input);
+        expect(result).toBe(expected);
+
         var input = new Node(1);
         input.right = new Node(2);
         input.right.left = new Node(3);
@@ -207,6 +214,13 @@ describe ("Test preorder traversal", () => {
 
 describe ("Test postorder traversal", () => {
     it ("Should give proper postorder traversal", () => {
+        var input = null;
+
+        var expected = "[]";
+        
+        var result = postOrderTraversal(input);
+        expect(result).toBe(expected);
+
         var input = new Node(1);
         input.right = new Node(2);
         input.right.left = new Node(3);
