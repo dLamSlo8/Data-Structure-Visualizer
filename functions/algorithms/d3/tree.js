@@ -210,3 +210,9 @@ export const addAnimationElement = () => {
 
   tree.append('animated.g');
 }
+
+export const removeClickHandlers = () => {
+  d3.select('g.nodes')
+      .selectAll('g.node')
+      .on('click', null);
+}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { resetD3Tree } from '@functions/tree';
+import { resetD3Tree } from '@functions/algorithms/d3/tree';
 
 import DataStructureLayout from '@components/layouts/DataStructureLayout';
 import TreeTraversalActions from '@components/pages/algorithms/tree-traversal/actions/TreeTraversalActions'
