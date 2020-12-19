@@ -232,6 +232,13 @@ describe ("Test postorder traversal", () => {
 
 describe ("Test level order traversal", () => {
     it ("Should give proper level order traversal", () => {
+        var input = null;
+
+        var expected = "[]";
+        
+        var result = levelOrderTraversal(input);
+        expect(result).toBe(expected);
+
         var input = new Node(1);
         input.right = new Node(2);
         input.right.left = new Node(3);
