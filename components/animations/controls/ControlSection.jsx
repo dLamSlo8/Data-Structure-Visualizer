@@ -1,15 +1,16 @@
 import { useContext } from 'react';
 
-import AnimationContext from '../../../contexts/AnimationContext';
+import AnimationContext from '@contexts/AnimationContext';
 
-import ResetIcon from '../../../public/icons/rotate-ccw.svg';
-import LeftIcon from '../../../public/icons/chevron-left.svg';
-import PlayIcon from '../../../public/icons/play-circle.svg';
-import PauseIcon from '../../../public/icons/pause-circle.svg';
-import RightIcon from '../../../public/icons/chevron-right.svg';
-import RightsIcon from '../../../public/icons/chevrons-right.svg';
+import ResetIcon from '@icons/rotate-ccw.svg';
+import LeftIcon from '@icons/chevron-left.svg';
+import PlayIcon from '@icons/play-circle.svg';
+import PauseIcon from '@icons/pause-circle.svg';
+import RightIcon from '@icons/chevron-right.svg';
+import RightsIcon from '@icons/chevrons-right.svg';
 
-import Button from '../../Button';
+import Button from '@components/Button';
+import RangeSlider from './RangeSlider';
 
 export default function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
@@ -95,6 +96,18 @@ export default function ControlSection({ extraSettings, rootClass }) {
                                 <p className="absolute top-0 w-full h-full flex items-center p-4 rounded-lg bg-white bg-opacity-95 shadow-main font-bold text-sm">You may only modify settings when auto-animation is paused/reset.</p>
                             )
                         }
+                    </div>
+                    <div className="flex flex-col md:flex-row space-y-3 md:space-y-0">
+                        <div className="w-1/2 md:pr-5">
+                            <h6>Animation Speed</h6>
+                            <RangeSlider 
+                            min={0}
+                            max={5} />
+                        </div>
+                        <div className="w-1/2">
+                            <h6>Current Step</h6>
+                            
+                        </div>
                     </div>
                     {extraSettings}
                 </section>  
