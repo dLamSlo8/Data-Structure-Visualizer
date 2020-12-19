@@ -8,9 +8,9 @@ import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
 export default function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode, drewTree, setDrewTree }) {
-    const { isAnimatingMode, animationState  } = useContext(AnimationContext);
+    const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
     const animationElementRef = useRef(null);
-    const { animationProps, setSteps } = useAnimationControl({
+    const { animationProps } = useAnimationControl({
         initialProps: { xy: [50, 50] },
     }); // TO-DO: Maintain initialProps through a ref that will change based on pan and zoom of canvas! There's currently a bug where when we pan and zoom, then reset the animation, it will always be at [50, 50]!
 
@@ -39,7 +39,9 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
                     right: ''
                 });
             }
-            setDrewTree(true);
+            if (!updateStepsRef.current) {
+                updateStepsRef.current = true;
+            }
         }
     }, [rootNode]);
 
@@ -71,20 +73,7 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
         }
     }, [isAnimatingMode]);
 
-    /**
-     * Effect
-     * Whenever animating mode is turned on and iff there is a new tree to be drawn,
-     * generate the steps for this new tree and toggle off drewTree such that if animating
-     * mode is toggled on and off and the tree hasn't changed, nothing will happen (as
-     * the steps are the exact same. This is great for performance as we don't need
-     * to do expensive calculations each time we turn on animating mode.)
-     */
-    useEffect(() => {
-        if (drewTree && isAnimatingMode) {
-            setSteps(preOrderTraversalD3());
-            setDrewTree(false);
-        }
-    }, [drewTree, isAnimatingMode]);
+
 
     return (
         rootNode ? (

@@ -8,7 +8,10 @@
     "start": "next start",
     "watch:css": "postcss styles/tailwind.css -o styles/index.css -w",
     "build:css": "postcss styles/tailwind.css -o styles/index.css",
-    "purge:css": "set NODE_ENV=production&&npm run build:css"
+    "purge:css": "set NODE_ENV=production&&npm run build:css",
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:server": "cross-env BUNDLE_ANALYZE=server next build",
+    "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build"
   },
   "dependencies": {
     "@react-spring/web": "^9.0.0-rc.3",
@@ -19,6 +22,7 @@
     "postcss": "^8.1.10",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-draggable": "^4.4.3",
     "react-spring": "9.0.0-rc.3",
     "react-transition-group": "^4.4.1",
     "sass": "^1.29.0",
@@ -26,7 +30,9 @@
     "uuid": "^8.3.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^10.0.3",
     "@svgr/webpack": "^5.5.0",
+    "cross-env": "^7.0.3",
     "husky": "^5.0.4"
   }
 }

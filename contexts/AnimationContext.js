@@ -4,7 +4,7 @@ const AnimationContext = createContext();
 
 /**
  * @state isAnimatingMode - Whether or not we are in animating mode.
- * @state 
+ * @state updateStepsRef - Ref value that represents whether steps should be updated.
  */
 export function AnimationContextProvider({ children }) {
     const [isAnimatingMode, setAnimatingMode] = useState(null);
@@ -12,12 +12,14 @@ export function AnimationContextProvider({ children }) {
     const [isMounted, setIsMounted] = useState(false);
     const [config, setConfig] = useState({});
     const animationMethodsRef = useRef(null);
+    const stepGeneratorRef = useRef(null);
+    const updateStepsRef = useRef(false); //
 
     useEffect(() => {
         setIsMounted(true);
     }, []);
 
-    useEffect(() => {
+    useEffect(() => { // Need to wait for component to be mounted to check window!
         if (isMounted) {
             setConfig({
                 animationsOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
@@ -28,7 +30,7 @@ export function AnimationContextProvider({ children }) {
     }, [isMounted]);
      
     return (
-        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, setAnimationState, config, setConfig }}>
+        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, animationMethodsRef, stepGeneratorRef, updateStepsRef, animationState, setAnimationState, config, setConfig }}>
             {children}
         </AnimationContext.Provider>
     )

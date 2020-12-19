@@ -229,6 +229,27 @@ export const inOrderTraversal = (node) => {
     return JSON.stringify(res);
 }
 
+export const inOrderTraversalD3 = () => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+
+        if (node.children) {
+            helper(node.children[0], l);
+        }
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[1], l);
+        }
+    }
+    
+    let res = [];
+
+    helper(d3Tree, res);
+    return res;
+}
+
 /**
  * Returns the preorder traversal of a binary tree
  * @param node - root node of the tree structure
@@ -250,6 +271,10 @@ export const preOrderTraversal = (node, l) => {
     return JSON.stringify(res);
 }
 
+/**
+ * Returns the preorder traversal of a d3 tree
+ * 
+ */
 export const preOrderTraversalD3 = () => {
     function helper(node, l) {
         if (!node.data.name) { 
@@ -289,7 +314,25 @@ export const postOrderTraversal = (node, l) => {
     var res = []
     helper(node, res);
     return JSON.stringify(res);
+}
+
+export const postOrderTraversalD3 = () => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
+
+        l.push({ x: node.x, y: node.y });
+    }
     
+    let res = [];
+
+    helper(d3Tree, res);
+    return res;
 }
 
 /**
