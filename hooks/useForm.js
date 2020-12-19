@@ -23,7 +23,6 @@ export default ({ initValues, validationRules }) => {
             let inputRules = validationRules[name];
 
             for (let rule of inputRules) {
-                console.log(rule.test(formData[name], formData))
                 if (!rule.test(formData[name], formData)) {
                     newErrorMapping[name] = rule.error;
                     hasError = true;
@@ -41,7 +40,6 @@ export default ({ initValues, validationRules }) => {
         e.preventDefault();
         
         if (validationRules) { // If no rules, no validate.
-            console.log('validating');
             if (validate()) {
                 handleSubmitSuccess();
             }

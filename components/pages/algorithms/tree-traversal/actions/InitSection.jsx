@@ -1,10 +1,10 @@
 
-import Form from '../../../forms/Form';
-import FormInput from '../../../forms/FormInput';
-import Button from '../../../Button';
+import Form from '@components/forms/Form';
+import FormInput from '@components/forms/FormInput';
+import Button from '@components/Button';
 
 // Responsibility: Render and handle form data. 
-export default function CustomBinaryTreeInitForm({ handleInit }) {
+export default function InitSection({ handleInit }) {
     return (
         <Form
         initValues={{ rootValue: '' }}

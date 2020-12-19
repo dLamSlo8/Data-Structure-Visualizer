@@ -10,7 +10,6 @@ export default function Form({ initValues, validationRules, children, handleSucc
     });
 
     useEffect(() => {
-        console.log('updating initValues');
         setFormData({ ...initValues });
     }, [initValues]);
 

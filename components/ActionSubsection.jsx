@@ -51,9 +51,7 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
                 <CSSTransition
                 in={!collapsed}
                 timeout={300}
-                {...cssTransitionLifecycle}
-               
-                >
+                {...cssTransitionLifecycle}>
                     <div className="section-scroll">
                         <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
                         {

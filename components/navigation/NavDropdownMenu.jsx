@@ -38,21 +38,21 @@ export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
                     <li>
                         <DropdownItem 
                         icon={<BinaryTreeIcon />} 
-                        title="Trees" 
+                        title="Data Structures" 
                         hasNestedDropdown
-                        handleClick={() => setActiveList('trees')} />
+                        handleClick={() => setActiveList('data-structures')} />
                     </li>
                     <li>
                         <DropdownItem 
                         icon={<BinaryTreeIcon />} 
-                        title="Graphs" 
+                        title="Algorithms" 
                         hasNestedDropdown
-                        handleClick={() => setActiveList('graphs')} />
+                        handleClick={() => setActiveList('algorithms')} />
                     </li>
                 </DropdownMenu>
             </CSSTransition>
             <CSSTransition
-            in={activeList === 'trees'}
+            in={activeList === 'algorithms'}
             timeout={300}
             onEnter={calcHeight}
             classNames="fade-side-reverse"
@@ -61,22 +61,44 @@ export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
                     <li>
                         <DropdownItem 
                         isReturn
-                        title="Back to Data Structure Types"
+                        title="Back to Choose Visualizer Type"
                         handleClick={() => setActiveList('init')}
                         rootClass="bg-gray-500" />
                     </li>
                     <NavDropdownItem 
                     icon={<BinaryTreeIcon />} 
-                    title="Binary Tree" 
+                    title="Tree Traversal" 
                     isLink
-                    linkProps={{ href: '/trees/binary-tree' }}
+                    linkProps={{ href: '/algorithms/tree-traversal' }}
                     handleClick={() => setDropdownOpen(false)} />
-                    <NavDropdownItem 
+                    {/* <NavDropdownItem 
                     icon={<BinarySearchTreeIcon />} 
                     title="Binary Search Tree" 
                     isLink
                     linkProps={{ href: '/trees/binary-search-tree' }}
-                    handleClick={(e) => setDropdownOpen(false)} />
+                    handleClick={(e) => setDropdownOpen(false)} /> */}
+                </DropdownMenu>
+            </CSSTransition>
+            <CSSTransition
+            in={activeList === 'data-structures'}
+            timeout={300}
+            onEnter={calcHeight}
+            classNames="fade-side-reverse"
+            unmountOnExit>
+                <DropdownMenu>
+                    <li>
+                        <DropdownItem 
+                        isReturn
+                        title="Back to Choose Visualizer Type"
+                        handleClick={() => setActiveList('init')}
+                        rootClass="bg-gray-500" />
+                    </li>
+                    <NavDropdownItem 
+                    icon={<BinaryTreeIcon />} 
+                    title="Binary Search Tree" 
+                    isLink
+                    linkProps={{ href: '/data-structures/binary-search-tree' }}
+                    handleClick={() => setDropdownOpen(false)} />
                 </DropdownMenu>
             </CSSTransition>
         </div>

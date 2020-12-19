@@ -1,14 +1,14 @@
-import { Node, addNode, replaceNodeValue, deleteSubtree, preOrderTraversalD3 } from '../../../../functions/tree';
+import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/tree';
 
-import useAnimationControl from '../../../../hooks/useAnimationControl';
+import useAnimationControl from '@hooks/useAnimationControl';
 
-import CustomBinaryTreeInitForm from './CustomBinaryTreeInitForm';
-import CustomBinaryTreeManageForm from './CustomBinaryTreeManageForm';
-import CustomBinaryTreeTraversalSection from './custom-binary-tree/traversals/CustomBinaryTreeTraversalSection';
-import ActionSubsection from '../../../ActionSubsection';
+import InitSection from './InitSection';
+import ManageSection from './ManageSection';
+import TraversalSection from './TraversalSection';
+import ActionSubsection from '@components/ActionSubsection';
 
 // Responsibility: Render and handle actions for custom binary tree.
-export default function CustomBinaryTreeActions({ rootNode, activeNode, setRootNode, setActiveNode, d3Tree }) {
+export default function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode, drewTree, setDrewTree }) {
     const handleInit = (value) => {
         let root = new Node(parseInt(value));
 
@@ -22,7 +22,6 @@ export default function CustomBinaryTreeActions({ rootNode, activeNode, setRootN
     }
 
     const handleUpdateValue = (value) => {
-        console.log(value);
         setRootNode(replaceNodeValue(rootNode, parseInt(value), activeNode.uuid));
     }
 
@@ -50,14 +49,14 @@ export default function CustomBinaryTreeActions({ rootNode, activeNode, setRootN
             sectionDescription="Here you can create, update, and delete tree nodes.">
                 {
                     rootNode ? (
-                        <CustomBinaryTreeManageForm 
+                        <ManageSection
                         activeNode={activeNode}
                         handleUpdateValue={handleUpdateValue}
                         handleAddLeft={generateHandleAddChildren({ isLeft: true })}
                         handleAddRight={generateHandleAddChildren({ isLeft: false })}
                         handleDeleteNode={handleDeleteNode} />
                     ) : (
-                        <CustomBinaryTreeInitForm handleInit={handleInit} />
+                        <InitSection handleInit={handleInit} />
                     )
                 }
             </ActionSubsection>
@@ -66,11 +65,11 @@ export default function CustomBinaryTreeActions({ rootNode, activeNode, setRootN
             sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation.">
                 {
                     rootNode ? (
-                        <CustomBinaryTreeTraversalSection d3Tree={d3Tree} />
+                        <TraversalSection rootNode={rootNode} drewTree={drewTree} setDrewTree={setDrewTree} />
                     ) : (
                         <div className="mt-8">
                             <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
-                            <p className="font-semibold text-gray-500">You must have initialized the tree to simulate traversals.</p>
+                            <p className="font-semibold text-gray-500">Tree must be non-empty in order to simulate traversals.</p>
                         </div>
                     )
                 }

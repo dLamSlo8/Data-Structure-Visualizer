@@ -1,11 +1,11 @@
 import { useMemo } from 'react';
 
-import Form from '../../../forms/Form';
-import FormInput from '../../../forms/FormInput';
-import Button from '../../../Button';
+import Form from '@components/forms/Form';
+import FormInput from '@components/forms/FormInput';
+import Button from '@components/Button';
 
 // Responsibility: Render and handle form data. Doesn't care about the parent. Just calls the callbacks. Remember, Actions will handle data.
-export default function CustomBinaryTreeManageForm({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
+export default function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
     const currentFormValue = useMemo(() => (activeNode ? {
         current: `${activeNode.current}`,
     } : null), [activeNode]);
