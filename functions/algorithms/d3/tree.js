@@ -8,26 +8,25 @@ export const resetD3Tree = () => {
 };
 
 /**
- * Going to need comments on this, not sure how node has x and children attributes,
- * our defined node does not include, is this something we need to add?
- * @param {*} node 
+ * @returns {Array} Preorder traversal of the current d3tree
  */
-export const preOrderTraversalD3 = (node) => {
-  function helper(node, l) {
-      if (!node) { // Node will be undefined
-          return;
-      }
-      
-      l.push({ x: node.x, y: node.y });
-      if (node.children) {
-          helper(node.children[0], l);
-          helper(node.children[1], l);
-      }
-  }
-  
-  let res = [];
-  helper(node, res);
-  return res;
+export const preOrderTraversalD3 = () => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+        
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
+    }
+    
+    let res = [];
+
+    helper(d3Tree, res);
+    return res;
 }
 
 
@@ -56,11 +55,9 @@ export const nodeToD3 = (node) => {
 * @param activeUuid - Uuid of active node
 */
 export const styleActiveNode = (activeUuid) => {
-  console.log('styling active');
   d3.select('g.nodes')
       .selectAll('g.node') // Styles active circle
       .each(function (datum) {
-          console.log(datum);
           if (datum.data.uuid === activeUuid) {
               d3.select(this).classed('active-node', true);
           }
@@ -87,100 +84,96 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
   const height = hierarchyNode.height * 100;
 
   const tree = d3.tree().size([width, height])(d3.hierarchy(data));
-  return tree;
+  
+  d3Tree = tree;
 }
 
 /**
-* Draws tree for #tree selector.
-* @param node - root node of the tree structure
-* @param optimalWidth - width of frame
-* @param optimalHeight - height of frame
-*/
-export const drawD3Tree = (tree, optimalWidth, optimalHeight) => {
-  d3.select('#tree-svg').remove(); // Remove previous tree if any. 
+ * Draws tree for #tree selector.
+ * @param optimalWidth - width of frame
+ * @param optimalHeight - height of frame
+ * @param animationElementRef - ref to keep track of transform for traversal animation element
+ */
+export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => {
+    d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
-  const canvas = d3.select('#tree')
-      .append('svg')
-      .attr('id', 'tree-svg')
-      .attr('cursor', 'grab')
-      .attr('width', optimalWidth)
-      .attr('height', optimalHeight)
-      .append('g')
-      .attr('transform', 'translate(0, 30)');
+    const canvas = d3.select('#tree')
+        .append('svg')
+        .attr('id', 'tree-svg')
+        .attr('cursor', 'grab')
+        .attr('width', optimalWidth)
+        .attr('height', optimalHeight)
+        .append('g')
+        .attr('transform', 'translate(0, 30)');
 
-  d3.select('#tree-svg').call(d3.zoom()
-      .extent([[0, 0], [optimalWidth, optimalHeight + 50]])
-      .scaleExtent([0.5, 8])
-      .filter(function filter(event) {
-          return document.documentElement.clientWidth <= 640 || event.shiftKey;
-      })
-      .on('zoom', function zoomed({transform}) {
-          d3.select('#tree-svg g')
-              .attr('transform', transform);
-      }))
+    d3.select('#tree-svg').call(d3.zoom()
+        .extent([[0, 0], [optimalWidth, optimalHeight + 50]])
+        .scaleExtent([0.5, 8])
+        .filter(function filter(event) {
+            return document.documentElement.clientWidth <= 640 || event.shiftKey;
+        })
+        .on('zoom', function zoomed({transform}) {
+            animationElementRef.current = transform;
+            d3.selectAll('#tree-svg > g')
+                .attr('transform', transform);
 
-
-  canvas.append('g')
-      .attr('class', 'links');
-
-  canvas.append('g')
-      .attr('class', 'nodes');
-
-  const nodes = tree.descendants().filter((node) => node.data.name !== null);
-  const links = tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
-
-  canvas.select('g.links')
-      .selectAll('.link')
-      .data(links)
-      .enter()
-      .append('line')
-      .attr('class', 'link')
-      .attr('stroke', 'black')
-      .attr('class', 'link')
-      .attr('x1', function(d) {return d.source.x;})
-      .attr('y1', function(d) {return d.source.y;})
-      .attr('x2', function(d) {return d.target.x;})
-      .attr('y2', function(d) {return d.target.y;});
-  // Create individual nodes
-  const node = canvas.select('g.nodes')
-      .selectAll('.node') 
-      .data(nodes)
-      .enter()
-      .append('g')
-      .attr('class', 'node');
-
-  node.append('circle')
-      .attr('r', 20)
-      .attr('cx', function(d) { return d.x; })
-      .attr('cy', function(d) { return d.y; })
-      .attr('fill', 'white')
-      .attr('stroke', 'black')
-      .attr('stroke-width', '2');
-
-  node.append('text')
-      .text(function(d) { return d.data.name; })
-      .attr('x', function(d) { return d.x; })
-      .attr('y', function(d) { return d.y; })
-      .attr('text-anchor', 'middle')
-      .attr('dy', '6')
-      .attr('font-family', '"Lora", serif');
+        }))
 
 
-  return { nodes };
+    canvas.append('g')
+        .attr('class', 'links');
+
+    canvas.append('g')
+        .attr('class', 'nodes');
+
+    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
+    const links = d3Tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
+
+    canvas.select('g.links')
+        .selectAll('.link')
+        .data(links)
+        .enter()
+        .append('line')
+        .attr('class', 'link')
+        .attr('stroke', 'black')
+        .attr('class', 'link')
+        .attr('x1', function(d) {return d.source.x;})
+        .attr('y1', function(d) {return d.source.y;})
+        .attr('x2', function(d) {return d.target.x;})
+        .attr('y2', function(d) {return d.target.y;});
+    // Create individual nodes
+    const node = canvas.select('g.nodes')
+        .selectAll('.node') 
+        .data(nodes)
+        .enter()
+        .append('g')
+        .attr('class', 'node');
+
+    node.append('circle')
+        .attr('r', 20)
+        .attr('cx', function(d) { return d.x; })
+        .attr('cy', function(d) { return d.y; })
+        .attr('fill', 'white')
+        .attr('stroke', 'black')
+        .attr('stroke-width', '2');
+
+    node.append('text')
+        .text(function(d) { return d.data.name; })
+        .attr('x', function(d) { return d.x; })
+        .attr('y', function(d) { return d.y; })
+        .attr('text-anchor', 'middle')
+        .attr('dy', '6')
+        .attr('font-family', '"Lora", serif');
+
+
+    return { nodes };
 }
 
-export const drawD3TreeWithActiveNode = (tree, optimalWidth, optimalHeight, activeUuid) => {
-  drawD3Tree(tree, optimalWidth, optimalHeight);
-
-  styleActiveNode(activeUuid);
-}
 /**
-* 
-* @param tree - D3 tree
 * @param handleActiveNodeChange - Callback function for when active node changes
 */
-export const setClickHandlers = (tree, handleActiveNodeChange) => {
-  const nodes = tree.descendants().filter((node) => node.data.name !== null);
+export const setClickHandlers = (handleActiveNodeChange) => {
+  const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
 
   const circleNodes = d3.select('g.nodes') // Adds onClick listener!
       .selectAll('g.node')
