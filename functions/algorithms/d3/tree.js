@@ -1,5 +1,12 @@
 import * as d3 from 'd3';
 
+
+export let d3Tree = null;
+
+export const resetD3Tree = () => {
+    // d3Tree = null;
+};
+
 /**
  * Going to need comments on this, not sure how node has x and children attributes,
  * our defined node does not include, is this something we need to add?
