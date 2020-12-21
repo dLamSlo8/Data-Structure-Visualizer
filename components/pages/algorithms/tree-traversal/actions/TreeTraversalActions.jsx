@@ -1,6 +1,5 @@
 import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/tree';
-
-import useAnimationControl from '@hooks/useAnimationControl';
+import PropTypes from 'prop-types';
 
 import InitSection from './InitSection';
 import ManageSection from './ManageSection';
@@ -8,17 +7,12 @@ import TraversalSection from './TraversalSection';
 import ActionSubsection from '@components/ActionSubsection';
 
 // Responsibility: Render and handle actions for custom binary tree.
-export default function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode, drewTree, setDrewTree }) {
+function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode }) {
+    console.log(activeNode);
     const handleInit = (value) => {
         let root = new Node(parseInt(value));
 
         setRootNode(root);
-        setActiveNode({
-            uuid: root.uuid,
-            current: root.value,
-            left: '',
-            right: ''
-        });
     }
 
     const handleUpdateValue = (value) => {
@@ -65,7 +59,7 @@ export default function TreeTraversalActions({ rootNode, activeNode, setRootNode
             sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation.">
                 {
                     rootNode ? (
-                        <TraversalSection rootNode={rootNode} drewTree={drewTree} setDrewTree={setDrewTree} />
+                        <TraversalSection rootNode={rootNode} />
                     ) : (
                         <div className="mt-8">
                             <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
@@ -77,3 +71,17 @@ export default function TreeTraversalActions({ rootNode, activeNode, setRootNode
         </>
     )
 }
+
+TreeTraversalActions.propTypes = {
+    rootNode: PropTypes.instanceOf(Node),
+    setRootNode: PropTypes.func.isRequired,
+    activeNode: PropTypes.exact({
+        uuid: PropTypes.string.isRequired,
+        current: PropTypes.number.isRequired,
+        left: PropTypes.number,
+        right: PropTypes.number
+    }),
+    setActiveNode: PropTypes.func.isRequired
+};
+
+export default TreeTraversalActions;

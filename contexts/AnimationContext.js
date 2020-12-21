@@ -1,4 +1,5 @@
 import { createContext, useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 const AnimationContext = createContext();
 
@@ -35,5 +36,9 @@ export function AnimationContextProvider({ children }) {
         </AnimationContext.Provider>
     )
 }
+
+AnimationContextProvider.propTypes = {
+    children: PropTypes.node.isRequired
+};
 
 export default AnimationContext;

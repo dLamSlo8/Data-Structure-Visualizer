@@ -84,27 +84,10 @@ export default function useAnimationControl({ initialProps, initConfig }) {
 
     };
 
-
     const handlePause = () => {
         stopAnimation();
         setAnimationState('paused');
     }
-
-
-
-    // useEffect(() => {
-    //     if (steps) {
-    //         // for (let idx = 0; idx < steps.length; idx++) {
-    //         //     console.log(steps[idx]);
-    //         //     let { x, y } = steps[idx];
-
-    //         //     setAnimation({ xy: [x, y], delay: 1000 * idx });
-    //         // }        }
-    //         setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
-    //         setAnimationState('running');
-
-    //     }
-    // }, [steps]);
 
     /**
      * Effect

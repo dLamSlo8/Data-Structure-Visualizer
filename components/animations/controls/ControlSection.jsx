@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
 
@@ -12,7 +13,7 @@ import RightsIcon from '@icons/chevrons-right.svg';
 import Button from '@components/Button';
 import RangeSlider from './RangeSlider';
 
-export default function ControlSection({ extraSettings, rootClass }) {
+function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
 
     const running = animationState === 'running';
@@ -109,10 +110,17 @@ export default function ControlSection({ extraSettings, rootClass }) {
                             
                         </div>
                     </div>
-                    {extraSettings}
+                    {extraSettings ? extraSettings({ config, setConfig }) : null}
                 </section>  
             </div>
         </section>
 
     )
 }
+
+ControlSection.propTypes = {
+    extraSettings: PropTypes.func,
+    rootClass: PropTypes.string
+};
+
+export default ControlSection;

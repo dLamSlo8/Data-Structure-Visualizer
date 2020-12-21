@@ -9,8 +9,8 @@ const INDEX_OF_PAGE_TYPE = 1;
 const INDEX_OF_PAGE_NAME = 2;
 
 /**
- * 
- * @param {String} str - Input string to capitalize. 
+ * Capitalize the input string
+ * @param {String} str - Input string to capitalize
  */
 const capitalize = (str) => {
     return `${str[0].toUpperCase()}${str.slice(1)}`;

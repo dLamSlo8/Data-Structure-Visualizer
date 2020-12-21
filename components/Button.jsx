@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Function that returns the appropriate tailwind style class for the button.
@@ -22,12 +23,20 @@ const getStyleClass = (style) => {
     }
 }
 
-// Memoize for performance. Never really want this to rerender
-export default memo(function Button({ btnStyle, children, rootClass, ...btnProps }) {
-    
+function Button({ btnStyle, children, rootClass, ...btnProps }) {
     return (
         <button className={`${getStyleClass(btnStyle)} ${rootClass ?? ''}`} {...btnProps}>
             {children}
         </button>
     )
-})
+}
+
+Button.propTypes = {
+    btnStyle: PropTypes.string,
+    children: PropTypes.node.isRequired,
+    rootClass: PropTypes.string,
+    btnProps: PropTypes.object
+}
+
+// Memoize for performance. Never really want this to rerender
+export default memo(Button);

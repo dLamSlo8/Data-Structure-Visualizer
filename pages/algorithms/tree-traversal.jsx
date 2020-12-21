@@ -21,7 +21,6 @@ export default function TreeTraversal() {
     
     return (
         <DataStructureLayout
-        propagateDimensions
         actions={
             <TreeTraversalActions 
             rootNode={rootNode} 

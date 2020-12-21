@@ -1,4 +1,6 @@
-export default function FormInput({ label, inputProps: { type, name, value, onChange, ...restInputProps }, error, rootClass }) {
+import PropTypes from 'prop-types';
+
+function FormInput({ label, inputProps: { type, name, value, onChange, ...restInputProps }, error, rootClass }) {
     return (
         <div className={`relative flex ${type === 'checkbox' ? 'flex-row-reverse' : 'flex-col'} ${rootClass ?? ''}`}>
             <label className="font-semibold text-lg text-gray-500" htmlFor={name}>{label}</label>
@@ -20,3 +22,12 @@ export default function FormInput({ label, inputProps: { type, name, value, onCh
         
     )
 }
+
+FormInput.propTypes = {
+    label: PropTypes.string,
+    inputProps: PropTypes.object.isRequired,
+    error: PropTypes.string,
+    rootClass: PropTypes.string
+};
+
+export default FormInput;

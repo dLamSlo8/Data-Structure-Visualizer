@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import UpIcon from '../../public/icons/chevron-up.svg';
 import DownIcon from '../../public/icons/chevron-down.svg';
@@ -7,7 +8,7 @@ import DropdownMenu from './DropdownMenu';
 import DropdownMenuOpener from './DropdownMenuOpener';
 
 // Responsibility: Handle rendering and keeping local state for dropdown select
-export default function DropdownSelect({ title, defaultValue, children: listChildren, dropdownWrapperClass }) {
+function DropdownSelect({ title, defaultValue, dropdownWrapperClass, children: listChildren }) {
     const [open, setOpen] = useState(false);
     const [selectedItem, setSelectedItem] = useState(defaultValue);
 
@@ -36,3 +37,12 @@ export default function DropdownSelect({ title, defaultValue, children: listChil
         </>
     )
 }
+
+DropdownSelect.propTypes = {
+    title: PropTypes.string.isRequired,
+    defaultValue: PropTypes.any,
+    dropdownWrapperClass: PropTypes.string,
+    children: PropTypes.node.isRequired
+};
+
+export default DropdownSelect;

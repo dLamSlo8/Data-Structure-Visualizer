@@ -1,7 +1,9 @@
+import PropTypes from 'prop-types';
+
 import DropdownItem from '../dropdown/DropdownItem';
 
 // DropdownItem with extra styling based on whether it is selected/active
-export default function SelectableDropdownItem({ isSelected, ...props }) {
+function SelectableDropdownItem({ isSelected, ...props }) {
     return (
         <li className="relative"> 
             <DropdownItem {...props} handleClick={!isSelected ? props.handleClick : (e) => e.preventDefault()} rootClass={isSelected && 'border-2 border-primary pointer-events-none'} />
@@ -15,3 +17,10 @@ export default function SelectableDropdownItem({ isSelected, ...props }) {
         </li>
     )
 }
+
+SelectableDropdownItem.propTypes = {
+    isSelected: PropTypes.bool.isRequired,
+    props: PropTypes.object
+};
+
+export default SelectableDropdownItem;

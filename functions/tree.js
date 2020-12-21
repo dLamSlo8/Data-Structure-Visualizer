@@ -589,7 +589,7 @@ export const setClickHandlers = (handleActiveNodeChange) => {
         .selectAll('g.node')
         .data(nodes)
         .on('click', function (_, datum) {
-            // console.log(datum);
+            console.log(datum);
             let activeNode = { 
                 uuid: datum.data.uuid,
                 current: datum.data.name    
@@ -600,8 +600,8 @@ export const setClickHandlers = (handleActiveNodeChange) => {
                 activeNode.right = datum.children[1].data.name;
             }
             else {
-                activeNode.left = '';
-                activeNode.right = '';
+                activeNode.left = null;
+                activeNode.right = null;
             }
 
             handleActiveNodeChange(activeNode);

@@ -1,18 +1,19 @@
 import { useEffect, useContext, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
-import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers, preOrderTraversalD3 } from '@functions/tree';
+import { Node, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers, preOrderTraversalD3 } from '@functions/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
-export default function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode, drewTree, setDrewTree }) {
+function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
     const animationElementRef = useRef(null);
     const { animationProps } = useAnimationControl({
         initialProps: { xy: [50, 50] },
-    }); // TO-DO: Maintain initialProps through a ref that will change based on pan and zoom of canvas! There's currently a bug where when we pan and zoom, then reset the animation, it will always be at [50, 50]!
+    }); 
 
 
     const handleActiveNodeChange = (node) => {
@@ -35,10 +36,11 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
                 setActiveNode({
                     uuid: rootNode.uuid,
                     current: rootNode.value,
-                    left: '',
-                    right: ''
+                    left: null,
+                    right: null
                 });
             }
+
             if (!updateStepsRef.current) {
                 updateStepsRef.current = true;
             }
@@ -97,3 +99,12 @@ export default function TreeTraversalVisualization({ rootNode, activeUuid, width
     )
 }
 
+TreeTraversalVisualization.propTypes = {
+    rootNode: PropTypes.instanceOf(Node),
+    activeUuid: PropTypes.string.isRequired,
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired,
+    setActiveNode: PropTypes.func.isRequired
+};
+
+export default TreeTraversalVisualization;

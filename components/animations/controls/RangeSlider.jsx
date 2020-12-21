@@ -1,13 +1,9 @@
 import { useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 import Draggable from 'react-draggable';
 
-export default function RangeSlider({ value, setValue, min, max }) {
+function RangeSlider({ value, setValue, min, max }) {
     const sliderRef = useRef(null);
-
-    useEffect(() => {
-        console.log(sliderRef.current.offsetWidth);
-    }, []);
-
 
     return (
         <div className="relative cursor-grab" ref={sliderRef}>
@@ -17,10 +13,17 @@ export default function RangeSlider({ value, setValue, min, max }) {
             position={null}
             grid={[sliderRef.current ? sliderRef.current.offsetWidth / (max - min) : 0, sliderRef.current ? sliderRef.current.offsetWidth / (max - min) : 0]}
             bounds="parent">
-                <div className="w-2 h-6 bg-gray-400 rounded-sm">
-                    
-                </div>
+                <div className="w-2 h-6 bg-gray-400 rounded-sm" />
             </Draggable>
         </div>
     )
 }
+
+RangeSlider.propTypes = {
+    value: PropTypes.number,
+    setValue: PropTypes.func,
+    min: PropTypes.number.isRequired,
+    max: PropTypes.number.isRequired
+};
+
+export default RangeSlider;

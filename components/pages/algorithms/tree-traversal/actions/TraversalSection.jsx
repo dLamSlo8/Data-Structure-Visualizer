@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
 import { preOrderTraversalD3, inOrderTraversalD3, postOrderTraversalD3 } from '@functions/tree';
@@ -7,10 +8,9 @@ import DropdownSelect from '@components/dropdown/DropdownSelect';
 import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';
 import ControlSection from '@components/animations/controls/ControlSection';
 
-export default function TreeTraversalSection({ sectionCollapsed }) {
+function TreeTraversalSection({ sectionCollapsed }) {
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const [traversalType, setTraversalType] = useState('Preorder');
-    const [hasMounted, setHasMounted] = useState(false);
 
     useEffect(() => {
         if (traversalType === 'Preorder') {
@@ -69,3 +69,9 @@ export default function TreeTraversalSection({ sectionCollapsed }) {
         </>
     )
 }
+
+TreeTraversalSection.propTypes = {
+    sectionCollapsed: PropTypes.bool
+};
+
+export default TreeTraversalSection;
