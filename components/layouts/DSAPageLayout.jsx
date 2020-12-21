@@ -7,13 +7,17 @@ import AnimationContext from '../../contexts/AnimationContext';
 import CloseIcon from '../../public/icons/x-circle.svg';
 import Button from '../Button';
 
-function DataStructureLayout({ actions, visualization, visualizationDescription }) {
-    const [mounted, setMounted] = useState(false);
+// Responsibility: Render layout for every DSA page.
+function DSAPageLayout({ actions, visualization, visualizationDescription }) {
+    const [mounted, setMounted] = useState(false); 
     const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
-    const visualizationRef = useRef(null);
-    const actionsRef = useRef(null);
+    const visualizationRef = useRef(null); // Ref to get width and height of visualization section
+    const actionsRef = useRef(null); // Ref to get height of action section
 
-    // Need to wait for after initial mount to get ref information.
+    /**
+     * Effect  
+     * Update state when mounted to get current ref information
+     */ 
     useEffect(() => { 
         setMounted(true);
     }, []);
@@ -58,10 +62,10 @@ function DataStructureLayout({ actions, visualization, visualizationDescription 
     )
 }
 
-DataStructureLayout.propTypes = {
-    actions: PropTypes.node.isRequired,
-    visualization: PropTypes.func.isRequired,
-    visualizationDescription: PropTypes.string
+DSAPageLayout.propTypes = {
+    actions: PropTypes.node.isRequired, // Action child(s)
+    visualization: PropTypes.func.isRequired, // Visualization child(s)
+    visualizationDescription: PropTypes.string // Description of visualization to be rendered underneath Visualization header
 };
 
-export default DataStructureLayout;
+export default DSAPageLayout;

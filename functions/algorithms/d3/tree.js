@@ -59,7 +59,6 @@ export const inOrderTraversalD3 = (d3TreeRef) => {
  * @returns {Array} Postorder traversal in xy-coordinates
  */
 export const postOrderTraversalD3 = (d3TreeRef) => {
-    console.log('post it!');
     function helper(node, l) {
         if (!node.data.name) { 
             return;
@@ -114,23 +113,20 @@ export const styleActiveNode = (activeUuid) => {
                 d3.select(this).classed('active-node', false);
             }
         });
-
-
 }
 
 /**
-* Generates tree given rootNode.
+* Generates tree given rootNode
 * @param node - root node of the tree structure
-* @param optimalWidth - width of frame
+* @param width - width of canvas
 * @returns {Object} D3 tree
 */
-export const generateD3Tree = (rootNode, optimalWidth) => {
+export const generateD3Tree = (rootNode, width) => {
     const data = nodeToD3(rootNode);
 
     // Generate binary tree using d3.
 
     const hierarchyNode = d3.hierarchy((data));
-    const width = optimalWidth;
     const height = hierarchyNode.height * 100;
 
     const tree = d3.tree().size([width, height])(d3.hierarchy(data));
@@ -140,33 +136,34 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
 
 /**
  * Draws tree for #tree selector.
- * @param optimalWidth - width of frame
- * @param optimalHeight - height of frame
+ * @param d3TreeRef - ref representing current d3 tree
+ * @param width - width of canvas
+ * @param height - height of canvas
  * @param animationElementRef - ref to keep track of transform for traversal animation element
  */
-export const drawD3Tree = (d3TreeRef, optimalWidth, optimalHeight, animationElementRef) => {
+export const drawD3Tree = (d3TreeRef, width, height, animationElementRef) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
     const canvas = d3.select('#tree')
         .append('svg')
         .attr('id', 'tree-svg')
         .attr('cursor', 'grab')
-        .attr('width', optimalWidth)
-        .attr('height', optimalHeight)
+        .attr('width', width)
+        .attr('height', height)
         .append('g')
         .attr('transform', 'translate(0, 30)');
 
+    // Sets up zoom and pan. 
     d3.select('#tree-svg').call(d3.zoom()
-        .extent([[0, 0], [optimalWidth, optimalHeight + 50]])
+        .extent([[0, 0], [width, height + 50]])
         .scaleExtent([0.5, 8])
-        .filter(function filter(event) {
+        .filter(function filter(event) { // Only allows zoom and pan when holding down shift key (on non-mobile screens!)
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
             animationElementRef.current = transform;
             d3.selectAll('#tree-svg > g')
                 .attr('transform', transform);
-
         }))
 
 
@@ -220,18 +217,18 @@ export const drawD3Tree = (d3TreeRef, optimalWidth, optimalHeight, animationElem
 }
 
 /**
- * 
+ * Sets click handlers for each node in the tree
+ * @param d3TreeRef - Ref representing current d3 tree
  * @param tree - D3 tree
  * @param handleActiveNodeChange - Callback function for when active node changes
  */
 export const setClickHandlers = (d3TreeRef, handleActiveNodeChange) => {
     const nodes = d3TreeRef.descendants().filter((node) => node.data.name !== null);
 
-    const circleNodes = d3.select('g.nodes') // Adds onClick listener!
+    d3.select('g.nodes') // Selects all circle nodes
         .selectAll('g.node')
         .data(nodes)
         .on('click', function (_, datum) {
-            console.log(datum);
             let activeNode = { 
                 uuid: datum.data.uuid,
                 current: datum.data.name    

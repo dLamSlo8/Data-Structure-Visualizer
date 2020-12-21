@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import DataStructureLayout from '@components/layouts/DataStructureLayout';
+import DSAPageLayout from '@components/layouts/DSAPageLayout';
 import TreeTraversalActions from '@components/pages/algorithms/tree-traversal/actions/TreeTraversalActions'
 import TreeTraversalVisualization from '@components/pages/algorithms/tree-traversal/visualization/TreeTraversalVisualization';
 
@@ -10,9 +10,8 @@ export default function TreeTraversal() {
     const [rootNode, setRootNode] = useState(null);
     const [activeNode, setActiveNode] = useState(null);
 
-    
     return (
-        <DataStructureLayout
+        <DSAPageLayout
         actions={
             <TreeTraversalActions 
             rootNode={rootNode} 

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { animated } from '@react-spring/web';
 
+// Responsibility: Render animation element
 function TreeTraversalAnimationElement({ animationProps, transform }) {
     return (
         ReactDOM.createPortal(
@@ -13,8 +14,8 @@ function TreeTraversalAnimationElement({ animationProps, transform }) {
 }
 
 TreeTraversalAnimationElement.propTypes = {
-    animationProps: PropTypes.object,
-    transform: PropTypes.object
+    animationProps: PropTypes.object, // Represents the react-spring generated props that hold the [xy] values
+    transform: PropTypes.object // Represents the current transform of the canvas such that any zoom or pan gets applied to this element
 };
 
 export default TreeTraversalAnimationElement;

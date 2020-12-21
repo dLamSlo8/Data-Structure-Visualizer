@@ -10,6 +10,7 @@ import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeCl
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
+// Responsibility: Render any visuals (i.e. tree and animation element) and animatinos
 function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
     const { d3StructureRef } = useContext(D3Context);
@@ -19,6 +20,10 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
         d3StructureRef
     }); 
 
+    /**
+     * Sets active node based on selected node
+     * @param {Object} node Currently selected node
+     */
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
     }
@@ -30,10 +35,14 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
      */
     useEffect(() => {
         if (rootNode) {
+            // Draw tree
             d3StructureRef.current = generateD3Tree(rootNode, width, height);
             drawD3Tree(d3StructureRef.current, width, height, animationElementRef);
+
+            // Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
+            // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
             if (rootNode.left === null && rootNode.right === null) {
                 styleActiveNode(rootNode.uuid);
                 setActiveNode({
@@ -44,6 +53,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
                 });
             }
 
+            // Inidicates that steps need to be updated when isAnimatingMode is toggled
             if (!updateStepsRef.current) {
                 updateStepsRef.current = true;
             }

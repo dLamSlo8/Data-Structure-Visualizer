@@ -6,7 +6,12 @@ import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
 // Responsibility: Render and handle form data. Doesn't care about the parent. Just calls the callbacks. Remember, Actions will handle data.
-function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
+function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {   
+    /**
+     * Represents 'current' node value. 
+     * Wrapped in a useMemo to prevent value from changing 
+     * on a re-render unless activeNode has changed.
+     */ 
     const currentFormValue = useMemo(() => (activeNode ? {
         current: `${activeNode.current}`,
     } : null), [activeNode]);
@@ -45,7 +50,7 @@ function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAdd
                         initValues={{left: ''}}
                         handleSuccess={(formData) => formData.left && handleAddLeft(formData.left)}>
                             {
-                                ({ formData, handleChange, errorMapping}) => (
+                                ({ formData, handleChange, errorMapping }) => (
                                     <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3 mt-3">
                                         <FormInput 
                                         label="Left Value"
@@ -110,16 +115,16 @@ function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAdd
 }
 
 ManageSection.propTypes = {
-    activeNode: PropTypes.exact({
+    activeNode: PropTypes.exact({ // Currently active node
         uuid: PropTypes.string.isRequired,
         current: PropTypes.number.isRequired,
         left: PropTypes.number,
         right: PropTypes.number
     }),
-    handleUpdateValue: PropTypes.func.isRequired,
-    handleAddLeft: PropTypes.func.isRequired,
-    handleAddRight: PropTypes.func.isRequired,
-    handleDeleteNode: PropTypes.func.isRequired
+    handleUpdateValue: PropTypes.func.isRequired, // Callback for updating current value
+    handleAddLeft: PropTypes.func.isRequired, // Callback for adding left child
+    handleAddRight: PropTypes.func.isRequired, // Callback for adding right child
+    handleDeleteNode: PropTypes.func.isRequired // Callback for deleting current node (and its subtree)
 };
 
 export default ManageSection;

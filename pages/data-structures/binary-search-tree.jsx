@@ -1,7 +1,7 @@
-import DataStructureLayout from '@components/layouts/DataStructureLayout';
+import DSAPageLayout from '@components/layouts/DSAPageLayout';
 
 export default function BinarySearchTree() {
     return (
-        <DataStructureLayout />
+        <DSAPageLayout />
     )
 }

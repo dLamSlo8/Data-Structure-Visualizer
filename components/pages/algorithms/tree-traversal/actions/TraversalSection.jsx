@@ -8,10 +8,15 @@ import DropdownSelect from '@components/dropdown/DropdownSelect';
 import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';
 import ControlSection from '@components/animations/controls/ControlSection';
 
+// Responsibility: Render tree traversal section and handle changes to traversal function.
 function TreeTraversalSection({ sectionCollapsed }) {
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const [traversalType, setTraversalType] = useState('Preorder');
 
+    /**
+     * Effect
+     * Updates step generator function based on traversal type selection.
+     */
     useEffect(() => {
         if (traversalType === 'Preorder') {
             stepGeneratorRef.current = preOrderTraversalD3;
@@ -34,12 +39,20 @@ function TreeTraversalSection({ sectionCollapsed }) {
             >
                 {
                     ({ selectedItem, setSelectedItem, setOpen }) => {
+                        /**
+                         * Effect
+                         * When this section is collapsed, we need to close the menu!
+                         */
                         useEffect(() => {
                             if (sectionCollapsed) {
                                 setOpen(false);
                             }
                         }, [sectionCollapsed]);
 
+                        /**
+                         * Updates appropriate state on click of new item
+                         * @param {string} item Currently selected item 
+                         */
                         const handleClick = (item) => {
                             setSelectedItem(item);
                             setTraversalType(item);
@@ -71,7 +84,7 @@ function TreeTraversalSection({ sectionCollapsed }) {
 }
 
 TreeTraversalSection.propTypes = {
-    sectionCollapsed: PropTypes.bool
+    sectionCollapsed: PropTypes.bool // Whether the section is collapsed or not
 };
 
 export default TreeTraversalSection;

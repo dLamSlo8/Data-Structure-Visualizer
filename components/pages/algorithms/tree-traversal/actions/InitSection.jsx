@@ -4,7 +4,7 @@ import Form from '@components/forms/Form';
 import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
-// Responsibility: Render and handle form data. 
+// Responsibility: Render and handle initialization form data. 
 function InitSection({ handleInit }) {
     return (
         <Form
@@ -35,7 +35,7 @@ function InitSection({ handleInit }) {
 }
 
 InitSection.propTypes = {
-    handleInit: PropTypes.func.isRequired
+    handleInit: PropTypes.func.isRequired // Callback for initializing tree with current node value
 };
 
 export default InitSection;
