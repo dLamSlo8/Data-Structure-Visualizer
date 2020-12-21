@@ -1,6 +1,9 @@
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+
 import Link from 'next/link';
 
-export default function NavSectionItem({ title, img, description, routeName }) {
+function NavSectionItem({ title, img, description, routeName }) {
     return (
         <li className="bg-primary-light hover:bg-primary rounded-lg shadow-main hover:text-white hover:ring-4 hover:ring-primary hover:ring-opacity-25 transition-colors-shadow duration-200 ease-in-out">
             <Link href={routeName}>
@@ -15,3 +18,12 @@ export default function NavSectionItem({ title, img, description, routeName }) {
         </li>
     )
 }
+
+NavSectionItem.propTypes = {
+    title: PropTypes.string.isRequired,
+    img: PropTypes.element.isRequired,
+    description: PropTypes.string.isRequired,
+    routeName: PropTypes.string.isRequired
+};
+
+export default memo(NavSectionItem);

@@ -1,17 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
 import CollapseIcon from '../public/icons/collapse.svg';
 import ExpandIcon from '../public/icons/expand.svg';
 
-export default function ActionSubsection({ sectionTitle, sectionDescription, propagateState, children: sectionContent }) {
+function ActionSubsection({ sectionTitle, sectionDescription, children: sectionContent }) {
     const [collapsed, setCollapsed] = useState(false);
-    const [height, setHeight] = useState(null);
     const sectionRef = useRef(null);
-
-    useEffect(() => {
-        setHeight(sectionRef.current.offsetHeight)
-    }, []);
 
     const cssTransitionLifecycle = {
         onEnter: (node) => {
@@ -54,12 +50,17 @@ export default function ActionSubsection({ sectionTitle, sectionDescription, pro
                 {...cssTransitionLifecycle}>
                     <div className="section-scroll">
                         <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
-                        {
-                            propagateState ? sectionContent({ collapsed, setHeight, sectionRef }) : sectionContent
-                        }
+                        {sectionContent}
                     </div>
                 </CSSTransition>
             </div>
         </section>
     )
 }
+
+ActionSubsection.propTypes = {
+    sectionTitle: PropTypes.string.isRequired,
+    sectionDescription: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired
+}
+export default ActionSubsection;

@@ -29,6 +29,51 @@ export const preOrderTraversalD3 = () => {
     return res;
 }
 
+/**
+ * @returns {Array} Inorder traversal of the current d3tree
+ */
+export const inOrderTraversalD3 = () => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+
+        if (node.children) {
+            helper(node.children[0], l);
+        }
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[1], l);
+        }
+    }
+    
+    let res = [];
+
+    helper(d3Tree, res);
+    return res;
+}
+
+/**
+ * @returns {Array} Postorder traversal of the current d3tree
+ */
+export const postOrderTraversalD3 = () => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
+
+        l.push({ x: node.x, y: node.y });
+    }
+    
+    let res = [];
+
+    helper(d3Tree, res);
+    return res;
+}
 
 /**
  * Returns D3 representation of tree node.
@@ -171,8 +216,10 @@ export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => 
 }
 
 /**
-* @param handleActiveNodeChange - Callback function for when active node changes
-*/
+ * 
+ * @param tree - D3 tree
+ * @param handleActiveNodeChange - Callback function for when active node changes
+ */
 export const setClickHandlers = (handleActiveNodeChange) => {
     const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
 
@@ -191,20 +238,17 @@ export const setClickHandlers = (handleActiveNodeChange) => {
                 activeNode.right = datum.children[1].data.name;
             }
             else {
-                activeNode.left = '';
-                activeNode.right = '';
+                activeNode.left = null;
+                activeNode.right = null;
             }
 
             handleActiveNodeChange(activeNode);
         });
 }
 
-export const addAnimationElement = () => {
-    const tree = d3.select('#tree-svg > g');
-
-    tree.append('animated.g');
-}
-
+/**
+ * Removes click handlers from d3tree
+ */
 export const removeClickHandlers = () => {
     d3.select('g.nodes')
         .selectAll('g.node')

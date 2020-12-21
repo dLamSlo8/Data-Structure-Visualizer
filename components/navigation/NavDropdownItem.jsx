@@ -1,9 +1,12 @@
+import { memo } from 'react';
+import PropTypes from 'prop-types';
+
 import { useRouter } from 'next/router';
 
 import SelectableDropdownItem from '../dropdown/SelectableDropdownItem';
 
 // DropdownItem with extra styling based on whether the data structure is selected
-export default function NavDropdownItem({ ...props }) {
+function NavDropdownItem({ ...props }) {
     const { pathname } = useRouter();
     const isSelected = props.linkProps.href === pathname;
 
@@ -11,3 +14,9 @@ export default function NavDropdownItem({ ...props }) {
         <SelectableDropdownItem isSelected={isSelected} {...props} />
     )
 }
+
+NavDropdownItem.propTypes = {
+    props: PropTypes.object.required
+};
+
+export default memo(NavDropdownItem);

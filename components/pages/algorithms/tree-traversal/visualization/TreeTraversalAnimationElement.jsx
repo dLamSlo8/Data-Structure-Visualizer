@@ -1,8 +1,9 @@
 import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types';
 
 import { animated } from '@react-spring/web';
 
-export default function TreeTraversalAnimationElement({ animationProps, transform }) {
+function TreeTraversalAnimationElement({ animationProps, transform }) {
     return (
         ReactDOM.createPortal(
         <g id="animate-indicator" transform={transform ?? 'translate(0, 30)'}>
@@ -10,3 +11,10 @@ export default function TreeTraversalAnimationElement({ animationProps, transfor
         </g>, document.querySelector('#tree-svg'))
     )
 }
+
+TreeTraversalAnimationElement.propTypes = {
+    animationProps: PropTypes.object,
+    transform: PropTypes.object
+};
+
+export default TreeTraversalAnimationElement;

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'; // React/Next-specific
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
 import BinaryTreeIcon from '../../public/icons/binary-tree.svg';
@@ -8,7 +9,7 @@ import DropdownItem from '../dropdown/DropdownItem';
 import DropdownMenu from '../dropdown/DropdownMenu';
 import NavDropdownItem from './NavDropdownItem';
 
-export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
+function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
     const [activeList, setActiveList] = useState('init');
     const [listHeight, setListHeight] = useState(null);
 
@@ -104,3 +105,10 @@ export default function NavDropdownMenu({ dropdownOpen, setDropdownOpen }) {
         </div>
     )
 }
+
+NavDropdownMenu.propTypes = {
+    dropdownOpen: PropTypes.bool.isRequired,
+    setDropdownOpen: PropTypes.func.isRequired
+};
+
+export default NavDropdownMenu;

@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 import Form from '@components/forms/Form';
 import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
 // Responsibility: Render and handle form data. Doesn't care about the parent. Just calls the callbacks. Remember, Actions will handle data.
-export default function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
+function ManageSection({ activeNode, handleUpdateValue, handleAddLeft, handleAddRight, handleDeleteNode }) {    
     const currentFormValue = useMemo(() => (activeNode ? {
         current: `${activeNode.current}`,
     } : null), [activeNode]);
@@ -107,3 +108,18 @@ export default function ManageSection({ activeNode, handleUpdateValue, handleAdd
         
     )
 }
+
+ManageSection.propTypes = {
+    activeNode: PropTypes.exact({
+        uuid: PropTypes.string.isRequired,
+        current: PropTypes.number.isRequired,
+        left: PropTypes.number,
+        right: PropTypes.number
+    }),
+    handleUpdateValue: PropTypes.func.isRequired,
+    handleAddLeft: PropTypes.func.isRequired,
+    handleAddRight: PropTypes.func.isRequired,
+    handleDeleteNode: PropTypes.func.isRequired
+};
+
+export default ManageSection;

@@ -12,7 +12,7 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
 export default function useAnimationControl({ initialProps, initConfig }) {
-    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef } = useContext(AnimationContext);
+    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
@@ -20,7 +20,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
         from: initialProps
     }));
-    console.log(animationState);
     /**
      * React-spring script for running an animation from its current step to the end.
      */
@@ -31,7 +30,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
             await next({ xy: [x, y], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
-        console.log('done running!');
         setAnimationState('finished');
         setCurrentStep(0);
     }
@@ -61,8 +59,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     }
 
     const handleSkipToEnd = () => {
-        console.log('handling skip to end');
-        console.log(steps);
         setAnimation({ to: handleSkipRun });
         setCurrentStep(0);
         setAnimationState('finished');
@@ -75,11 +71,7 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     }
 
     const handleRun = () => {
-        console.log(steps);
-        console.log(animationState);
-        console.log(currentStep);
-        if (steps) {
-            console.log(animationState);
+        if (steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 console.log('finished!!');
                 setAnimation({ to: handleResetAndRunScript });
@@ -92,27 +84,26 @@ export default function useAnimationControl({ initialProps, initConfig }) {
 
     };
 
-
     const handlePause = () => {
         stopAnimation();
         setAnimationState('paused');
     }
 
-
-
-    // useEffect(() => {
-    //     if (steps) {
-    //         // for (let idx = 0; idx < steps.length; idx++) {
-    //         //     console.log(steps[idx]);
-    //         //     let { x, y } = steps[idx];
-
-    //         //     setAnimation({ xy: [x, y], delay: 1000 * idx });
-    //         // }        }
-    //         setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
-    //         setAnimationState('running');
-
-    //     }
-    // }, [steps]);
+    /**
+     * Effect
+     * Whenever animating mode is turned on and iff there is a new tree to be drawn,
+     * generate the steps for this new tree and toggle off drewTree such that if animating
+     * mode is toggled on and off and the tree hasn't changed, nothing will happen (as
+     * the steps are the exact same. This is great for performance as we don't need
+     * to do expensive calculations each time we turn on animating mode.)
+     */
+    useEffect(() => {
+        if (updateStepsRef.current && isAnimatingMode) {
+            setSteps(stepGeneratorRef.current());
+            
+            updateStepsRef.current = false;
+        }
+    }, [isAnimatingMode]);
 
     /**
      * Effect
@@ -127,7 +118,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
             setCurrentStep(0);
         }
         else if (isAnimatingMode && steps) {
-            console.log(steps);
             setAnimation({ to: initialProps, config: { duration: 0 } })
             setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
             setAnimationState('running');
@@ -136,7 +126,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     
     // Update animation methods to be used elsewhere.
     animationMethodsRef.current = { handleRun, handlePause, handleSkipToEnd, handleReset, setSteps };
-    console.log(animationMethodsRef.current);
 
     return { animationProps, setSteps };
 }                

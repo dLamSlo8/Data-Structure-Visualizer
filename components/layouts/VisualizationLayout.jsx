@@ -1,4 +1,6 @@
-export default function VisualizationLayout({ children }) {
+import PropTypes from 'prop-types';
+
+function VisualizationLayout({ children }) {
     return (
         <div className="group">
             <div className="absolute inset-0 border border-gray-400 rounded-lg z-negative group-hover:border-primary" aria-hidden="true" />
@@ -6,3 +8,9 @@ export default function VisualizationLayout({ children }) {
         </div>
     )
 }
+
+VisualizationLayout.propTypes = {
+    children: PropTypes.node.isRequired
+};
+
+export default VisualizationLayout;

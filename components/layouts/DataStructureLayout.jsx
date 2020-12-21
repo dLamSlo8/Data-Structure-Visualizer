@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
+import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
 import AnimationContext from '../../contexts/AnimationContext';
@@ -6,7 +7,7 @@ import AnimationContext from '../../contexts/AnimationContext';
 import CloseIcon from '../../public/icons/x-circle.svg';
 import Button from '../Button';
 
-export default function DataStructureLayout({ actions, visualization, visualizationDescription, propagateDimensions }) {
+function DataStructureLayout({ actions, visualization, visualizationDescription }) {
     const [mounted, setMounted] = useState(false);
     const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
     const visualizationRef = useRef(null);
@@ -42,17 +43,25 @@ export default function DataStructureLayout({ actions, visualization, visualizat
             </section>
             <section className="flex-grow flex flex-col py-5 px-8">
                 <h2 className={`inline-block self-start border-b-4 border-primary font-bold text-2xl ${visualizationDescription ? 'mb-2' : 'mb-5'}`}>Visualization</h2>
-                {
-                    visualizationDescription && (
-                        <p className="font-semibold text-gray-500 mb-3 md:w-4/5">{visualizationDescription}</p>
-                    )
-                }
+                    {
+                        visualizationDescription && (
+                            <p className="font-semibold text-gray-500 mb-3 md:w-4/5">{visualizationDescription}</p>
+                        )
+                    }
                 <div className="relative flex-grow" ref={visualizationRef}>
                     {
-                        propagateDimensions && mounted ? visualization({ width: visualizationRef.current.offsetWidth, height: visualizationRef.current.offsetHeight }) : visualization
+                        mounted ? visualization({ width: visualizationRef.current.offsetWidth, height: visualizationRef.current.offsetHeight }) : null
                     }
                 </div>
             </section>
         </main>
     )
 }
+
+DataStructureLayout.propTypes = {
+    actions: PropTypes.node.isRequired,
+    visualization: PropTypes.func.isRequired,
+    visualizationDescription: PropTypes.string
+};
+
+export default DataStructureLayout;

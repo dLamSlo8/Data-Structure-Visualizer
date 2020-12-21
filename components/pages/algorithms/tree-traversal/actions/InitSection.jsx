@@ -1,10 +1,11 @@
+import PropTypes from 'prop-types';
 
 import Form from '@components/forms/Form';
 import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
 // Responsibility: Render and handle form data. 
-export default function InitSection({ handleInit }) {
+function InitSection({ handleInit }) {
     return (
         <Form
         initValues={{ rootValue: '' }}
@@ -32,3 +33,9 @@ export default function InitSection({ handleInit }) {
         </Form>
     )
 }
+
+InitSection.propTypes = {
+    handleInit: PropTypes.func.isRequired
+};
+
+export default InitSection;

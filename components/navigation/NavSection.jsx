@@ -1,5 +1,6 @@
+import PropTypes from 'prop-types';
 
-export default function NavSection({ title, children, listLabel }) {
+function NavSection({ title, listLabel, children }) {
     return (
         <section>
             <h2 className="inline-block border-b-4 border-primary font-bold text-3xl">{title}</h2>
@@ -7,3 +8,11 @@ export default function NavSection({ title, children, listLabel }) {
         </section>
     )
 };
+
+NavSection.propTypes = {
+    title: PropTypes.string.isRequired,
+    listLabel: PropTypes.string.isRequired,
+    children: PropTypes.node.isRequired
+};
+
+export default NavSection;

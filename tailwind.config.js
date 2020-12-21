@@ -21,6 +21,10 @@ module.exports = {
         maxHeight: {
             'data-structure-layout': 'calc(100vh - 89px)'
         },
+        height: {
+            'px': '1px',
+            'px-1/2': '0.5px'
+        },
         boxShadow: {
             main: '0 3px 4px 2px rgba(0, 98, 255, 0.25)'
         },
@@ -30,6 +34,9 @@ module.exports = {
         },
         zIndex: {
             'negative': '-1'
+        },
+        cursor: {
+            grab: 'grab'
         }
     },
   },
