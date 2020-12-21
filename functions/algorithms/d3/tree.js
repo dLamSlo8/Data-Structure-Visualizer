@@ -35,36 +35,37 @@ export const preOrderTraversalD3 = () => {
  * @param node - root node of the tree structure
  */
 export const nodeToD3 = (node) => {
-  if (node === null) {
-      return { name: null, uuid: null };
-  }
+    if (node === null) {
+        return { name: null, uuid: null };
+    }
 
-  if (node.left === null && node.right === null) { // End case
-      return { name: node.value, uuid: node.uuid };
-  }
+    if (node.left === null && node.right === null) { // End case
+        return { name: node.value, uuid: node.uuid };
+    }
 
-  let data = { name: node.value, uuid: node.uuid, children: [
-      nodeToD3(node.left),
-      nodeToD3(node.right)
-  ] };
-  
-  return data;
+    let data = { name: node.value, uuid: node.uuid, children: [
+        nodeToD3(node.left),
+        nodeToD3(node.right)
+    ] };
+    
+    return data;
 }
+
 /**
 * Styles the currently active node
 * @param activeUuid - Uuid of active node
 */
 export const styleActiveNode = (activeUuid) => {
-  d3.select('g.nodes')
-      .selectAll('g.node') // Styles active circle
-      .each(function (datum) {
-          if (datum.data.uuid === activeUuid) {
-              d3.select(this).classed('active-node', true);
-          }
-          else {
-              d3.select(this).classed('active-node', false);
-          }
-      });
+    d3.select('g.nodes')
+        .selectAll('g.node') // Styles active circle
+        .each(function (datum) {
+            if (datum.data.uuid === activeUuid) {
+                d3.select(this).classed('active-node', true);
+            }
+            else {
+                d3.select(this).classed('active-node', false);
+            }
+        });
 
 
 }
@@ -75,17 +76,17 @@ export const styleActiveNode = (activeUuid) => {
 * @param optimalWidth - width of frame
 */
 export const generateD3Tree = (rootNode, optimalWidth) => {
-  const data = nodeToD3(rootNode);
+    const data = nodeToD3(rootNode);
 
-  // Generate binary tree using d3.
+    // Generate binary tree using d3.
 
-  const hierarchyNode = d3.hierarchy((data));
-  const width = optimalWidth;
-  const height = hierarchyNode.height * 100;
+    const hierarchyNode = d3.hierarchy((data));
+    const width = optimalWidth;
+    const height = hierarchyNode.height * 100;
 
-  const tree = d3.tree().size([width, height])(d3.hierarchy(data));
-  
-  d3Tree = tree;
+    const tree = d3.tree().size([width, height])(d3.hierarchy(data));
+    
+    d3Tree = tree;
 }
 
 /**
@@ -173,39 +174,39 @@ export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => 
 * @param handleActiveNodeChange - Callback function for when active node changes
 */
 export const setClickHandlers = (handleActiveNodeChange) => {
-  const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
+    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
 
-  const circleNodes = d3.select('g.nodes') // Adds onClick listener!
-      .selectAll('g.node')
-      .data(nodes)
-      .on('click', function (_, datum) {
-          console.log(datum);
-          let activeNode = { 
-              uuid: datum.data.uuid,
-              current: datum.data.name    
-          };
+    const circleNodes = d3.select('g.nodes') // Adds onClick listener!
+        .selectAll('g.node')
+        .data(nodes)
+        .on('click', function (_, datum) {
+            console.log(datum);
+            let activeNode = { 
+                uuid: datum.data.uuid,
+                current: datum.data.name    
+            };
 
-          if (datum.children) {
-              activeNode.left = datum.children[0].data.name;
-              activeNode.right = datum.children[1].data.name;
-          }
-          else {
-              activeNode.left = '';
-              activeNode.right = '';
-          }
+            if (datum.children) {
+                activeNode.left = datum.children[0].data.name;
+                activeNode.right = datum.children[1].data.name;
+            }
+            else {
+                activeNode.left = '';
+                activeNode.right = '';
+            }
 
-          handleActiveNodeChange(activeNode);
-      });
+            handleActiveNodeChange(activeNode);
+        });
 }
 
 export const addAnimationElement = () => {
-  const tree = d3.select('#tree-svg > g');
+    const tree = d3.select('#tree-svg > g');
 
-  tree.append('animated.g');
+    tree.append('animated.g');
 }
 
 export const removeClickHandlers = () => {
-  d3.select('g.nodes')
-      .selectAll('g.node')
-      .on('click', null);
+    d3.select('g.nodes')
+        .selectAll('g.node')
+        .on('click', null);
 }
