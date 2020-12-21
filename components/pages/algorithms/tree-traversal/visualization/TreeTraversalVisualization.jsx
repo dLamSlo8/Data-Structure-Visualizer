@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 
 import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
-import { Node, generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers, preOrderTraversalD3 } from '@functions/tree';
+import { Node } from '@functions/algorithms/helper/tree';
+import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@functions/algorithms/d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';

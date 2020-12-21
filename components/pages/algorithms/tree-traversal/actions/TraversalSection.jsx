@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
-import { preOrderTraversalD3, inOrderTraversalD3, postOrderTraversalD3 } from '@functions/tree';
+import { preOrderTraversalD3, inOrderTraversalD3, postOrderTraversalD3 } from '@functions/algorithms/d3/tree';
 
 import DropdownSelect from '@components/dropdown/DropdownSelect';
 import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';

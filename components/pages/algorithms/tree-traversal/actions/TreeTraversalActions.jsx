@@ -1,5 +1,6 @@
-import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/tree';
 import PropTypes from 'prop-types';
+
+import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/algorithms/helper/tree';
 
 import InitSection from './InitSection';
 import ManageSection from './ManageSection';

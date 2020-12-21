@@ -316,24 +316,7 @@ export const postOrderTraversal = (node, l) => {
     return JSON.stringify(res);
 }
 
-export const postOrderTraversalD3 = () => {
-    function helper(node, l) {
-        if (!node.data.name) { 
-            return;
-        }
-        if (node.children) {
-            helper(node.children[0], l);
-            helper(node.children[1], l);
-        }
 
-        l.push({ x: node.x, y: node.y });
-    }
-    
-    let res = [];
-
-    helper(d3Tree, res);
-    return res;
-}
 
 /**
  * Returns the level order traversal of a binary tree
