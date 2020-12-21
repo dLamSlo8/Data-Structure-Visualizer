@@ -27,7 +27,7 @@ Form.propTypes = {
     initValues: PropTypes.object.isRequired,
     validationRules: PropTypes.object,
     handleSuccess: PropTypes.func.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.func.isRequired
 };
 
 export default Form;
