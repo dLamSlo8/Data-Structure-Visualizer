@@ -42,7 +42,7 @@ DropdownSelect.propTypes = {
     title: PropTypes.string.isRequired,
     defaultValue: PropTypes.any,
     dropdownWrapperClass: PropTypes.string,
-    children: PropTypes.node.isRequired
+    children: PropTypes.func.isRequired
 };
 
 export default DropdownSelect;

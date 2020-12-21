@@ -102,7 +102,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
 
 TreeTraversalVisualization.propTypes = {
     rootNode: PropTypes.instanceOf(Node),
-    activeUuid: PropTypes.string.isRequired,
+    activeUuid: PropTypes.string,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
     setActiveNode: PropTypes.func.isRequired

@@ -51,7 +51,7 @@ function DropdownItem({ icon, title, description, hasNestedDropdown, isReturn, h
 DropdownItem.propTypes = {
     icon: PropTypes.element,
     title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     hasNestedDropdown: PropTypes.bool,
     isReturn: PropTypes.bool,
     handleClick: PropTypes.func.isRequired,
