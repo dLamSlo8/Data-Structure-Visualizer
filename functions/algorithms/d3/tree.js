@@ -216,41 +216,6 @@ export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => 
 }
 
 /**
-* @param handleActiveNodeChange - Callback function for when active node changes
-*/
-export const setClickHandlers = (handleActiveNodeChange) => {
-    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
-
-    const circleNodes = d3.select('g.nodes') // Adds onClick listener!
-        .selectAll('g.node')
-        .data(nodes)
-        .on('click', function (_, datum) {
-            console.log(datum);
-            let activeNode = { 
-                uuid: datum.data.uuid,
-                current: datum.data.name    
-            };
-
-            if (datum.children) {
-                activeNode.left = datum.children[0].data.name;
-                activeNode.right = datum.children[1].data.name;
-            }
-            else {
-                activeNode.left = '';
-                activeNode.right = '';
-            }
-
-            handleActiveNodeChange(activeNode);
-        });
-}
-
-export const addAnimationElement = () => {
-    const tree = d3.select('#tree-svg > g');
-
-    tree.append('animated.g');
-}
-
-/**
  * 
  * @param tree - D3 tree
  * @param handleActiveNodeChange - Callback function for when active node changes
