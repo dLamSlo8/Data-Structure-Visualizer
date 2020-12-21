@@ -1,4 +1,4 @@
-import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/tree';
+import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/algorithms/helper/tree';
 
 import useAnimationControl from '@hooks/useAnimationControl';
 

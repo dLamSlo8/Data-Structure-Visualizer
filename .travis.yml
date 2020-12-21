@@ -1,0 +1,20 @@
+sudo:
+    false
+
+language:
+    node_js
+
+node_js:
+    stable
+
+notifications:
+    email: false
+
+env:
+    - NODE_ENV=TEST
+
+install:
+    - npm ci
+
+script:
+    - npm run test
