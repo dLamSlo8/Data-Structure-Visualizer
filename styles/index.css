@@ -857,12 +857,12 @@ button {
   height: 1.5rem;
 }
 
-.h-full{
-  height: 100%;
+.h-px{
+  height: 1px;
 }
 
-.h-px-1\/2{
-  height: 0.5px;
+.h-full{
+  height: 100%;
 }
 
 .text-sm{

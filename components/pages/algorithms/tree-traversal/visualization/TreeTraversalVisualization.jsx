@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
+import D3Context from '@contexts/D3Context';
 import { Node } from '@functions/algorithms/helper/tree';
 import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@functions/algorithms/d3/tree';
 
@@ -11,11 +12,12 @@ import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
 function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
+    const { d3StructureRef } = useContext(D3Context);
     const animationElementRef = useRef(null);
     const { animationProps } = useAnimationControl({
         initialProps: { xy: [50, 50] },
+        d3StructureRef
     }); 
-
 
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
@@ -28,9 +30,9 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
      */
     useEffect(() => {
         if (rootNode) {
-            generateD3Tree(rootNode, width, height);
-            drawD3Tree(width, height, animationElementRef);
-            setClickHandlers(handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(rootNode, width, height);
+            drawD3Tree(d3StructureRef.current, width, height, animationElementRef);
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             if (rootNode.left === null && rootNode.right === null) {
                 styleActiveNode(rootNode.uuid);
@@ -71,7 +73,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
                 removeClickHandlers();
             }
             else {
-                setClickHandlers(handleActiveNodeChange);
+                setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
             }
         }
     }, [isAnimatingMode]);

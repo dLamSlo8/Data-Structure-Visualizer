@@ -9,11 +9,16 @@ import ActionSubsection from '@components/ActionSubsection';
 
 // Responsibility: Render and handle actions for custom binary tree.
 function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode }) {
-    console.log(activeNode);
     const handleInit = (value) => {
         let root = new Node(parseInt(value));
 
         setRootNode(root);
+        setActiveNode({
+            uuid: root.uuid,
+            current: root.value,
+            left: null,
+            right: null
+        });
     }
 
     const handleUpdateValue = (value) => {

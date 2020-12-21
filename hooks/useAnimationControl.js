@@ -11,7 +11,7 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function useAnimationControl({ initialProps, initConfig }) {
+export default function useAnimationControl({ initialProps, initConfig, d3StructureRef }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
@@ -73,7 +73,6 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     const handleRun = () => {
         if (steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
-                console.log('finished!!');
                 setAnimation({ to: handleResetAndRunScript });
             }
             else {
@@ -99,7 +98,7 @@ export default function useAnimationControl({ initialProps, initConfig }) {
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
-            setSteps(stepGeneratorRef.current());
+            setSteps(stepGeneratorRef.current(d3StructureRef.current));
             
             updateStepsRef.current = false;
         }

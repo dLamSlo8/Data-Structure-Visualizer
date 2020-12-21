@@ -30,7 +30,7 @@ function DataStructureLayout({ actions, visualization, visualizationDescription 
                 classNames="lift-animating-actions"
                 timeout={300}
                 unmountOnExit>
-                    <div className="absolute inset-0 flex items-start justify-center bg-black bg-opacity-50" style={{height: actionsRef?.current?.scrollHeight }} aria-hidden="true">
+                    <div className="absolute inset-0 flex items-start justify-center bg-black bg-opacity-50" style={{height: actionsRef.current?.scrollHeight }} aria-hidden="true">
                         <div id="animating-label" className="sticky top-2 inline-flex items-center space-x-3 px-4 py-2 rounded-lg bg-primary-light shadow-main">
                                 <p className="font-semibold text-primary">Currently in animating mode</p>
                                 <Button onClick={() => setAnimatingMode(false)}>

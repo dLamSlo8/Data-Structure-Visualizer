@@ -1,16 +1,12 @@
 import * as d3 from 'd3';
 
-
-export let d3Tree = null;
-
-export const resetD3Tree = () => {
-    // d3Tree = null;
-};
-
 /**
- * @returns {Array} Preorder traversal of the current d3tree
+ * Generates the preorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Preorder traversal in xy-coordinates
  */
-export const preOrderTraversalD3 = () => {
+export const preOrderTraversalD3 = (d3TreeRef) => {
     function helper(node, l) {
         if (!node.data.name) { 
             return;
@@ -25,14 +21,17 @@ export const preOrderTraversalD3 = () => {
     
     let res = [];
 
-    helper(d3Tree, res);
+    helper(d3TreeRef, res);
     return res;
 }
 
 /**
- * @returns {Array} Inorder traversal of the current d3tree
+ * Generates the inorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Inorder traversal in xy-coordinates
  */
-export const inOrderTraversalD3 = () => {
+export const inOrderTraversalD3 = (d3TreeRef) => {
     function helper(node, l) {
         if (!node.data.name) { 
             return;
@@ -49,14 +48,18 @@ export const inOrderTraversalD3 = () => {
     
     let res = [];
 
-    helper(d3Tree, res);
+    helper(d3TreeRef, res);
     return res;
 }
 
 /**
- * @returns {Array} Postorder traversal of the current d3tree
+ * Generates the postorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Postorder traversal in xy-coordinates
  */
-export const postOrderTraversalD3 = () => {
+export const postOrderTraversalD3 = (d3TreeRef) => {
+    console.log('post it!');
     function helper(node, l) {
         if (!node.data.name) { 
             return;
@@ -71,7 +74,7 @@ export const postOrderTraversalD3 = () => {
     
     let res = [];
 
-    helper(d3Tree, res);
+    helper(d3TreeRef, res);
     return res;
 }
 
@@ -119,6 +122,7 @@ export const styleActiveNode = (activeUuid) => {
 * Generates tree given rootNode.
 * @param node - root node of the tree structure
 * @param optimalWidth - width of frame
+* @returns {Object} D3 tree
 */
 export const generateD3Tree = (rootNode, optimalWidth) => {
     const data = nodeToD3(rootNode);
@@ -131,7 +135,7 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
 
     const tree = d3.tree().size([width, height])(d3.hierarchy(data));
     
-    d3Tree = tree;
+    return tree;
 }
 
 /**
@@ -140,7 +144,7 @@ export const generateD3Tree = (rootNode, optimalWidth) => {
  * @param optimalHeight - height of frame
  * @param animationElementRef - ref to keep track of transform for traversal animation element
  */
-export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => {
+export const drawD3Tree = (d3TreeRef, optimalWidth, optimalHeight, animationElementRef) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
     const canvas = d3.select('#tree')
@@ -172,8 +176,8 @@ export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => 
     canvas.append('g')
         .attr('class', 'nodes');
 
-    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
-    const links = d3Tree.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
+    const nodes = d3TreeRef.descendants().filter((node) => node.data.name !== null);
+    const links = d3TreeRef.links().filter((link) => link.source.data.name !== null && link.target.data.name !== null);
 
     canvas.select('g.links')
         .selectAll('.link')
@@ -220,8 +224,8 @@ export const drawD3Tree = (optimalWidth, optimalHeight, animationElementRef) => 
  * @param tree - D3 tree
  * @param handleActiveNodeChange - Callback function for when active node changes
  */
-export const setClickHandlers = (handleActiveNodeChange) => {
-    const nodes = d3Tree.descendants().filter((node) => node.data.name !== null);
+export const setClickHandlers = (d3TreeRef, handleActiveNodeChange) => {
+    const nodes = d3TreeRef.descendants().filter((node) => node.data.name !== null);
 
     const circleNodes = d3.select('g.nodes') // Adds onClick listener!
         .selectAll('g.node')

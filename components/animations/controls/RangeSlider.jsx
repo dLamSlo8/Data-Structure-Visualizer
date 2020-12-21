@@ -7,7 +7,7 @@ function RangeSlider({ value, setValue, min, max }) {
 
     return (
         <div className="relative cursor-grab" ref={sliderRef}>
-            <div className="w-full h-px-1/2 absolute top-1/2 transform -translate-y-1/2 bg-gray-400" />
+            <div className="w-full h-px absolute top-1/2 transform -translate-y-1/2 bg-gray-400" />
             <Draggable
             axis="x"
             position={null}
