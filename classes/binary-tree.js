@@ -1,4 +1,4 @@
-import {TreeNode} from "./tree-node.js";
+import {TreeNode, NullTreeNode} from "./tree-node.js";
 
 /**
  * Binary Tree class
@@ -20,15 +20,20 @@ export class BinaryTree {
      */
     inOrderTraversal = () => {
         function helper(node, res) {
-            if (node === null) {
+            if (node === null || node === NullTreeNode) {
                 return;
             }
 
-
-            helper(node.children[0], res);
+            if (node.children) {
+                helper(node.children[0], res);
+            }
+            
             res[0].push(node.name);
             res[1].push(node.uuid);
-            helper(node.children[1], res);
+
+            if (node.children) {
+                helper(node.children[1], res);
+            }
         }
 
         if (this.root === null) {
@@ -46,15 +51,17 @@ export class BinaryTree {
      */
     preOrderTraversal = () => {
         function helper(node, res) {
-            if (node === null) {
+            if (node === null || node === NullTreeNode) {
                 return;
             }
             
             res[0].push(node.name);
             res[1].push(node.uuid);
 
-            helper(node.children[0], res);
-            helper(node.children[1], res);
+            if (node.children) {
+                helper(node.children[0], res);
+                helper(node.children[1], res);
+            }
 
         }
         if (this.root === null) {
@@ -72,12 +79,14 @@ export class BinaryTree {
      */
     postOrderTraversal = () => {
         function helper(node, res) {
-            if (node === null) {
+            if (node === null || node === NullTreeNode) {
                 return;
             }
 
-            helper(node.children[0], res);
-            helper(node.children[1], res);
+            if (node.children) {
+                helper(node.children[0], res);
+                helper(node.children[1], res);
+            }
 
             res[0].push(node.name);
             res[1].push(node.uuid);
@@ -110,12 +119,14 @@ export class BinaryTree {
             let first = q.shift();
             res[0].push(first.name);
             res[1].push(first.uuid);
-            if (first.children[0] !== null) {
-                q.push(first.children[0]);
-            }
-
-            if (first.children[1] !== null) {
-                q.push(first.children[1]);
+            if (first.children) {
+                if (first.children[0] !== NullTreeNode) {
+                    q.push(first.children[0]);
+                }
+    
+                if (first.children[1] !== NullTreeNode) {
+                    q.push(first.children[1]);
+                }
             }
         }
         return res;
@@ -131,17 +142,31 @@ export class BinaryTree {
                 return null;
             }
 
-            if (node.uuid === uuid) {
-                return null;
+            // if nulltree, return the nulltree node
+            if (node === NullTreeNode) {
+                return node;
             }
 
-            // go through left and right
-            var left = helper(node.children[0], uuid);
-            var right = helper(node.children[1], uuid);
+            if (node.uuid === uuid) {
+                return NullTreeNode;
+            }
 
-            // add set left and right child
-            node.children[0] = left;
-            node.children[1] = right;
+            // if child exists
+            if (node.children) {
+                // go through left and right
+                var left = helper(node.children[0], uuid);
+                var right = helper(node.children[1], uuid);
+
+                // if no child left, set children back to null
+                if ((left === null || left === NullTreeNode) && (right === null || right === NullTreeNode)) {
+                    node.children = null;
+                } else {
+                    // add set left and right child
+                    node.children[0] = left;
+                    node.children[1] = right;
+                }
+            }
+            
             return node;
         }
 
@@ -150,6 +175,8 @@ export class BinaryTree {
         }
 
         this.root = helper(this.root, uuid);
+
+        this.root = this.root !== NullTreeNode ? this.root : null;
     }
 
     /**
@@ -161,7 +188,7 @@ export class BinaryTree {
      */
     addNode = (value, isLeft, matchUUID, createUUID) => {
         function helper(node, value, isLeft, matchUUID, createUUID) {
-            if (node === null) {
+            if (node === null || node === NullTreeNode) {
                 return;
             }
 
@@ -211,7 +238,7 @@ export class BinaryTree {
      */
     replaceNodeValue = (value, uuid) => {
         function helper(node, value, uuid) {
-            if (node === null) {
+            if (node === null || node === NullTreeNode) {
                 return;
             }
 
@@ -219,8 +246,11 @@ export class BinaryTree {
                 node.name = value;
                 return;
             }
-            helper(node.children[0], value, uuid);
-            helper(node.children[1], value, uuid);
+
+            if (node.children) {
+                helper(node.children[0], value, uuid);
+                helper(node.children[1], value, uuid);
+            }
         }
 
         if (this.root === null) {

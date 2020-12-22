@@ -33,4 +33,30 @@ export class TreeNode {
         }
     }
 
+    /**
+     * Sets the left child of node
+     * @param {TreeNode} node - node to set as left child 
+     */
+    setLeft(node) {
+        if (this.children !== null) {
+            this.children[0] = node;
+        } else {
+            this.children = [node, NullTreeNode];
+        }
+    }
+
+    /**
+     * Sets the right child of node
+     * @param {TreeNode} node - node to set as right child 
+     */
+    setRight(node) {
+        if (this.children !== null) {
+            this.children[1] = node;
+        } else {
+            this.children = [NullTreeNode, node];
+        }
+    }
+
 }
+
+export const NullTreeNode = new TreeNode(null, null);
