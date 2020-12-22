@@ -1,5 +1,5 @@
 module.exports = {
     "collectCoverageFrom": [
-        "**/helper/**"
+        "**/classes/**"
     ]
 }
