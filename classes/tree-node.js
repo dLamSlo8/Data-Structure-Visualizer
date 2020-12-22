@@ -15,7 +15,7 @@ export default class TreeNode {
      * @param {string} [uuid] - uuid of node
      * @param {TreeNode} [node] - node to make copy of 
      */
-    constructor(value, uuid, isLeaf, node) {
+    constructor(value, uuid, node) {
         if (node) {
             let { name, uuid, children } = node;
             this.name = name;
@@ -23,13 +23,13 @@ export default class TreeNode {
             this.children = [...children];
         } else {
             this.name = value;
-            this.uuid = uuid || (uuid === null && null) || uuidv4(); // Can be null 
-            if (isLeaf) {
-                this.children = null;
+            if (uuid === null && value === null) {
+                this.uuid = null;
             }
             else {
-                this.children = [new TreeNode(null, null, true), new TreeNode(null, null, true)];
+                this.uuid = uuid || uuidv4(); 
             }
+            this.children = null;
         }
     }
 

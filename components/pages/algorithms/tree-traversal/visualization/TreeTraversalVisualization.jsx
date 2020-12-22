@@ -44,8 +44,8 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
-            if (tree.root.children[0] === null && tree.root.children[1] === null) {
-                styleActiveNode(rootNode.uuid);
+            if (tree.root.children === null) {
+                styleActiveNode(tree.root.uuid);
                 setActiveNode({
                     uuid: tree.root.uuid,
                     current: tree.root.name,
