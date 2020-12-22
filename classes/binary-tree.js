@@ -1,11 +1,11 @@
-import {TreeNode} from "./tree-node.js";
+import TreeNode from "./tree-node.js";
 
 /**
  * Binary Tree class
  * 
  * @property {TreeNode} root - root node of tree structure
  */
-export class BinaryTree {
+export default class BinaryTree {
     /**
      * 
      * @param {TreeNode} [root = null] - root node of tree structure
@@ -167,14 +167,14 @@ export class BinaryTree {
 
             if (node.uuid === matchUUID) {
                 if (isLeft) {
-                    if (node.children[0] !== null) {
-                        throw ("A left child for this node already exists.")
-                    }
+                    // if (node.children[0] !== null) {
+                    //     throw ("A left child for this node already exists.")
+                    // }
                     node.children[0] = new TreeNode(value, createUUID);
                 } else {
-                    if (node.children[1] !== null) {
-                        throw ("A right child for this node already exists.")
-                    }
+                    // if (node.children[1] !== null) {
+                    //     throw ("A right child for this node already exists.")
+                    // }
                     node.children[1] = new TreeNode(value, createUUID);
                 }
                 return;

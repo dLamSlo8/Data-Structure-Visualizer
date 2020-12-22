@@ -1,5 +1,5 @@
-import { TreeNode } from "../../classes/tree-node.js";
-import { BinaryTree } from "../../classes/binary-tree.js";
+import TreeNode from "../../classes/tree-node.js";
+import BinaryTree from "../../classes/binary-tree.js";
 
 
 describe ("Test inOrderTraversal method", () => {

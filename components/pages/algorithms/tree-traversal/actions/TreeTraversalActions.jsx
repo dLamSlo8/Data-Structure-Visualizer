@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 
-import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/algorithms/helper/tree';
+import BinaryTree from '@classes/binary-tree';
+import TreeNode from '@classes/tree-node';
+// import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/algorithms/helper/tree';
 
 import InitSection from './InitSection';
 import ManageSection from './ManageSection';
@@ -8,37 +10,39 @@ import TraversalSection from './TraversalSection';
 import ActionSubsection from '@components/ActionSubsection';
 
 // Responsibility: Render and handle actions for custom binary tree.
-function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode }) {
+function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
     const handleInit = (value) => {
-        let root = new Node(parseInt(value));
-
-        setRootNode(root);
+        let tree = new BinaryTree(new TreeNode(parseInt(value)));
+        console.log(tree);
+        setTree(tree);
         setActiveNode({
-            uuid: root.uuid,
-            current: root.value,
+            uuid: tree.root.uuid,
+            current: tree.root.name,
             left: null,
             right: null
         });
     }
 
     const handleUpdateValue = (value) => {
-        setRootNode(replaceNodeValue(rootNode, parseInt(value), activeNode.uuid));
+        // setRootNode(replaceNodeValue(rootNode, parseInt(value), activeNode.uuid));
     }
 
     const generateHandleAddChildren = ({ isLeft }) => {
         return (value) => {
             let childValue = parseInt(value);
-        
-            setRootNode(addNode(rootNode, childValue, isLeft, activeNode.uuid));
+            
+            console.log(tree);
+            tree.addNode(childValue, isLeft, activeNode.uuid)
+            setTree({ ...tree });
             setActiveNode((activeNode) => ({ ...activeNode, ...(isLeft ? { left: childValue } : { right: childValue })}));
         }
     }
 
     const handleDeleteNode = () => {
-        let rootCopy = new Node(0, 0, rootNode);
+        tree.deleteSubtree(activeNode.uuid);
 
         setActiveNode(null);
-        setRootNode(deleteSubtree(rootCopy, activeNode.uuid));
+        setTree({ ...tree });
     }
 
 
@@ -48,7 +52,7 @@ function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode
             sectionTitle="Manage Tree"
             sectionDescription="Here you can create, update, and delete tree nodes.">
                 {
-                    rootNode ? (
+                    tree ? (
                         <ManageSection
                         activeNode={activeNode}
                         handleUpdateValue={handleUpdateValue}
@@ -64,8 +68,8 @@ function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode
             sectionTitle="Simulate Traversals"
             sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation.">
                 {
-                    rootNode ? (
-                        <TraversalSection rootNode={rootNode} />
+                    tree ? (
+                        <TraversalSection tree={tree} />
                     ) : (
                         <div className="mt-8">
                             <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
@@ -79,8 +83,7 @@ function TreeTraversalActions({ rootNode, activeNode, setRootNode, setActiveNode
 }
 
 TreeTraversalActions.propTypes = {
-    rootNode: PropTypes.instanceOf(Node),
-    setRootNode: PropTypes.func.isRequired,
+    tree: PropTypes.instanceOf(BinaryTree),
     activeNode: PropTypes.exact({
         uuid: PropTypes.string.isRequired,
         current: PropTypes.number.isRequired,
