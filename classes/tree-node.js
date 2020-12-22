@@ -23,10 +23,12 @@ export class TreeNode {
             this.children = [...children];
         } else {
             this.name = value;
+            // if uuid and value null, the node should be null
             if (uuid === null && value === null) {
                 this.uuid = null;
             }
             else {
+                // if no uuid, use our own, used for testing
                 this.uuid = uuid || uuidv4(); 
             }
             this.children = null;
