@@ -24,16 +24,16 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
     }
 
     const handleUpdateValue = (value) => {
-        // setRootNode(replaceNodeValue(rootNode, parseInt(value), activeNode.uuid));
+        tree.replaceNodeValue(parseInt(value), activeNode.uuid);
+        setTree(new BinaryTree(null, tree));
     }
 
     const generateHandleAddChildren = ({ isLeft }) => {
         return (value) => {
             let childValue = parseInt(value);
             
-            console.log(tree);
             tree.addNode(childValue, isLeft, activeNode.uuid)
-            setTree({ ...tree });
+            setTree(new BinaryTree(null, tree)); // Makes a copy of current tree.
             setActiveNode((activeNode) => ({ ...activeNode, ...(isLeft ? { left: childValue } : { right: childValue })}));
         }
     }
@@ -42,7 +42,12 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
         tree.deleteSubtree(activeNode.uuid);
 
         setActiveNode(null);
-        setTree({ ...tree });
+        if (tree.root === null) {
+            setTree(null);
+        }
+        else {
+            setTree(new BinaryTree(null, tree));
+        }
     }
 
 
@@ -85,7 +90,7 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
 TreeTraversalActions.propTypes = {
     tree: PropTypes.instanceOf(BinaryTree),
     activeNode: PropTypes.exact({
-        uuid: PropTypes.string.isRequired,
+        uuid: PropTypes.string,
         current: PropTypes.number.isRequired,
         left: PropTypes.number,
         right: PropTypes.number
