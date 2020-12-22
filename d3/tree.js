@@ -39,9 +39,9 @@ export const generateD3Tree = (rootNode, width) => {
  * @param d3TreeRef - ref representing current d3 tree
  * @param width - width of canvas
  * @param height - height of canvas
- * @param animationElementRef - ref to keep track of transform for traversal animation element
+ * @param transformRef - ref to keep track of current transform of canvas
  */
-export const drawD3Tree = (d3TreeRef, width, height, animationElementRef) => {
+export const drawD3Tree = (d3TreeRef, width, height, transformRef) => {
     d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
     const canvas = d3.select('#tree')
@@ -61,7 +61,7 @@ export const drawD3Tree = (d3TreeRef, width, height, animationElementRef) => {
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
-            animationElementRef.current = transform;
+            transformRef.current = transform;
             d3.selectAll('#tree-svg > g')
                 .attr('transform', transform);
         }))

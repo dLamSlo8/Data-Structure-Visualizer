@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import TreeNode from "../../classes/tree-node.js";
+
+import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
 import BinaryTree from "../../classes/binary-tree.js";
-=======
-import { NullTreeNode, TreeNode } from "../../classes/tree-node.js";
-import { BinaryTree } from "../../classes/binary-tree.js";
->>>>>>> 0fd76f8906aafb909c2a9e278114a73eaa7a08e9
 
 
 describe ("Test inOrderTraversal method", () => {

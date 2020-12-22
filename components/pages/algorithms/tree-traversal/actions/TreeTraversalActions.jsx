@@ -11,9 +11,13 @@ import ActionSubsection from '@components/ActionSubsection';
 
 // Responsibility: Render and handle actions for custom binary tree.
 function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
+    /**
+     * Initialize tree and update active node
+     * @param {number} value Value to initialize tree with
+     */
     const handleInit = (value) => {
         let tree = new BinaryTree(new TreeNode(parseInt(value)));
-        console.log(tree);
+
         setTree(tree);
         setActiveNode({
             uuid: tree.root.uuid,
@@ -23,21 +27,32 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
         });
     }
 
+    /**
+     * Update current node's value
+     * @param {number} value Value to update the current node to
+     */
     const handleUpdateValue = (value) => {
         tree.replaceNodeValue(parseInt(value), activeNode.uuid);
-        setTree(new BinaryTree(null, tree));
+        setTree(new BinaryTree(null, tree)); // Makes a copy of current tree (look at BinaryTree constructor for more info)
     }
 
+    /**
+     * Generates a function to add child node based on left or right child
+     * @param {bool} isLeft Whether the node we are adding is the left child
+     */
     const generateHandleAddChildren = ({ isLeft }) => {
         return (value) => {
             let childValue = parseInt(value);
             
             tree.addNode(childValue, isLeft, activeNode.uuid)
-            setTree(new BinaryTree(null, tree)); // Makes a copy of current tree.
+            setTree(new BinaryTree(null, tree)); 
             setActiveNode((activeNode) => ({ ...activeNode, ...(isLeft ? { left: childValue } : { right: childValue })}));
         }
     }
 
+    /**
+     * Deletes tree node and updates state (i.e. reset active node and tree)
+     */
     const handleDeleteNode = () => {
         tree.deleteSubtree(activeNode.uuid);
 
