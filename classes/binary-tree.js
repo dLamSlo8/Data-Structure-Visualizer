@@ -167,20 +167,34 @@ export class BinaryTree {
 
             if (node.uuid === matchUUID) {
                 if (isLeft) {
-                    if (node.children[0] !== null) {
-                        throw ("A left child for this node already exists.")
+                    if (node.children) {
+                        if (node.children[0] && node.children[0].name !== null) {
+                            throw ("A left child for this node already exists.")
+                        }
+    
+                        node.children[0] = new TreeNode(value, createUUID);
                     }
-                    node.children[0] = new TreeNode(value, createUUID);
+                    else {
+                        node.children = [new TreeNode(value, createUUID), new TreeNode(null, null)];
+                    }
                 } else {
-                    if (node.children[1] !== null) {
-                        throw ("A right child for this node already exists.")
+                    if (node.children) {
+                        if (node.children[1] && node.children[1].name !== null) {
+                            throw ("A right child for this node already exists.")
+                        }
+
+                        node.children[1] = new TreeNode(value, createUUID);
                     }
-                    node.children[1] = new TreeNode(value, createUUID);
+                    else {
+                        node.children = [new TreeNode(null, null), new TreeNode(value, createUUID)];
+                    }
                 }
                 return;
             }
-            helper(node.children[0], value, isLeft, matchUUID, createUUID);
-            helper(node.children[1], value, isLeft, matchUUID, createUUID);
+            if (node.children) {
+                helper(node.children[0], value, isLeft, matchUUID, createUUID);
+                helper(node.children[1], value, isLeft, matchUUID, createUUID);
+            }
         }
 
         if (this.root === null) {

@@ -18,10 +18,18 @@ export class TreeNode {
     constructor(value, uuid, node) {
         if (node) {
             let { name, uuid, children } = node;
+            this.name = name;
+            this.uuid = uuid;
+            this.children = [...children];
         } else {
             this.name = value;
-            this.uuid = uuid || uuidv4();
-            this.children = [null, null];
+            if (uuid === null && value === null) {
+                this.uuid = null;
+            }
+            else {
+                this.uuid = uuid || uuidv4(); 
+            }
+            this.children = null;
         }
     }
 
