@@ -321,3 +321,75 @@ describe ("Test addNode method", () => {
         expect(input.root).toMatchObject(expected);
     })
 })
+
+describe ("Test replaceNodeValue method", () => {
+    it ("Should throw an error when missing root", () => {
+        var input = new BinaryTree();
+
+        expect(() => input.replaceNodeValue(5, "123")).toThrow("Please insert a node into the tree.");
+    })
+
+    it ("Should update node value of corresponding node", () => {
+        var root = new TreeNode(1, "123");
+
+        var input = new BinaryTree(root);
+
+        var expected = new TreeNode(5, "123");
+
+        input.replaceNodeValue(5, "123");
+        expect(input.root).toMatchObject(expected);
+
+        var root = new TreeNode(5, "123");
+        root.children[1] = new TreeNode(4, "111");
+        root.children[1].children[0] = new TreeNode(6, "964");
+        root.children[1].children[1] = new TreeNode(7, "432");
+
+        var input = new BinaryTree(root);
+
+        var expected = new TreeNode(5, "123");
+        expected.children[1] = new TreeNode(-1, "111");
+        expected.children[1].children[0] = new TreeNode(6, "964");
+        expected.children[1].children[1] = new TreeNode(7, "432");
+
+        input.replaceNodeValue(-1, "111");
+        expect(input.root).toMatchObject(expected);
+
+        var root = new TreeNode(-1, "123");
+        root.children[0] = new TreeNode(-2, "111");
+        root.children[0].children[0] = new TreeNode(2, "964");
+        root.children[1] = new TreeNode(0, "432");
+        root.children[1].children[1] = new TreeNode(-3, "231");
+        root.children[1].children[1].children[1] = new TreeNode(-3, "777");
+
+        var input = new BinaryTree(root);
+
+        var expected = new TreeNode(-1, "123");
+        expected.children[0] = new TreeNode(-2, "111");
+        expected.children[0].children[0] = new TreeNode(2, "964");
+        expected.children[1] = new TreeNode(0, "432");
+        expected.children[1].children[1] = new TreeNode(-3, "231");
+        expected.children[1].children[1].children[1] = new TreeNode(-2, "777");
+
+        input.replaceNodeValue(-2, "777");
+        expect(input.root).toMatchObject(expected);
+
+        var root = new TreeNode(-1, "123");
+        root.children[0] = new TreeNode(-2, "111");
+        root.children[0].children[0] = new TreeNode(2, "964");
+        root.children[1] = new TreeNode(0, "432");
+        root.children[1].children[1] = new TreeNode(-3, "231");
+        root.children[1].children[1].children[1] = new TreeNode(-3, "777");
+
+        var input = new BinaryTree(root);
+
+        var expected = new TreeNode(-1, "123");
+        expected.children[0] = new TreeNode(-2, "111");
+        expected.children[0].children[0] = new TreeNode(0, "964");
+        expected.children[1] = new TreeNode(0, "432");
+        expected.children[1].children[1] = new TreeNode(-3, "231");
+        expected.children[1].children[1].children[1] = new TreeNode(-3, "777");
+
+        input.replaceNodeValue(0, "964");
+        expect(input.root).toMatchObject(expected);
+    })
+})
