@@ -189,4 +189,30 @@ export class BinaryTree {
 
         helper(this.root, value, isLeft, matchUUID, createUUID);
     }
+
+    /**
+     * Updates node with new value
+     * @param {int} value - value to replace node with
+     * @param {string} uuid - uuid of node we want to update value for
+     */
+    replaceNodeValue = (value, uuid) => {
+        function helper(node, value, uuid) {
+            if (node === null) {
+                return;
+            }
+
+            if (node.uuid === uuid) {
+                node.name = value;
+                return;
+            }
+            helper(node.children[0], value, uuid);
+            helper(node.children[1], value, uuid);
+        }
+
+        if (this.root === null) {
+            throw ("Please insert a node into the tree.")
+        }
+
+        helper(this.root, value, uuid);
+    }
 }
