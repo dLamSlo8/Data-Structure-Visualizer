@@ -34,50 +34,18 @@ function TreeTraversalSection({ sectionCollapsed }) {
         <>
             <DropdownSelect
             title="Traversal Type"
-            defaultValue="Preorder"
+            values={[{
+                title: 'Preorder'
+            }, {
+                title: 'Inorder'
+            }, {
+                title: 'Postorder'
+            }]}
+            value={traversalType}
+            setValue={setTraversalType}
             dropdownWrapperClass="mt-1 w-full"
-            >
-                {
-                    ({ selectedItem, setSelectedItem, setOpen }) => {
-                        /**
-                         * Effect
-                         * When this section is collapsed, we need to close the menu!
-                         */
-                        useEffect(() => {
-                            if (sectionCollapsed) {
-                                setOpen(false);
-                            }
-                        }, [sectionCollapsed]);
-
-                        /**
-                         * Updates appropriate state on click of new item
-                         * @param {string} item Currently selected item 
-                         */
-                        const handleClick = (item) => {
-                            setSelectedItem(item);
-                            setTraversalType(item);
-                            setOpen(false);
-                        }
-
-                        return (
-                            <>
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Preorder'}
-                                title="Preorder"
-                                handleClick={() => handleClick('Preorder')} />
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Inorder'}
-                                title="Inorder"
-                                handleClick={() => handleClick('Inorder')} />
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Postorder'}
-                                title="Postorder"
-                                handleClick={() => handleClick('Postorder')} />
-                            </>
-                        )
-                    }
-                }
-            </DropdownSelect>
+            closeTrigger={sectionCollapsed} />
+               
             <ControlSection rootClass="mt-3" />
         </>
     )
