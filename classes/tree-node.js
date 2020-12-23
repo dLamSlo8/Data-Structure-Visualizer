@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @property {string} uuid - uuid of node
  * @property {Array} children - children nodes (i.e. index 0 is left, index 1 is right)
  */
-export class TreeNode {
+export default class TreeNode {
 
     /**
      * @param {int} value - value of node
@@ -20,7 +20,12 @@ export class TreeNode {
             let { name, uuid, children } = node;
             this.name = name;
             this.uuid = uuid;
-            this.children = [...children];
+            if (children) {
+                this.children = [new TreeNode(null, null, node.children[0]), new TreeNode(null, null, node.children[1])];
+            }
+            else {
+                this.children = null;
+            }
         } else {
             this.name = value;
             // if uuid and value null, the node should be null

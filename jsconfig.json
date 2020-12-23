@@ -6,7 +6,9 @@
             "@hooks/*": ["hooks/*"],
             "@contexts/*": ["contexts/*"],
             "@functions/*": ["functions/*"],
-            "@icons/*": ["public/icons/*"]
+            "@icons/*": ["public/icons/*"],
+            "@classes/*": ["classes/*"],
+            "@d3/*": ["d3/*"]
         }
     }
 }

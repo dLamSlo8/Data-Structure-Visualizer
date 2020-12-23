@@ -7,21 +7,21 @@ import TreeTraversalVisualization from '@components/pages/algorithms/tree-traver
 // Responsibility: Render the actions and visualization component, allowing for communication through coupled state.
 // Does not interfere with logic. Lets actions and visualization do the work.
 export default function TreeTraversal() {
-    const [rootNode, setRootNode] = useState(null);
+    const [tree, setTree] = useState(null);
     const [activeNode, setActiveNode] = useState(null);
 
     return (
         <DSAPageLayout
         actions={
             <TreeTraversalActions 
-            rootNode={rootNode} 
+            tree={tree} 
             activeNode={activeNode} 
-            setRootNode={setRootNode} 
+            setTree={setTree} 
             setActiveNode={setActiveNode} />
         }
         visualization={({ width, height }) => (
             <TreeTraversalVisualization 
-            rootNode={rootNode} 
+            tree={tree} 
             activeUuid={activeNode?.uuid} 
             width={width} 
             height={height} 
