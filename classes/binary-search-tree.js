@@ -99,6 +99,12 @@ export class BinarySearchTree {
                 helper(node.children[1], value, moves);
             }
         }
+
+        // if tree doesn't exist create a new node;
+        if (this.root === null) {
+            throw ("Please create a tree!");
+        }
+
         let moves = [];
         helper(this.root, value, moves);
         return moves;
@@ -239,6 +245,11 @@ export class BinarySearchTree {
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
+        }
+
+        // if tree doesn't exist create a new node;
+        if (this.root === null) {
+            throw ("Please create a tree!");
         }
 
         let moves = [];
