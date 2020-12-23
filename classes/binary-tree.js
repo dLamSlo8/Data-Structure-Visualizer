@@ -40,7 +40,7 @@ export class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
@@ -68,7 +68,7 @@ export class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
@@ -96,7 +96,7 @@ export class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
@@ -110,10 +110,10 @@ export class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var node = this.root;
-        var res = [[], []];
+        let node = this.root;
+        let res = [[], []];
         
-        var q = []
+        let q = []
         q.push(node);
         while (q.length > 0) {
             let first = q.shift();
@@ -154,8 +154,8 @@ export class BinaryTree {
             // if child exists
             if (node.children) {
                 // go through left and right
-                var left = helper(node.children[0], uuid);
-                var right = helper(node.children[1], uuid);
+                let left = helper(node.children[0], uuid);
+                let right = helper(node.children[1], uuid);
 
                 // if no child left, set children back to null
                 if ((left === null || left === NullTreeNode) && (right === null || right === NullTreeNode)) {

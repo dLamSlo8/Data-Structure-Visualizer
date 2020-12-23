@@ -27,7 +27,7 @@ export class BinarySearchTree {
         // need to discuss how to handle root node
         function helper(node, value, uuid, moves) {
             if (node == null || node === NullTreeNode) {
-                var newNode = new TreeNode(value, uuid);
+                let newNode = new TreeNode(value, uuid);
                 moves.push(newNode.uuid);
                 return newNode;
             }
@@ -58,7 +58,7 @@ export class BinarySearchTree {
             throw ("Please create a tree!");
         }
 
-        var moves = [];
+        let moves = [];
         helper(this.root, value, uuid, moves);
         return moves;
     }
@@ -84,7 +84,7 @@ export class BinarySearchTree {
                 helper(node.children[1], value, moves);
             }
         }
-        var moves = [];
+        let moves = [];
         helper(this.root, value, moves);
         return moves;
     }
@@ -115,7 +115,7 @@ export class BinarySearchTree {
                     return node.children[0];
                 }
                 else {
-                    var tmp = inorderSuccessor(node);
+                    let tmp = inorderSuccessor(node);
                     moves.push({"id": tmp.uuid});
                     tmp.children = [];
                     tmp.children[0] = node.children[0];
@@ -211,7 +211,7 @@ export class BinarySearchTree {
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
         }
 
-        var moves = [];
+        let moves = [];
         let result = helper(this.root, value, moves);
         this.root = ( result === NullTreeNode) ? null: result;
         
