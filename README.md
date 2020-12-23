@@ -1,3 +1,5 @@
+[![Build Status](https://www.travis-ci.com/dLamSlo8/Data-Structure-Visualizer.svg?branch=main)](https://www.travis-ci.com/dLamSlo8/Data-Structure-Visualizer)
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
