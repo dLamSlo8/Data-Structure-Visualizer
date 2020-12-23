@@ -8,7 +8,11 @@ import DropdownMenu from './DropdownMenu';
 import DropdownMenuOpener from './DropdownMenuOpener';
 import SelectableDropdownItem from'./SelectableDropdownItem';
 
-// Responsibility: Handle rendering and keeping local state for dropdown select
+/**
+ * Custom select element
+ * Responsibility: Renders dropdown and handles open and active item state
+ * @state open - Whether the dropdown is opened
+ */ 
 function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdownWrapperClass }) {
     const [open, setOpen] = useState(false);
     
@@ -48,6 +52,7 @@ function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdown
                         {
                             values.map(({ title, ...restItemProps }) => (
                                 <SelectableDropdownItem 
+                                key={title}
                                 isSelected={value === title}
                                 title={title}
                                 handleClick={() => handleClick(title)}
@@ -63,9 +68,11 @@ function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdown
 
 DropdownSelect.propTypes = {
     title: PropTypes.string.isRequired,
-    defaultValue: PropTypes.any,
+    value: PropTypes.any.isRequired,
+    setValue: PropTypes.func.isRequired,
+    values: PropTypes.arrayOf(PropTypes.object).isRequired,
     dropdownWrapperClass: PropTypes.string,
-    children: PropTypes.func.isRequired
+    closeTrigger: PropTypes.bool
 };
 
 export default DropdownSelect;

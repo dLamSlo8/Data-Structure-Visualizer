@@ -41,11 +41,13 @@ export const generateD3Tree = (rootNode, width) => {
  * @param height - height of canvas
  * @param transformRef - ref to keep track of current transform of canvas
  */
-export const drawD3Tree = (d3TreeRef, width, height, transformRef) => {
-    d3.select('#tree-svg').remove(); // Remove previous tree if any. 
+export const drawD3Tree = (attachRef, d3TreeRef, width, height, transformRef) => {
 
-    const canvas = d3.select('#tree')
-        .append('svg')
+    let canvas = d3.select(attachRef);
+
+    canvas.select('svg').remove(); // Remove previous tree if any
+
+    canvas.append('svg')
         .attr('id', 'tree-svg')
         .attr('cursor', 'grab')
         .attr('width', width)
@@ -66,6 +68,7 @@ export const drawD3Tree = (d3TreeRef, width, height, transformRef) => {
                 .attr('transform', transform);
         }))
 
+    canvas = canvas.select('svg > g');
 
     canvas.append('g')
         .attr('class', 'links');
@@ -110,10 +113,7 @@ export const drawD3Tree = (d3TreeRef, width, height, transformRef) => {
         .attr('y', function(d) { return d.y; })
         .attr('text-anchor', 'middle')
         .attr('dy', '6')
-        .attr('font-family', '"Lora", serif');
-
-
-    return { nodes };
+        .attr('font-family', '"Inter", serif');
 }
 
 /**

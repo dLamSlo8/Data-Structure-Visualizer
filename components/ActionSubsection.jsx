@@ -63,6 +63,9 @@ function ActionSubsection({ sectionTitle, sectionDescription, propagateCollapsed
 ActionSubsection.propTypes = {
     sectionTitle: PropTypes.string.isRequired,
     sectionDescription: PropTypes.string.isRequired,
-    children: PropTypes.node.isRequired
+    children: PropTypes.oneOfType([
+        PropTypes.node,
+        PropTypes.func
+    ]).isRequired
 }
 export default ActionSubsection;

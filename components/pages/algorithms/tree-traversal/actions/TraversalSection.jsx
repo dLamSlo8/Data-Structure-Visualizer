@@ -13,7 +13,7 @@ import ControlSection from '@components/animations/controls/ControlSection';
  * Responsibility: Render tree traversal section and handle changes to traversal function
  * @state traversalType - Type of tree traversal
  */ 
-function TraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed is not being passed!
+function TraversalSection({ sectionCollapsed }) { 
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const [traversalType, setTraversalType] = useState('Preorder');
 

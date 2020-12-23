@@ -91,7 +91,7 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
                 {
                     ({ collapsed }) => (
                         tree ? (
-                            <TraversalSection tree={tree} sectionCollapsed={collapsed} />
+                            <TraversalSection sectionCollapsed={collapsed} />
                         ) : (
                             <div className="mt-8">
                                 <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
