@@ -9,7 +9,7 @@ import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem'
 import ControlSection from '@components/animations/controls/ControlSection';
 
 // Responsibility: Render tree traversal section and handle changes to traversal function.
-function TreeTraversalSection({ sectionCollapsed }) {
+function TreeTraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed is not being passed!
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const [traversalType, setTraversalType] = useState('Preorder');
 
