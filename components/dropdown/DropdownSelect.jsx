@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import UpIcon from '../../public/icons/chevron-up.svg';
@@ -6,11 +6,30 @@ import DownIcon from '../../public/icons/chevron-down.svg';
 
 import DropdownMenu from './DropdownMenu';
 import DropdownMenuOpener from './DropdownMenuOpener';
+import SelectableDropdownItem from'./SelectableDropdownItem';
 
-// Responsibility: Handle rendering and keeping local state for dropdown select
-function DropdownSelect({ title, defaultValue, dropdownWrapperClass, children: listChildren }) {
+/**
+ * Custom select element
+ * Responsibility: Renders dropdown and handles open and active item state
+ * @state open - Whether the dropdown is opened
+ */ 
+function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdownWrapperClass }) {
     const [open, setOpen] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(defaultValue);
+    
+    /**
+     * Effect
+     * Automatically closes dropdown when trigger is activated.
+     */
+    useEffect(() => {
+        if (closeTrigger) {
+            setOpen(false);
+        }
+    }, [closeTrigger]);
+
+    const handleClick = (title) => {
+        setOpen(false);
+        setValue(title);
+    };
 
     return (
         <>
@@ -18,7 +37,7 @@ function DropdownSelect({ title, defaultValue, dropdownWrapperClass, children: l
             <button 
             className="flex justify-between items-center w-full py-3 px-5 border border-gray-500 rounded-lg"
             onClick={() => setOpen((open) => !open)}>
-                {selectedItem}
+                {value}
                 {
                     open ? (
                         <UpIcon />
@@ -30,7 +49,16 @@ function DropdownSelect({ title, defaultValue, dropdownWrapperClass, children: l
             <DropdownMenuOpener open={open}>
                 <div className={`dropdown-wrapper ${dropdownWrapperClass ?? ''}`}>
                     <DropdownMenu>
-                        {listChildren({ selectedItem, setSelectedItem, setOpen })}
+                        {
+                            values.map(({ title, ...restItemProps }) => (
+                                <SelectableDropdownItem 
+                                key={title}
+                                isSelected={value === title}
+                                title={title}
+                                handleClick={() => handleClick(title)}
+                                {...restItemProps} />
+                            ))
+                        }
                     </DropdownMenu>
                 </div>
             </DropdownMenuOpener>
@@ -40,9 +68,11 @@ function DropdownSelect({ title, defaultValue, dropdownWrapperClass, children: l
 
 DropdownSelect.propTypes = {
     title: PropTypes.string.isRequired,
-    defaultValue: PropTypes.any,
+    value: PropTypes.any.isRequired,
+    setValue: PropTypes.func.isRequired,
+    values: PropTypes.arrayOf(PropTypes.object).isRequired,
     dropdownWrapperClass: PropTypes.string,
-    children: PropTypes.func.isRequired
+    closeTrigger: PropTypes.bool
 };
 
 export default DropdownSelect;
