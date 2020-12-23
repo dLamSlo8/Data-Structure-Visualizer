@@ -36,6 +36,7 @@ export const generateD3Tree = (rootNode, width) => {
 
 /**
  * Draws tree for #tree selector.
+ * @param attachRef - ref representing dom element to attach tree to
  * @param d3TreeRef - ref representing current d3 tree
  * @param width - width of canvas
  * @param height - height of canvas
