@@ -12,8 +12,8 @@ export default class TreeNode {
 
     /**
      * @param {int} value - value of node
-     * @param {string} [uuid] - uuid of node
-     * @param {TreeNode} [node] - node to make copy of 
+     * @param {string} [uuid = null] - (optional) uuid of node
+     * @param {TreeNode} [node = null] - (optional) node to make copy of 
      */
     constructor(value, uuid, node) {
         if (node) {

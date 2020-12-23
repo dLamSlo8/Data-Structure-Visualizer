@@ -393,8 +393,8 @@ describe ("Test deleteNode method", () => {
 
         // testing removing successor that is a left child and only has right child
         root = new TreeNode(6, "1");
-        root.setLeft(new TreeNode(2,"2"))
-        root.setRight(new TreeNode(20,"3"))
+        root.setLeft(new TreeNode(2,"2"));
+        root.setRight(new TreeNode(20,"3"));
     })
     
 })
