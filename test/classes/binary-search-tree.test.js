@@ -1,4 +1,4 @@
-import { NullTreeNode, TreeNode } from "../../classes/tree-node.js";
+import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
 import { BinarySearchTree } from "../../classes/binary-search-tree.js";
 
 describe ("Test insertNode method", () => {

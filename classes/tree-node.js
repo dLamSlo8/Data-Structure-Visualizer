@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @property {string} uuid - uuid of node
  * @property {Array} children - children nodes (i.e. index 0 is left, index 1 is right)
  */
-export class TreeNode {
+export default class TreeNode {
 
     /**
      * @param {int} value - value of node

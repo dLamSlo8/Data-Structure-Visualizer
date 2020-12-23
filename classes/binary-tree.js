@@ -1,4 +1,4 @@
-import {TreeNode, NullTreeNode} from "./tree-node.js";
+import TreeNode, { NullTreeNode } from "./tree-node.js";
 
 /**
  * Binary Tree class
