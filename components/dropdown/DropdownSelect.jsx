@@ -11,7 +11,7 @@ import SelectableDropdownItem from'./SelectableDropdownItem';
 // Responsibility: Handle rendering and keeping local state for dropdown select
 function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdownWrapperClass }) {
     const [open, setOpen] = useState(false);
-
+    
     /**
      * Effect
      * Automatically closes dropdown when trigger is activated.

@@ -86,15 +86,18 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
             </ActionSubsection>
             <ActionSubsection
             sectionTitle="Simulate Traversals"
-            sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation.">
+            sectionDescription="Here you can select a traversal to run and use the following controls to step through the animation."
+            propagateCollapsed>
                 {
-                    tree ? (
-                        <TraversalSection tree={tree} />
-                    ) : (
-                        <div className="mt-8">
-                            <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
-                            <p className="font-semibold text-gray-500">Tree must be non-empty in order to simulate traversals.</p>
-                        </div>
+                    ({ collapsed }) => (
+                        tree ? (
+                            <TraversalSection tree={tree} sectionCollapsed={collapsed} />
+                        ) : (
+                            <div className="mt-8">
+                                <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>
+                                <p className="font-semibold text-gray-500">Tree must be non-empty in order to simulate traversals.</p>
+                            </div>
+                        )
                     )
                 }
             </ActionSubsection>

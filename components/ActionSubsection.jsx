@@ -5,7 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import CollapseIcon from '../public/icons/collapse.svg';
 import ExpandIcon from '../public/icons/expand.svg';
 
-function ActionSubsection({ sectionTitle, sectionDescription, children: sectionContent }) {
+function ActionSubsection({ sectionTitle, sectionDescription, propagateCollapsed, children: sectionContent }) {
     const [collapsed, setCollapsed] = useState(false);
     const sectionRef = useRef(null);
 
@@ -50,7 +50,9 @@ function ActionSubsection({ sectionTitle, sectionDescription, children: sectionC
                 {...cssTransitionLifecycle}>
                     <div className="section-scroll">
                         <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
-                        {sectionContent}
+                        {
+                            propagateCollapsed ? sectionContent({ collapsed }) : sectionContent
+                        }
                     </div>
                 </CSSTransition>
             </div>
