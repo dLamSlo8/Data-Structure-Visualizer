@@ -11,7 +11,7 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function useAnimationControl({ initialProps, initConfig }) {
+export default function AnimationManager({ initialProps, initConfig, d3StructureRef }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
@@ -98,7 +98,7 @@ export default function useAnimationControl({ initialProps, initConfig }) {
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
-            setSteps(stepGeneratorRef.current());
+            setSteps(stepGeneratorRef.current(d3StructureRef.current));
             
             updateStepsRef.current = false;
         }

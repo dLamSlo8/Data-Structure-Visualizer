@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
+import D3Context from '@contexts/D3Context';
 import { preOrderTraversalD3, inOrderTraversalD3, postOrderTraversalD3 } from '@functions/algorithms/d3/tree';
 
 import DropdownSelect from '@components/dropdown/DropdownSelect';
@@ -11,6 +12,7 @@ import ControlSection from '@components/animations/controls/ControlSection';
 // Responsibility: Render tree traversal section and handle changes to traversal function.
 function TreeTraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed is not being passed!
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
+    const { d3StructureRef } = useContext(D3Context);
     const [traversalType, setTraversalType] = useState('Preorder');
 
     /**
@@ -19,13 +21,13 @@ function TreeTraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed
      */
     useEffect(() => {
         if (traversalType === 'Preorder') {
-            stepGeneratorRef.current = preOrderTraversalD3;
+            stepGeneratorRef.current = () => preOrderTraversalD3(d3StructureRef.current);
         }
         else if (traversalType === 'Inorder') {
-            stepGeneratorRef.current = inOrderTraversalD3;
+            stepGeneratorRef.current = () => inOrderTraversalD3(d3StructureRef.current);
         }
         else {
-            stepGeneratorRef.current = postOrderTraversalD3;
+            stepGeneratorRef.current = () => postOrderTraversalD3(d3StructureRef.current);
         }
         updateStepsRef.current = true;
     }, [traversalType]);

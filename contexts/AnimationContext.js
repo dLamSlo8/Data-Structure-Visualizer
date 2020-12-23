@@ -20,6 +20,7 @@ export function AnimationContextProvider({ children }) {
     const animationMethodsRef = useRef(null);
     const stepGeneratorRef = useRef(null);
     const updateStepsRef = useRef(false); 
+    const canvasTransformRef = useRef(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -36,7 +37,7 @@ export function AnimationContextProvider({ children }) {
     }, [isMounted]);
      
     return (
-        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, animationMethodsRef, stepGeneratorRef, updateStepsRef, animationState, setAnimationState, config, setConfig }}>
+        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, canvasTransformRef, animationMethodsRef, stepGeneratorRef, updateStepsRef, animationState, setAnimationState, config, setConfig }}>
             {children}
         </AnimationContext.Provider>
     )
