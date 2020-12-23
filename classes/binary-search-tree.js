@@ -26,7 +26,7 @@ export class BinarySearchTree {
     insertNode(value, uuid) {
         // need to discuss how to handle root node
         function helper(node, value, uuid, moves) {
-            if (node == null || node === NullTreeNode) {
+            if (node === null || node === NullTreeNode) {
                 let newNode = new TreeNode(value, uuid);
                 moves.push(newNode.uuid);
                 return newNode;
@@ -69,7 +69,7 @@ export class BinarySearchTree {
      */
     findNode(value) {
         function helper(node, value, moves) {
-            if (node == null) {
+            if (node === null) {
                 throw "A node with this value does not exist in the tree";
             }
             moves.push(node.uuid);
@@ -98,7 +98,7 @@ export class BinarySearchTree {
      */
     deleteNode(value) {
         function helper(node, value, moves) {
-            if (node == null) {
+            if (node === null) {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 throw "A node with this value does not exist in the tree";
             }
@@ -108,10 +108,10 @@ export class BinarySearchTree {
                 if (node.children == null) {
                     return NullTreeNode;
                 }
-                else if (node.children[0] == null || node.children[0] === NullTreeNode) {
+                else if (node.children[0] === null || node.children[0] === NullTreeNode) {
                     return node.children[1];
                 }
-                else if (node.children[1] == null || node.children[1] === NullTreeNode) {
+                else if (node.children[1] === null || node.children[1] === NullTreeNode) {
                     return node.children[0];
                 }
                 else {
@@ -165,19 +165,19 @@ export class BinarySearchTree {
             function findMin(node, isRightChild, isLeftChild) {
                 if (node.children !== null) {
                     // found last node in left branch
-                    if (node.children[0] == null || node.children[0] === NullTreeNode) {
+                    if (node.children[0] === null || node.children[0] === NullTreeNode) {
                         // successor has a right child, transfer successor's right child to parent
 
-                        if (isRightChild != null && isLeftChild == null) {
+                        if (isRightChild !== null && isLeftChild === null) {
                             // successor has a right child, which means it's right child must be set to successor's right child
-                            if (node.children[1] != NullTreeNode) {
+                            if (node.children[1] !== NullTreeNode) {
                                 //attach this node's right children to its parent
                                 isRightChild.children[1] = node.children[1];
                             }
                         }
-                        else if (isRightChild == null && isLeftChild != null) {
+                        else if (isRightChild === null && isLeftChild !== null) {
                             // a left child can have right have right children it needs to attach to parent
-                            if (node.children[1] != NullTreeNode) {
+                            if (node.children[1] !== NullTreeNode) {
                                 //attach this node's right children to its parent
                                 isLeftChild.children[0] = node.children[1];
                             }
@@ -189,17 +189,17 @@ export class BinarySearchTree {
                 //node has no children, which means it is the left most leaf node
 
                 // remove the node from parent node
-                if (isRightChild != null && isLeftChild == null) {
+                if (isRightChild !== null && isLeftChild === null) {
                     //check if parent does not have a left child
-                    if (isRightChild.children[0] == NullTreeNode) {
+                    if (isRightChild.children[0] === NullTreeNode) {
                         isRightChild.children = null;
                     } else{
                         isRightChild.children[1] = NullTreeNode;
                     }
                 }
-                else if (isRightChild == null && isLeftChild != null) {
+                else if (isRightChild === null && isLeftChild !== null) {
                     //check if parent does not have a left child
-                    if (isLeftChild.children[1] == NullTreeNode) {
+                    if (isLeftChild.children[1] === NullTreeNode) {
                         isLeftChild.children = null;
                     } else{
                         isLeftChild.children[0] = NullTreeNode;

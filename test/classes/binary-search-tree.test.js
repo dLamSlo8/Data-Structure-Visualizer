@@ -73,30 +73,43 @@ describe ("Test deleteNode method", () => {
 
         expect(() => input.deleteNode(5)).toThrow("A node with this value does not exist in the tree");
 
-
-        input = new BinarySearchTree();
         let root = new TreeNode(5, "1");
         root.setLeft(new TreeNode(5, "2"));
         root.setRight(new TreeNode(7, "3"));
 
+        input = new BinarySearchTree(root);
+
+        expect(() => input.deleteNode(2)).toThrow("A node with this value does not exist in the tree");
         expect(() => input.deleteNode(10)).toThrow("A node with this value does not exist in the tree");
         expect(() => input.deleteNode()).toThrow("A node with this value does not exist in the tree");
     })
 
     it ("Should give proper moves array and tree", () => {
-        // testing delete on left side with deleted element having no children
+        // test delete to return empty root for single element
         let root = new TreeNode(5, "1");
-        root.setLeft(new TreeNode(4, "2"));
-        root.setRight(new TreeNode(7, "3"));
 
         let input = new BinarySearchTree(root);
 
-        let expectedMoves = ["1", "2"];
+        let expectedMoves = ["1"];
+
+        let result = input.deleteNode(5);
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.root).toBeNull();
+
+        // testing delete on left side with deleted element having no children
+        root = new TreeNode(5, "1");
+        root.setLeft(new TreeNode(4, "2"));
+        root.setRight(new TreeNode(7, "3"));
+
+        input = new BinarySearchTree(root);
+
+        expectedMoves = ["1", "2"];
 
         let expected = new TreeNode(5, "1");
         expected.setRight(new TreeNode(7, "3"));
 
-        let result = input.deleteNode(4);
+        result = input.deleteNode(4);
 
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
@@ -377,6 +390,11 @@ describe ("Test deleteNode method", () => {
         expect(result.slice(0, -1)).toEqual(expectedMoves);
         expect(result[result.length - 1]).toMatchObject(expectedNode);
         expect(input.root).toEqual(expected);
+
+        // testing removing successor that is a left child and only has right child
+        root = new TreeNode(6, "1");
+        root.setLeft(new TreeNode(2,"2"))
+        root.setRight(new TreeNode(20,"3"))
     })
     
 })
@@ -428,6 +446,4 @@ describe ("Test findNode method", () => {
         expect(result).toEqual(expectedMoves);
 
     })
-    
-    
 })
