@@ -31,6 +31,7 @@ export class TreeNode {
                 // if no uuid, use our own, used for testing
                 this.uuid = uuid || uuidv4(); 
             }
+
             this.children = null;
         }
     }

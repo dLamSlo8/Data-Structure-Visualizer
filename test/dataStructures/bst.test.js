@@ -25,7 +25,7 @@ describe("Test insertNode function", () => {
         expectedTree.left.left = new Node(5, 4);
         expectedTree.right = new Node(7, 3);
 
-        var expectedMoves = [1, 2, 4]
+        var expectedMoves = [1, 2, 4];
 
         var result = insertNode(input, 5, 4);
         
@@ -90,8 +90,6 @@ describe("Test insertNode function", () => {
         expect(result[1]).toMatchObject(expectedTree);
 
     })
-
-    
 })
 
 describe("Test deleteNode function", () => {
