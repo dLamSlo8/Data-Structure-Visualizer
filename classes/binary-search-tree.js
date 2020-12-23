@@ -84,8 +84,8 @@ export class BinarySearchTree {
          * @param {Array} moves - array to store moves we took
          */
         function helper(node, value, moves) {
-            if (node === null) {
-                throw "A node with this value does not exist in the tree";
+            if (node === null || node === NullTreeNode) {
+                throw ("A node with this value does not exist in the tree");
             }
             moves.push(node.uuid);
 
@@ -93,10 +93,18 @@ export class BinarySearchTree {
                 return;
             }
             else if (value <= node.name) {
-                helper(node.children[0], value, moves);
-            } 
+                if (node.children) {
+                    helper(node.children[0], value, moves);
+                } else {
+                    helper(null, value, moves);
+                }
+            }
             else {
-                helper(node.children[1], value, moves);
+                if (node.children) {
+                    helper(node.children[1], value, moves);
+                } else {
+                    helper(null, value, moves);
+                }
             }
         }
 
