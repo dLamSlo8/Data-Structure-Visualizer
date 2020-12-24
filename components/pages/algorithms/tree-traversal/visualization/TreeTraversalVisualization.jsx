@@ -10,16 +10,22 @@ import {  } from '@functions/algorithms/d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
+import { NullTreeNode } from '@classes/tree-node';
 
-// Responsibility: Render any visuals (i.e. tree and animation element) and animatinos
+/**
+ * Visualization section of tree traversal page
+ * Responsibility: Render any visuals (i.e. tree and animation element) and animations
+ * @ref attachTreeRef - Ref passed to d3 to know where to attach tree visualization
+ */ 
 function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
-    const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
+    const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext); // ANIMATION
     const { d3StructureRef } = useContext(D3Context);
     const animationElementRef = useRef(null);
     const { animationProps } = useAnimationControl({
         initialProps: { xy: [50, 50] },
         d3StructureRef
     }); 
+    const attachTreeRef = useRef(null);
 
     /**
      * Sets active node based on selected node
@@ -38,14 +44,13 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         if (tree) {
             // Draw tree
             d3StructureRef.current = generateD3Tree(tree.root, width, height);
-            drawD3Tree(d3StructureRef.current, width, height, animationElementRef);
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
 
             // Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
-            if (tree.root.children === null) {
-                styleActiveNode(tree.root.uuid);
+            if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {
                 setActiveNode({
                     uuid: tree.root.uuid,
                     current: tree.root.name,
@@ -54,7 +59,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
                 });
             }
 
-            // Inidicates that steps need to be updated when isAnimatingMode is toggled
+            // ANIMATION - Indicates that steps need to be updated when isAnimatingMode is toggled
             if (!updateStepsRef.current) {
                 updateStepsRef.current = true;
             }
@@ -79,6 +84,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
      * Removes click handlers when in animating mode
      */
     useEffect(() => {
+        // isAnimatingMode is initially null, so we avoid hitting the inner false case on mount
         if (isAnimatingMode !== null) {
             if (isAnimatingMode) {
                 removeClickHandlers();
@@ -94,7 +100,8 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
     return (
         tree ? (
             <VisualizationLayout>
-                <div id="tree">
+                <div id="tree" ref={attachTreeRef}> 
+
                 </div>
                 {
                     animationState ? (
