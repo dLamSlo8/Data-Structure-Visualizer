@@ -27,7 +27,7 @@ export class BinarySearchTree {
         // need to discuss how to handle root node
         function helper(node, value, uuid, moves) {
             if (node == null || node === NullTreeNode) {
-                var newNode = new TreeNode(value, uuid);
+                let newNode = new TreeNode(value, uuid);
                 moves.push(newNode.uuid);
                 return newNode;
             }
@@ -58,7 +58,7 @@ export class BinarySearchTree {
             throw ("Please create a tree!");
         }
 
-        var moves = [];
+        let moves = [];
         helper(this.root, value, uuid, moves);
         return moves;
     }
@@ -84,7 +84,7 @@ export class BinarySearchTree {
                 helper(node.children[1], value, moves);
             }
         }
-        var moves = [];
+        let moves = [];
         helper(this.root, value, moves);
         return moves;
     }
@@ -115,7 +115,7 @@ export class BinarySearchTree {
                     return node.children[0];
                 }
                 else {
-                    var tmp = inorderSuccessor(node);
+                    let tmp = inorderSuccessor(node);
                     moves.push({"id": tmp.uuid});
                     tmp.children = [];
                     tmp.children[0] = node.children[0];
@@ -169,7 +169,7 @@ export class BinarySearchTree {
                         // successor has a right child, transfer successor's right child to parent
 
                         if (isRightChild != null && isLeftChild == null) {
-                            // successor has a right child, which means it's right child must be set to successor's right child
+                            // successor has a right child, which means its right child must be set to successor's right child
                             if (node.children[1] != NullTreeNode) {
                                 //attach this node's right children to its parent
                                 isRightChild.children[1] = node.children[1];
@@ -186,16 +186,25 @@ export class BinarySearchTree {
                     }
                     return findMin(node.children[0], null, node)
                 }
-                //node has no children, which means it is the left most leaf node
+                //node has no children, which means it is the left most leaf node or the direct right node of node we want to delete
 
                 // remove the node from parent node
                 if (isRightChild != null && isLeftChild == null) {
+                    /* 
+                        the commented out if statemnet can never occur. The reason the if statement exist in the 
+                        first place is because it needs to check the successors's parent to see if it has another
+                        child. If it does not, the parent's children value should be set to null rather than 
+                        [NullTreeNode, NullTreeNode]. Since we only ever call inOrderSuccessor when the node to
+                        delete has two nodes, we never actually need to check if there is a left child because it is
+                        guaranteed by the fact that the node has 2 children
+
+                    */
                     //check if parent does not have a left child
-                    if (isRightChild.children[0] == NullTreeNode) {
-                        isRightChild.children = null;
-                    } else{
+                    // if (isRightChild.children[0] == NullTreeNode) {
+                    //     isRightChild.children = null;
+                    // } else{
                         isRightChild.children[1] = NullTreeNode;
-                    }
+                    // }
                 }
                 else if (isRightChild == null && isLeftChild != null) {
                     //check if parent does not have a left child
@@ -211,7 +220,7 @@ export class BinarySearchTree {
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
         }
 
-        var moves = [];
+        let moves = [];
         let result = helper(this.root, value, moves);
         this.root = ( result === NullTreeNode) ? null: result;
         
