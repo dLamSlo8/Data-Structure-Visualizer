@@ -99,7 +99,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
                 <div id="tree" ref={attachTreeRef}> 
 
                 </div>
-                <AnimationManager initialProps={{ xy: [50, 50] }} >
+                <AnimationManager initialProps={{ xy: [0, 0] }}>
                     {
                         ({ animationProps }) => (
                             animationState ? (

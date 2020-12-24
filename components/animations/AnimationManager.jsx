@@ -28,7 +28,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
      * React-spring script for running an animation from its current step to the end.
      */
     const handleRunScript = async (next) => {
-        for (let idx = currentStep; idx < steps.length; idx++) {            
+        for (let idx = currentStep + 1; idx < steps.length; idx++) {            
             await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
@@ -47,31 +47,9 @@ export default function AnimationManager({ initialProps, initConfig, children })
      * React-spring script that instantly resets the animation to its original position (from initialProps)
      */
     const handleResetScript = async (next) => {
-        await next({ ...initialProps, config: { duration: 0 } });
+        await next({ ...steps[0], config: { duration: 0 } });
     };
 
-    /**
-     * React-spring script that skips to next step in animation.
-     */
-    const handleStepForwardScript = async (next) => {
-        let { x, y } = steps[currentStep]; 
-        console.log(currentStep);
-        setCurrentStep((step) => step + 1);
-
-        await next({ xy: [x, y], config: { duration: 0 } });
-    }
-
-    /**
-     * React-spring script that goes to previous step in animation. 
-     */
-    const handleStepBackwardScript = async (next) => {
-        let { x, y } = steps[currentStep === 0 ? currentStep : currentStep - 1];
-        console.log(currentStep);
-
-        await next({ to: currentStep === 0 ? initialProps : { xy: [x, y] }, config: { duration: 0 } });
-        setCurrentStep((step) => step - 1);
-
-    }
 
     /**
      * React-spring script that resets an animation to its initial state before running to completion
@@ -83,7 +61,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
 
     const handleSkipToEnd = () => {
         setAnimation({ to: handleSkipRun });
-        setCurrentStep(0);
+        setCurrentStep(steps.length - 1);
         setAnimationState('finished');
     }
 
@@ -100,20 +78,15 @@ export default function AnimationManager({ initialProps, initConfig, children })
          */ 
         if (currentStep < steps.length - 1) {
 
-            setAnimation({ ...steps[currentStep], config: { duration: 0 } });
+            setAnimation({ ...steps[currentStep + 1], config: { duration: 0 } });
             setCurrentStep((step) => step + 1);
         }
     }
 
     const handleStepBack = () => {
         // Only step back if not on first step.
-        if (currentStep >= 0) {
-            if (currentStep > 0) {
-                setAnimation({ ...steps[currentStep - 1], config: { duration: 0 } });
-            }
-            else {
-                setAnimation({ ...initialProps, config: { duration: 0 }});
-            }
+        if (currentStep > 0) {
+            setAnimation({ ...steps[currentStep - 1], config: { duration: 0 } });
             setCurrentStep((step) => step - 1);
         }
     }
@@ -165,7 +138,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
             setCurrentStep(0);
         }
         else if (isAnimatingMode && steps) {
-            setAnimation({ to: initialProps, config: { duration: 0 } })
+            setAnimation({ ...steps[0], config: { duration: 0 } })
             setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
             setAnimationState('running');
         }

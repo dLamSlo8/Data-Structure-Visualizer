@@ -54,8 +54,12 @@ function ControlSection({ extraSettings, rootClass }) {
             <h4 className={` font-semibold text-lg ${isAnimatingMode ? 'text-white' : 'text-gray-500'} mb-1`}>Controls</h4>
             <div className={`p-5 border border-gray-400 rounded-lg ${isAnimatingMode ? 'bg-white' : ''}`}>
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
-                    <Button type="button" onClick={animationMethodsRef.current?.handleReset}><ResetIcon /></Button>
-                    <Button type="button" onClick={() => animationMethodsRef.current?.handleStepBack()}><LeftIcon /></Button>
+                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleReset()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
+                        <ResetIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    </Button>
+                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleStepBack()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
+                        <LeftIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    </Button>
                     <Button type="button" onClick={handlePlayPauseClick}>
                         {
                             running ? (
@@ -65,8 +69,12 @@ function ControlSection({ extraSettings, rootClass }) {
                             )
                         }
                     </Button>
-                    <Button type="button" onClick={() => animationMethodsRef.current?.handleStepForward()}><RightIcon /></Button>
-                    <Button type="button" onClick={() => animationMethodsRef.current?.handleSkipToEnd()}><RightsIcon /></Button>
+                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleStepForward()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
+                        <RightIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    </Button>
+                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleSkipToEnd()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
+                        <RightsIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    </Button>
                 </section>
                 <section className="relative mt-3">
 

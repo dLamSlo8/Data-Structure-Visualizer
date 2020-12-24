@@ -25,7 +25,7 @@ const getStyleClass = (style) => {
 
 function Button({ btnStyle, children, rootClass, ...btnProps }) {
     return (
-        <button className={`${getStyleClass(btnStyle)} ${rootClass ?? ''}`} {...btnProps}>
+        <button className={`${getStyleClass(btnStyle)} ${rootClass ? rootClass : ''}`} {...btnProps}>
             {children}
         </button>
     )

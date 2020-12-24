@@ -1200,6 +1200,11 @@ button {
   color: rgba(255, 255, 255, var(--tw-text-opacity));
 }
 
+.text-gray-400{
+  --tw-text-opacity: 1;
+  color: rgba(156, 163, 175, var(--tw-text-opacity));
+}
+
 .text-gray-500{
   --tw-text-opacity: 1;
   color: rgba(107, 114, 128, var(--tw-text-opacity));
