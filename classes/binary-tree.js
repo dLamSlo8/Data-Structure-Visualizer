@@ -8,7 +8,7 @@ import TreeNode, { NullTreeNode } from "./tree-node.js";
 export default class BinaryTree {
     /**
      * 
-     * @param {TreeNode} [root = null] - root node of tree structure
+     * @param {TreeNode} [root = null] - (optional) root node of tree structure
      */
     constructor(root, tree) {
         if (tree) {
@@ -24,7 +24,11 @@ export default class BinaryTree {
      * @return {Array} array of inorder traversal, 0 index includes array of 
      *                 values, 1 index includes array of uuid
      */
-    inOrderTraversal() {
+    inOrderTraversal = () => {
+        /**
+         * @param {TreeNode} node - root node of tree structure
+         * @param {Array} res - array to store inorder traversal
+         */
         function helper(node, res) {
             if (node === null || node === NullTreeNode) {
                 return;
@@ -46,7 +50,7 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
@@ -55,7 +59,11 @@ export default class BinaryTree {
      * @return {Array} array of preorder traversal, 0 index includes array of 
      *                 values, 1 index includes array of uuid
      */
-    preOrderTraversal() {
+    preOrderTraversal = () => {
+        /**
+         * @param {TreeNode} node - root node of tree structure
+         * @param {Array} res - array to store preorder traversal
+         */
         function helper(node, res) {
             if (node === null || node === NullTreeNode) {
                 return;
@@ -74,7 +82,7 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
@@ -83,7 +91,11 @@ export default class BinaryTree {
      * @return {Array} array of postorder traversal, 0 index includes array of 
      *                 values, 1 index includes array of uuid
      */
-    postOrderTraversal() {
+    postOrderTraversal = () => {
+        /**
+         * @param {TreeNode} node - root node of tree structure
+         * @param {Array} res - array to store postorder traversal
+         */
         function helper(node, res) {
             if (node === null || node === NullTreeNode) {
                 return;
@@ -102,13 +114,13 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var res = [[], []];
+        let res = [[], []];
         helper(this.root, res);
         return res;
     }
 
     /**
-     * @return {Array} array of levelorder traversal, 0 index includes array of 
+     * @return {Array} - array of levelorder traversal, 0 index includes array of 
      *                 values, 1 index includes array of uuid
      */
     levelOrderTraversal() {
@@ -116,10 +128,10 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        var node = this.root;
-        var res = [[], []];
+        let node = this.root;
+        let res = [[], []];
         
-        var q = []
+        let q = []
         q.push(node);
         while (q.length > 0) {
             let first = q.shift();
@@ -142,7 +154,12 @@ export default class BinaryTree {
      * Deletes subtree of specified node
      * @param {string} uuid - uuid of root node of subtree to delete
      */
-    deleteSubtree(uuid) {
+    deleteSubtree = (uuid) => {
+        /**
+         * Deletes the subtree of node with given uuid
+         * @param {TreeNode} node - root node of tree structure
+         * @param {string} uuid - uuid of root node of subtree to delete
+         */
         function helper(node, uuid) {
             if (node === null) {
                 return null;
@@ -160,8 +177,8 @@ export default class BinaryTree {
             // if child exists
             if (node.children) {
                 // go through left and right
-                var left = helper(node.children[0], uuid);
-                var right = helper(node.children[1], uuid);
+                let left = helper(node.children[0], uuid);
+                let right = helper(node.children[1], uuid);
 
                 // if no child left, set children back to null
                 if ((left === null || left === NullTreeNode) && (right === null || right === NullTreeNode)) {
@@ -190,9 +207,17 @@ export default class BinaryTree {
      * @param {int} value - value new node should have
      * @param {boolean} isLeft - whether to add to left or right subtree
      * @param {string} matchUUID - uuid of node we want to add to
-     * @param {string} createUUID - (optional) uuid of node created
+     * @param {string} [createUUID = null] - (optional) uuid of node created
      */
-    addNode(value, isLeft, matchUUID, createUUID) {
+    addNode = (value, isLeft, matchUUID, createUUID) => {
+        /**
+         * Inserts a node at specified location of tree structure
+         * @param {TreeNode} node - root node of tree structure
+         * @param {int} value - value new node should have
+         * @param {boolean} isLeft - whether to add to left or right subtree
+         * @param {string} matchUUID - uuid of node we want to add to
+         * @param {string} [createUUID = null] - (optional) uuid of node created
+         */
         function helper(node, value, isLeft, matchUUID, createUUID) {
             if (node === null || node === NullTreeNode) {
                 return;
