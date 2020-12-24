@@ -17,6 +17,7 @@ function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
 
     const running = animationState === 'running';
+    const enableSteps = isAnimatingMode && animationState !== 'running';
 
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
@@ -57,8 +58,11 @@ function ControlSection({ extraSettings, rootClass }) {
                     <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleReset()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
                         <ResetIcon className={!isAnimatingMode && 'text-gray-400'} />
                     </Button>
-                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleStepBack()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
-                        <LeftIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    <Button 
+                    type="button" 
+                    onClick={() => enableSteps && animationMethodsRef.current?.handleStepBack()} 
+                    rootClass={!enableSteps && 'pointer-events-none'}>
+                        <LeftIcon className={!enableSteps && 'text-gray-400'} />
                     </Button>
                     <Button type="button" onClick={handlePlayPauseClick}>
                         {
@@ -69,8 +73,11 @@ function ControlSection({ extraSettings, rootClass }) {
                             )
                         }
                     </Button>
-                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleStepForward()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
-                        <RightIcon className={!isAnimatingMode && 'text-gray-400'} />
+                    <Button 
+                    type="button" 
+                    onClick={() => enableSteps && animationMethodsRef.current?.handleStepForward()} 
+                    rootClass={!enableSteps && 'pointer-events-none'}>
+                        <RightIcon className={!enableSteps && 'text-gray-400'} />
                     </Button>
                     <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleSkipToEnd()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
                         <RightsIcon className={!isAnimatingMode && 'text-gray-400'} />

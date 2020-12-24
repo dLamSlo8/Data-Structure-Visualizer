@@ -24,17 +24,29 @@ export default function AnimationManager({ initialProps, initConfig, children })
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
         from: initialProps
     }));
+
     /**
-     * React-spring script for running an animation from its current step to the end.
+     * React-spring script for running an animation from beginning to end.
      */
     const handleRunScript = async (next) => {
-        for (let idx = currentStep + 1; idx < steps.length; idx++) {            
-            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
+        setCurrentStep(0);
+        for (let idx = 0; idx < steps.length; idx++) {            
+            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
         setAnimationState('finished');
-        setCurrentStep(0);
     }
+
+    /**
+     * React-spring script for running an animation from its current step to the end.
+     */
+    const handleContinueScript = async (next) => {
+        for (let idx = currentStep + 1; idx < steps.length; idx++) {            
+            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });      
+            setCurrentStep((step) => step + 1);
+        }
+        setAnimationState('finished');
+    };
 
     /**
      * React-spring script that skips to the end of an animation (i.e. the last step of the animation)
@@ -56,7 +68,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
      */
     const handleResetAndRunScript = async (next) => {
         await next({ to: handleResetScript });
-        await next({ to: handleRunScript, delay: config.animationSpeed - 500 });
+        await next({ to: handleRunScript });
     }
 
     const handleSkipToEnd = () => {
@@ -79,15 +91,22 @@ export default function AnimationManager({ initialProps, initConfig, children })
         if (currentStep < steps.length - 1) {
 
             setAnimation({ ...steps[currentStep + 1], config: { duration: 0 } });
+            if (currentStep + 1 === steps.length - 1) { // If next step is the last one, ensure that if play is pressed again, it will reset accordingly.
+                setAnimationState('finished');
+            }
             setCurrentStep((step) => step + 1);
         }
     }
 
     const handleStepBack = () => {
-        // Only step back if not on first step.
-        if (currentStep > 0) {
-            setAnimation({ ...steps[currentStep - 1], config: { duration: 0 } });
-            setCurrentStep((step) => step - 1);
+        if (currentStep >= 0) {
+            if (currentStep === steps.length - 1) { // If we're at the end, we must switch animation state from finished to paused.
+                setAnimationState('paused');
+            }
+            setAnimation({ ...steps[currentStep === 0 ? currentStep : currentStep - 1], config: { duration: 0 } });
+            if (currentStep > 0) {
+                setCurrentStep((step) => step - 1);
+            }
         }
     }
 
@@ -97,7 +116,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
                 setAnimation({ to: handleResetAndRunScript });
             }
             else {
-                setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });
+                setAnimation({ to: handleContinueScript });
             }
             setAnimationState('running');
         }
@@ -138,8 +157,8 @@ export default function AnimationManager({ initialProps, initConfig, children })
             setCurrentStep(0);
         }
         else if (isAnimatingMode && steps) {
-            setAnimation({ ...steps[0], config: { duration: 0 } })
-            setAnimation({ to: handleRunScript, delay: config.animationSpeed - 500 });  
+            setAnimation({ ...steps[0], config: { duration: 0 } }); // Account for resetting animation props.
+            setAnimation({ to: handleRunScript });  
             setAnimationState('running');
         }
     }, [isAnimatingMode, steps]);
