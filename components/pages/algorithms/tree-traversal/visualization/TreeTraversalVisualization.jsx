@@ -10,7 +10,7 @@ import {  } from '@functions/algorithms/d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
-import { NullTreeNode } from '@classes/tree-node';
+import AnimationManager from '@components/animations/AnimationManager';
 
 /**
  * Visualization section of tree traversal page
@@ -21,10 +21,6 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext); // ANIMATION
     const { d3StructureRef } = useContext(D3Context);
     const animationElementRef = useRef(null);
-    const { animationProps } = useAnimationControl({
-        initialProps: { xy: [50, 50] },
-        d3StructureRef
-    }); 
     const attachTreeRef = useRef(null);
 
     /**
@@ -103,11 +99,15 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
                 <div id="tree" ref={attachTreeRef}> 
 
                 </div>
-                {
-                    animationState ? (
-                        <TreeTraversalAnimationElement animationProps={animationProps} transform={animationElementRef.current} />
-                    ) : null
-                }
+                <AnimationManager initialProps={{ xy: [50, 50] }} >
+                    {
+                        ({ animationProps }) => (
+                            animationState ? (
+                                <TreeTraversalAnimationElement animationProps={animationProps} transform={animationElementRef.current} />
+                            ) : null
+                        )
+                    }
+                </AnimationManager>
             </VisualizationLayout>
         ) : (
             <div className="h-full flex flex-col justify-center items-center px-20">

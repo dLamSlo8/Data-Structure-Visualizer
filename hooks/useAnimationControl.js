@@ -14,6 +14,7 @@ import AnimationContext from '@contexts/AnimationContext';
 export default function useAnimationControl({ initialProps, initConfig }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
+    console.log('rerender');
     const [steps, setSteps] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
 
@@ -51,6 +52,29 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     };
 
     /**
+     * React-spring script that skips to next step in animation.
+     */
+    const handleStepForwardScript = async (next) => {
+        let { x, y } = steps[currentStep]; 
+        console.log(currentStep);
+        setCurrentStep((step) => step + 1);
+
+        await next({ xy: [x, y], config: { duration: 0 } });
+    }
+
+    /**
+     * React-spring script that goes to previous step in animation. 
+     */
+    const handleStepBackwardScript = async (next) => {
+        let { x, y } = steps[currentStep === 0 ? currentStep : currentStep - 1];
+        console.log(currentStep);
+
+        await next({ to: currentStep === 0 ? initialProps : { xy: [x, y] }, config: { duration: 0 } });
+        setCurrentStep((step) => step - 1);
+
+    }
+
+    /**
      * React-spring script that resets an animation to its initial state before running to completion
      */
     const handleResetAndRunScript = async (next) => {
@@ -59,19 +83,49 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     }
 
     const handleSkipToEnd = () => {
-        setAnimation({ to: handleSkipRun });
+        console.log(currentStep);
+        // setAnimation({ to: handleSkipRun });
         setCurrentStep(0);
         setAnimationState('finished');
     }
 
     const handleReset = () => {
+        console.log(currentStep);
         setAnimation({ to: handleResetScript });
         setCurrentStep(0);
         setAnimationState('reset');
     }
 
+    const handleStepForward = () => {
+        /**
+         *  Only step forward if not on last step. Even though the UI should account for disabling this button, 
+         *  we need to have this safeguard in case a user manually enables it through DevTools.
+         */ 
+        if (currentStep < steps.length - 1) {
+            let { x, y } = steps[currentStep];
+
+            setAnimation({ xy: [x, y], config: { duration: 0 } });
+            setCurrentStep((step) => step + 1);
+        }
+    }
+
+    const handleStepBack = () => {
+        // Only step back if not on first step.
+        if (currentStep >= 0) {
+            if (currentStep > 0) {
+                let { x, y } = steps[currentStep - 1];
+
+                setAnimation({ xy: [x, y], config: { duration: 0 } });
+            }
+            else {
+                setAnimation({ ...initialProps, config: { duration: 0 }});
+            }
+            setCurrentStep((step) => step - 1);
+        }
+    }
+
     const handleRun = () => {
-        if (steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
+        if (isAnimatingMode && steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 setAnimation({ to: handleResetAndRunScript });
             }
@@ -124,7 +178,7 @@ export default function useAnimationControl({ initialProps, initConfig }) {
     }, [isAnimatingMode, steps]);
     
     // Update animation methods to be used elsewhere.
-    animationMethodsRef.current = { handleRun, handlePause, handleSkipToEnd, handleReset, setSteps };
-
+    animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
+    console.log(animationMethodsRef.current);
     return { animationProps, setSteps };
 }                

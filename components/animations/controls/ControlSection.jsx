@@ -26,7 +26,7 @@ function ControlSection({ extraSettings, rootClass }) {
         let { name, value, checked, type } = e.target;
 
         if (e) { 
-            setConfig((config) => ({ ...config, [e.target.name]: (type === 'checkbox' ? checked : value )}));
+            setConfig((config) => ({ ...config, [name]: (type === 'checkbox' ? checked : value )}));
         }
         else { // For more custom values, pass in directly.
             setConfig((config) => ({ ...config, [customProps.prop]: customProps.propValue }));
@@ -37,10 +37,10 @@ function ControlSection({ extraSettings, rootClass }) {
         setAnimatingMode(true);
 
         if (running) {
-            animationMethodsRef.current.handlePause();
+            animationMethodsRef.current?.handlePause();
         }
         else {
-            animationMethodsRef.current.handleRun();
+            animationMethodsRef.current?.handleRun();
         }
     }
 
@@ -54,8 +54,8 @@ function ControlSection({ extraSettings, rootClass }) {
             <h4 className={` font-semibold text-lg ${isAnimatingMode ? 'text-white' : 'text-gray-500'} mb-1`}>Controls</h4>
             <div className={`p-5 border border-gray-400 rounded-lg ${isAnimatingMode ? 'bg-white' : ''}`}>
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
-                    <Button type="button" onClick={animationMethodsRef.current.handleReset}><ResetIcon /></Button>
-                    {/* <Button type="button" onClick={handleStepBack}><LeftIcon /></Button> */}
+                    <Button type="button" onClick={animationMethodsRef.current?.handleReset}><ResetIcon /></Button>
+                    <Button type="button" onClick={() => animationMethodsRef.current?.handleStepBack()}><LeftIcon /></Button>
                     <Button type="button" onClick={handlePlayPauseClick}>
                         {
                             running ? (
@@ -65,8 +65,8 @@ function ControlSection({ extraSettings, rootClass }) {
                             )
                         }
                     </Button>
-                    {/* <Button type="button" onClick={handleStepForward}><RightIcon /></Button> */}
-                    <Button type="button" onClick={animationMethodsRef.current.handleSkipToEnd}><RightsIcon /></Button>
+                    <Button type="button" onClick={() => animationMethodsRef.current?.handleStepForward()}><RightIcon /></Button>
+                    <Button type="button" onClick={() => animationMethodsRef.current?.handleSkipToEnd()}><RightsIcon /></Button>
                 </section>
                 <section className="relative mt-3">
 

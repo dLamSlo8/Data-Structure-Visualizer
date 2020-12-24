@@ -6,12 +6,16 @@ import AnimationContext from '@contexts/AnimationContext';
  * 
  * @param stepGenerator - Generator function for animation steps
  * @param initialProps - Initial properties for the spring 
+ *                      Format: {
+ *                          <name>: <value (i.e. array, number)>
+*                          }
+ * 
  * @param initConfig - Initial config for animation sequence. May either extend default configs or assign completely new ones.
  *                      Extend syntax: initConfig: { extends: { ... } }
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function AnimationManager({ initialProps, initConfig, d3StructureRef }) {
+export default function AnimationManager({ initialProps, initConfig, children }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
@@ -24,10 +28,8 @@ export default function AnimationManager({ initialProps, initConfig, d3Structure
      * React-spring script for running an animation from its current step to the end.
      */
     const handleRunScript = async (next) => {
-        for (let idx = currentStep; idx < steps.length; idx++) {
-            let { x, y } = steps[idx];
-            
-            await next({ xy: [x, y], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
+        for (let idx = currentStep; idx < steps.length; idx++) {            
+            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
         setAnimationState('finished');
@@ -38,17 +40,38 @@ export default function AnimationManager({ initialProps, initConfig, d3Structure
      * React-spring script that skips to the end of an animation (i.e. the last step of the animation)
      */
     const handleSkipRun = async (next) => {
-        let { x, y } = steps[steps.length - 1];
-
-        await next({ xy: [x, y], config: { duration: 0 } });
+        await next({ ...steps[steps.length - 1], config: { duration: 0 } });
     }
 
     /**
      * React-spring script that instantly resets the animation to its original position (from initialProps)
      */
     const handleResetScript = async (next) => {
-        await next({ to: initialProps, config: { duration: 0 } });
+        await next({ ...initialProps, config: { duration: 0 } });
     };
+
+    /**
+     * React-spring script that skips to next step in animation.
+     */
+    const handleStepForwardScript = async (next) => {
+        let { x, y } = steps[currentStep]; 
+        console.log(currentStep);
+        setCurrentStep((step) => step + 1);
+
+        await next({ xy: [x, y], config: { duration: 0 } });
+    }
+
+    /**
+     * React-spring script that goes to previous step in animation. 
+     */
+    const handleStepBackwardScript = async (next) => {
+        let { x, y } = steps[currentStep === 0 ? currentStep : currentStep - 1];
+        console.log(currentStep);
+
+        await next({ to: currentStep === 0 ? initialProps : { xy: [x, y] }, config: { duration: 0 } });
+        setCurrentStep((step) => step - 1);
+
+    }
 
     /**
      * React-spring script that resets an animation to its initial state before running to completion
@@ -70,8 +93,33 @@ export default function AnimationManager({ initialProps, initConfig, d3Structure
         setAnimationState('reset');
     }
 
+    const handleStepForward = () => {
+        /**
+         *  Only step forward if not on last step. Even though the UI should account for disabling this button, 
+         *  we need to have this safeguard in case a user manually enables it through DevTools.
+         */ 
+        if (currentStep < steps.length - 1) {
+
+            setAnimation({ ...steps[currentStep], config: { duration: 0 } });
+            setCurrentStep((step) => step + 1);
+        }
+    }
+
+    const handleStepBack = () => {
+        // Only step back if not on first step.
+        if (currentStep >= 0) {
+            if (currentStep > 0) {
+                setAnimation({ ...steps[currentStep - 1], config: { duration: 0 } });
+            }
+            else {
+                setAnimation({ ...initialProps, config: { duration: 0 }});
+            }
+            setCurrentStep((step) => step - 1);
+        }
+    }
+
     const handleRun = () => {
-        if (steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
+        if (isAnimatingMode && steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 setAnimation({ to: handleResetAndRunScript });
             }
@@ -98,7 +146,7 @@ export default function AnimationManager({ initialProps, initConfig, d3Structure
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
-            setSteps(stepGeneratorRef.current(d3StructureRef.current));
+            setSteps(stepGeneratorRef.current());
             
             updateStepsRef.current = false;
         }
@@ -124,7 +172,9 @@ export default function AnimationManager({ initialProps, initConfig, d3Structure
     }, [isAnimatingMode, steps]);
     
     // Update animation methods to be used elsewhere.
-    animationMethodsRef.current = { handleRun, handlePause, handleSkipToEnd, handleReset, setSteps };
-
-    return { animationProps, setSteps };
+    animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
+    console.log(animationMethodsRef.current);
+    return (
+        children({ animationProps })
+    )
 }                

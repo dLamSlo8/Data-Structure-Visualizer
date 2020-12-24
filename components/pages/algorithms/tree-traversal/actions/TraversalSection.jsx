@@ -52,6 +52,7 @@ function TraversalSection({ sectionCollapsed }) {
             dropdownWrapperClass="mt-1 w-full"
             closeTrigger={sectionCollapsed} />
             <ControlSection rootClass="mt-3" />
+
         </>
     )
 }
