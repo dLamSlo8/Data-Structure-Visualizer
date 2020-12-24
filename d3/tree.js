@@ -42,34 +42,23 @@ export const generateD3Tree = (rootNode, width) => {
  * @param height - height of canvas
  * @param transformRef - ref to keep track of current transform of canvas
  */
-export const drawD3Tree = (attachRef, d3TreeRef, width, height, transformRef) => {
+export const drawD3Tree = (svgRef, d3TreeRef, width, height) => {
 
-    let canvas = d3.select(attachRef);
+    let canvas = d3.select(svgRef);
 
-    canvas.select('svg').remove(); // Remove previous tree if any
-
-    canvas.append('svg')
-        .attr('id', 'tree-svg')
-        .attr('cursor', 'grab')
-        .attr('width', width)
-        .attr('height', height)
-        .append('g')
-        .attr('transform', 'translate(0, 30)');
-
+    canvas.selectAll('g > *').remove(); // Remove previous nodes and links if any
     // Sets up zoom and pan. 
-    d3.select('#tree-svg').call(d3.zoom()
+    canvas.call(d3.zoom()
         .extent([[0, 0], [width, height + 50]])
         .scaleExtent([0.5, 8])
         .filter(function filter(event) { // Only allows zoom and pan when holding down shift key (on non-mobile screens!)
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
-            transformRef.current = transform;
-            d3.selectAll('#tree-svg > g')
-                .attr('transform', transform);
+            d3.select(svgRef).select('g').attr('transform', transform);
         }))
 
-    canvas = canvas.select('svg > g');
+    canvas = canvas.select('g'); // Enter the <g> tag within <svg>.
 
     canvas.append('g')
         .attr('class', 'links');

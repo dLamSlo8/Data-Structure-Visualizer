@@ -12,7 +12,7 @@ export const preOrderTraversalD3 = (d3TreeRef) => {
             return;
         }
         
-        l.push({ xy: [node.x, node.y] });
+        l.push({ x: node.x, y: node.y });
         if (node.children) {
             helper(node.children[0], l);
             helper(node.children[1], l);
@@ -40,7 +40,7 @@ export const inOrderTraversalD3 = (d3TreeRef) => {
         if (node.children) {
             helper(node.children[0], l);
         }
-        l.push({ xy: [node.x, node.y] });
+        l.push({ x: node.x, y: node.y });
         if (node.children) {
             helper(node.children[1], l);
         }
@@ -68,7 +68,7 @@ export const postOrderTraversalD3 = (d3TreeRef) => {
             helper(node.children[1], l);
         }
 
-        l.push({ xy: [node.x, node.y] });
+        l.push({ x: node.x, y: node.y });
     }
     
     let res = [];

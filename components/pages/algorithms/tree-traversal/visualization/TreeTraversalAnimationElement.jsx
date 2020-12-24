@@ -4,12 +4,12 @@ import PropTypes from 'prop-types';
 import { animated } from '@react-spring/web';
 
 // Responsibility: Render animation element
-function TreeTraversalAnimationElement({ animationProps, transform }) {
+function TreeTraversalAnimationElement({ attachRef, animationProps }) {
     return (
         ReactDOM.createPortal(
-        <g id="animate-indicator" transform={transform ?? 'translate(0, 30)'}>
-            <animated.circle r="24" cx={animationProps?.xy?.interpolate((x, y) => `${x}`)} cy={animationProps?.xy?.interpolate((x, y) => `${y}`)} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
-        </g>, document.querySelector('#tree-svg'))
+        <g id="animate-indicator">
+            <animated.circle r="24" cx={animationProps?.x} cy={animationProps?.y} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
+        </g>, attachRef)
     )
 }
 

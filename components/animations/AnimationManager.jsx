@@ -4,7 +4,6 @@ import { Controller, useSpring, config } from '@react-spring/web';
 import AnimationContext from '@contexts/AnimationContext';
 /**
  * 
- * @param stepGenerator - Generator function for animation steps
  * @param initialProps - Initial properties for the spring 
  *                      Format: {
  *                          <name>: <value (i.e. array, number)>
@@ -18,11 +17,21 @@ import AnimationContext from '@contexts/AnimationContext';
 export default function AnimationManager({ initialProps, initConfig, children }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
 
+    const [animating, setAnimating] = useState(false);
     const [steps, setSteps] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
 
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
-        from: initialProps
+        from: initialProps,
+        onStart: (e) => {
+            console.log('start');
+            setAnimating(true);
+        },
+        onRest: (e) => {
+            console.log(e.target);
+            console.log('rest');
+            setAnimating(false);
+        }
     }));
 
     /**
@@ -30,8 +39,8 @@ export default function AnimationManager({ initialProps, initConfig, children })
      */
     const handleRunScript = async (next) => {
         setCurrentStep(0);
-        for (let idx = 0; idx < steps.length; idx++) {            
-            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });      
+        for (let idx = 1; idx < steps.length; idx++) {            
+            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });  
             setCurrentStep((step) => step + 1);
         }
         setAnimationState('finished');
@@ -41,7 +50,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
      * React-spring script for running an animation from its current step to the end.
      */
     const handleContinueScript = async (next) => {
-        for (let idx = currentStep + 1; idx < steps.length; idx++) {            
+        for (let idx = currentStep + 1; idx < steps.length; idx++) {    
             await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });      
             setCurrentStep((step) => step + 1);
         }
@@ -88,17 +97,21 @@ export default function AnimationManager({ initialProps, initConfig, children })
          *  Only step forward if not on last step. Even though the UI should account for disabling this button, 
          *  we need to have this safeguard in case a user manually enables it through DevTools.
          */ 
-        if (currentStep < steps.length - 1) {
-
-            setAnimation({ ...steps[currentStep + 1], config: { duration: 0 } });
-            if (currentStep + 1 === steps.length - 1) { // If next step is the last one, ensure that if play is pressed again, it will reset accordingly.
+        if (currentStep <= steps.length - 1) {
+            setAnimation({ ...steps[currentStep === steps.length - 1 ? currentStep : currentStep + 1], config: { duration: 0 } });
+            if (currentStep === steps.length - 1) { // If next step is the last one, ensure that if play is pressed again, it will reset accordingly.
                 setAnimationState('finished');
             }
-            setCurrentStep((step) => step + 1);
+            if (currentStep < steps.length - 1) { 
+                setCurrentStep((step) => step + 1);
+            }
         }
     }
 
     const handleStepBack = () => {
+        // First need to check if in transit or if already at destination. This will determine whether to go back to current step or go to current step - 1
+        console.log(animationProps.x.animation.values[0].lastVelocity);
+
         if (currentStep >= 0) {
             if (currentStep === steps.length - 1) { // If we're at the end, we must switch animation state from finished to paused.
                 setAnimationState('paused');
@@ -165,7 +178,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
     
     // Update animation methods to be used elsewhere.
     animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
-    console.log(animationMethodsRef.current);
+
     return (
         children({ animationProps })
     )

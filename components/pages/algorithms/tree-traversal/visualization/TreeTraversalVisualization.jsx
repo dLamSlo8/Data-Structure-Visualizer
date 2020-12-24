@@ -20,8 +20,8 @@ import AnimationManager from '@components/animations/AnimationManager';
 function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext); // ANIMATION
     const { d3StructureRef } = useContext(D3Context);
-    const animationElementRef = useRef(null);
-    const attachTreeRef = useRef(null);
+    const svgTreeRef = useRef(null);
+    const gRef = useRef(null);
 
     /**
      * Sets active node based on selected node
@@ -40,7 +40,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         if (tree) {
             // Draw tree
             d3StructureRef.current = generateD3Tree(tree.root, width, height);
-            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+            drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
 
             // Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
@@ -96,14 +96,18 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
     return (
         tree ? (
             <VisualizationLayout>
-                <div id="tree" ref={attachTreeRef}> 
+                <div id="tree"> 
+                    <svg cursor="grab" width={width} height={height} ref={svgTreeRef}>
+                        <g transform="translate(0, 30)" ref={gRef}>
 
+                        </g>
+                    </svg>
                 </div>
-                <AnimationManager initialProps={{ xy: [0, 0] }}>
+                <AnimationManager initialProps={{ x: 0, y: 0 }}>
                     {
                         ({ animationProps }) => (
                             animationState ? (
-                                <TreeTraversalAnimationElement animationProps={animationProps} transform={animationElementRef.current} />
+                                <TreeTraversalAnimationElement attachRef={gRef.current} animationProps={animationProps} />
                             ) : null
                         )
                     }

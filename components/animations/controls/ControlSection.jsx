@@ -17,7 +17,7 @@ function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
 
     const running = animationState === 'running';
-    const enableSteps = isAnimatingMode && animationState !== 'running';
+    const enableSteps = isAnimatingMode && animationState && animationState !== 'running';
 
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
