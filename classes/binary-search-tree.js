@@ -1,4 +1,4 @@
-import {TreeNode, NullTreeNode} from "./tree-node.js";
+import TreeNode, { NullTreeNode } from "./tree-node.js";
 
 
 /**
@@ -7,7 +7,7 @@ import {TreeNode, NullTreeNode} from "./tree-node.js";
  * @property {TreeNode} root - root node of binary search tree
  */
 
-export class BinarySearchTree {
+export default class BinarySearchTree {
     /**
      * Creates new binary search tree
      * @param {TreeNode} [root = null] - root node of tree structure
@@ -19,14 +19,22 @@ export class BinarySearchTree {
     /**
      * Inserts a new node into the tree. Break ties by inserting into left subtree.
      * @param {int} value - value of node to insert
-     * @param {string} uuid - uuid of node to create
-     * @return {Array} Array of uuid of nodes visited to insert node. Includes
+     * @param {string} [uuid = null] - (optional) uuid of node to create
+     * @return {Array} - Array of uuid of nodes visited to insert node. Includes
      *                 UUID of node inserted
      */
     insertNode(value, uuid) {
         // need to discuss how to handle root node
+
+        /**
+         * Inserts a new node into the tree. Break ties by inserting into left subtree.
+         * @param {TreeNode} node - root node of tree structure
+         * @param {int} value - value of node to insert
+         * @param {string} [uuid = null] - (optional) uuid of node to insert
+         * @param {Array} moves - array to store moves we took
+         */
         function helper(node, value, uuid, moves) {
-            if (node == null || node === NullTreeNode) {
+            if (node === null || node === NullTreeNode) {
                 let newNode = new TreeNode(value, uuid);
                 moves.push(newNode.uuid);
                 return newNode;
@@ -66,11 +74,18 @@ export class BinarySearchTree {
     /**
      * Returns array of steps that occur from finding a node in the tree
      * @param {int} value - value of node to find
+     * @return {Array} - Array of uuid of nodes that we took to find node
      */
     findNode(value) {
+        /**
+         * Finds node in tree
+         * @param {TreeNode} node - root node of tree structure
+         * @param {int} value - value of node to insert
+         * @param {Array} moves - array to store moves we took
+         */
         function helper(node, value, moves) {
-            if (node == null) {
-                throw "A node with this value does not exist in the tree";
+            if (node === null || node === NullTreeNode) {
+                throw ("A node with this value does not exist in the tree");
             }
             moves.push(node.uuid);
 
@@ -78,12 +93,26 @@ export class BinarySearchTree {
                 return;
             }
             else if (value <= node.name) {
-                helper(node.children[0], value, moves);
-            } 
+                if (node.children) {
+                    helper(node.children[0], value, moves);
+                } else {
+                    helper(null, value, moves);
+                }
+            }
             else {
-                helper(node.children[1], value, moves);
+                if (node.children) {
+                    helper(node.children[1], value, moves);
+                } else {
+                    helper(null, value, moves);
+                }
             }
         }
+
+        // if tree doesn't exist create a new node;
+        if (this.root === null) {
+            throw ("Please create a tree!");
+        }
+
         let moves = [];
         helper(this.root, value, moves);
         return moves;
@@ -93,12 +122,20 @@ export class BinarySearchTree {
     /**
      * Returns array of steps that occur from deleting a node in the tree
      * as well as the new tree. Delete first node reached when duplicate value.
-     * @param node - root node of the tree
-     * @param value - value of node to delete
+     * @param {TreeNode} node - root node of the tree
+     * @param {int} value - value of node to delete
+     * @return {Array} - array of uuid that occur from deleting a node. If need to move
+     *                 a node, last index in array is object of {id: id}
      */
     deleteNode(value) {
+        /**
+         * Deletes node in tree
+         * @param {TreeNode} node - root node of tree structure
+         * @param {int} value - value of node to insert
+         * @param {Array} moves - array to store moves we took
+         */
         function helper(node, value, moves) {
-            if (node == null) {
+            if (node === null) {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 throw "A node with this value does not exist in the tree";
             }
@@ -108,10 +145,10 @@ export class BinarySearchTree {
                 if (node.children == null) {
                     return NullTreeNode;
                 }
-                else if (node.children[0] == null || node.children[0] === NullTreeNode) {
+                else if (node.children[0] === null || node.children[0] === NullTreeNode) {
                     return node.children[1];
                 }
-                else if (node.children[1] == null || node.children[1] === NullTreeNode) {
+                else if (node.children[1] === null || node.children[1] === NullTreeNode) {
                     return node.children[0];
                 }
                 else {
@@ -158,26 +195,33 @@ export class BinarySearchTree {
         /**
          * Returns node of inorder successor of node and removes that node from
          * tree
-         * @param node - root node of the tree structure
-         * @param nodeForSuccessor - node that we want to find succesor for
+         * @param {TreeNode} node - root node of the tree structure
+         * @param {TreeNode} nodeForSuccessor - node that we want to find succesor for
+         * @return {TreeNode} - inorder successor of node
          */
         function inorderSuccessor(nodeForSuccessor) {
+            /**
+             * Finds the minimum node and removes that node from tree
+             * @param {TreeNode} node - node we want to find min of
+             * @param {TreeNode} isRightChild - Parent of node if node is a right child
+             * @param {TreeNode} isLeftChild - Parent of node if node is a left child
+             */
             function findMin(node, isRightChild, isLeftChild) {
                 if (node.children !== null) {
                     // found last node in left branch
-                    if (node.children[0] == null || node.children[0] === NullTreeNode) {
+                    if (node.children[0] === null || node.children[0] === NullTreeNode) {
                         // successor has a right child, transfer successor's right child to parent
 
-                        if (isRightChild != null && isLeftChild == null) {
-                            // successor has a right child, which means its right child must be set to successor's right child
-                            if (node.children[1] != NullTreeNode) {
+                        if (isRightChild !== null && isLeftChild === null) {
+                            // successor has a right child, which means it's right child must be set to successor's right child
+                            if (node.children[1] !== NullTreeNode) {
                                 //attach this node's right children to its parent
                                 isRightChild.children[1] = node.children[1];
                             }
                         }
-                        else if (isRightChild == null && isLeftChild != null) {
+                        else if (isRightChild === null && isLeftChild !== null) {
                             // a left child can have right have right children it needs to attach to parent
-                            if (node.children[1] != NullTreeNode) {
+                            if (node.children[1] !== NullTreeNode) {
                                 //attach this node's right children to its parent
                                 isLeftChild.children[0] = node.children[1];
                             }
@@ -206,9 +250,9 @@ export class BinarySearchTree {
                         isRightChild.children[1] = NullTreeNode;
                     // }
                 }
-                else if (isRightChild == null && isLeftChild != null) {
+                else if (isRightChild === null && isLeftChild !== null) {
                     //check if parent does not have a left child
-                    if (isLeftChild.children[1] == NullTreeNode) {
+                    if (isLeftChild.children[1] === NullTreeNode) {
                         isLeftChild.children = null;
                     } else{
                         isLeftChild.children[0] = NullTreeNode;
@@ -218,6 +262,11 @@ export class BinarySearchTree {
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
+        }
+
+        // if tree doesn't exist create a new node;
+        if (this.root === null) {
+            throw ("Please create a tree!");
         }
 
         let moves = [];

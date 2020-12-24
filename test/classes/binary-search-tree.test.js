@@ -1,5 +1,5 @@
-import { NullTreeNode, TreeNode } from "../../classes/tree-node.js";
-import { BinarySearchTree } from "../../classes/binary-search-tree.js";
+import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
+import BinarySearchTree from "../../classes/binary-search-tree.js";
 
 describe ("Test insertNode method", () => {
     it ("Should throw an error when missing root", () => {
@@ -68,18 +68,20 @@ describe ("Test insertNode method", () => {
 })
 
 describe ("Test deleteNode method", () => {
-    it ("Should throw an error when value not found", () => {
+    it ("Should throw an error when missing root", () => {
         let input = new BinarySearchTree();
 
-        expect(() => input.deleteNode(5)).toThrow("A node with this value does not exist in the tree");
+        expect(() => input.deleteNode(5)).toThrow("Please create a tree!");
+    })
 
-        // testing deleting a node that is greater than all values in tree
+    it ("Should throw an error when value not found", () => {
         let root = new TreeNode(5, "1");
         root.setLeft(new TreeNode(5, "2"));
         root.setRight(new TreeNode(7, "3"));
 
-        input = new BinarySearchTree();
+        let input = new BinarySearchTree(root);
 
+        expect(() => input.deleteNode(2)).toThrow("A node with this value does not exist in the tree");
         expect(() => input.deleteNode(10)).toThrow("A node with this value does not exist in the tree");
         expect(() => input.deleteNode()).toThrow("A node with this value does not exist in the tree");
 
@@ -101,19 +103,31 @@ describe ("Test deleteNode method", () => {
     })
 
     it ("Should give proper moves array and tree", () => {
-        // testing delete on left side with deleted element having no children
+        // test delete to return empty root for single element
         let root = new TreeNode(5, "1");
-        root.setLeft(new TreeNode(4, "2"));
-        root.setRight(new TreeNode(7, "3"));
 
         let input = new BinarySearchTree(root);
 
-        let expectedMoves = ["1", "2"];
+        let expectedMoves = ["1"];
+
+        let result = input.deleteNode(5);
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.root).toBeNull();
+
+        // testing delete on left side with deleted element having no children
+        root = new TreeNode(5, "1");
+        root.setLeft(new TreeNode(4, "2"));
+        root.setRight(new TreeNode(7, "3"));
+
+        input = new BinarySearchTree(root);
+
+        expectedMoves = ["1", "2"];
 
         let expected = new TreeNode(5, "1");
         expected.setRight(new TreeNode(7, "3"));
 
-        let result = input.deleteNode(4);
+        result = input.deleteNode(4);
 
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
@@ -414,17 +428,20 @@ describe ("Test deleteNode method", () => {
 })
 
 describe ("Test findNode method", () => {
-    it ("Should throw an error when value not found", () => {
+    it ("Should throw an error when missing root", () => {
         let input = new BinarySearchTree();
 
-        expect(() => input.findNode()).toThrow("A node with this value does not exist in the tree");
+        expect(() => input.findNode(5)).toThrow("Please create a tree!");
+    })
 
-
-        input = new BinarySearchTree();
+    it ("Should throw an error when value not found", () => {
         let root = new TreeNode(5, "1");
         root.setLeft(new TreeNode(5, "2"));
         root.setRight(new TreeNode(7, "3"));
 
+        let input = new BinarySearchTree(root);
+
+        expect(() => input.findNode(2)).toThrow("A node with this value does not exist in the tree");
         expect(() => input.findNode(10)).toThrow("A node with this value does not exist in the tree");
     })
 
@@ -443,6 +460,7 @@ describe ("Test findNode method", () => {
         expect(result).toEqual(expectedMoves);
 
 
+        // testing find leaf
         root = new TreeNode(5, "1");
         root.setLeft(new TreeNode(3, "2"));
         root.children[0].setLeft(new TreeNode(1,"4"))
@@ -459,7 +477,35 @@ describe ("Test findNode method", () => {
 
         expect(result).toEqual(expectedMoves);
 
+        // testing find node that has missing left child
+        root = new TreeNode(5, "1");
+        root.setLeft(new TreeNode(3, "2"));
+        root.children[0].setRight(new TreeNode(4,"5"))
+        root.setRight(new TreeNode(7, "3"));
+        root.children[1].setLeft(new TreeNode(6,"6"))
+        root.children[1].setRight(new TreeNode(10,"7"))
+
+        input = new BinarySearchTree(root);
+        
+        expectedMoves = ["1", "2"];
+
+        result = input.findNode(3);
+
+        expect(result).toEqual(expectedMoves);
+
+        // testing find node that has missing right child
+        root = new TreeNode(5, "1");
+        root.setLeft(new TreeNode(3, "2"));
+        root.children[0].setRight(new TreeNode(4,"5"))
+        root.setRight(new TreeNode(7, "3"));
+        root.children[1].setRight(new TreeNode(10,"7"))
+
+        input = new BinarySearchTree(root);
+        
+        expectedMoves = ["1", "3"];
+
+        result = input.findNode(7);
+
+        expect(result).toEqual(expectedMoves);
     })
-    
-    
 })
