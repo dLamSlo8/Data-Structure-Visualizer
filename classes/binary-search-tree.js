@@ -230,16 +230,25 @@ export default class BinarySearchTree {
                     }
                     return findMin(node.children[0], null, node)
                 }
-                //node has no children, which means it is the left most leaf node
+                //node has no children, which means it is the left most leaf node or the direct right node of node we want to delete
 
                 // remove the node from parent node
-                if (isRightChild !== null && isLeftChild === null) {
+                if (isRightChild != null && isLeftChild == null) {
+                    /* 
+                        the commented out if statemnet can never occur. The reason the if statement exist in the 
+                        first place is because it needs to check the successors's parent to see if it has another
+                        child. If it does not, the parent's children value should be set to null rather than 
+                        [NullTreeNode, NullTreeNode]. Since we only ever call inOrderSuccessor when the node to
+                        delete has two nodes, we never actually need to check if there is a left child because it is
+                        guaranteed by the fact that the node has 2 children
+
+                    */
                     //check if parent does not have a left child
-                    if (isRightChild.children[0] === NullTreeNode) {
-                        isRightChild.children = null;
-                    } else{
+                    // if (isRightChild.children[0] == NullTreeNode) {
+                    //     isRightChild.children = null;
+                    // } else{
                         isRightChild.children[1] = NullTreeNode;
-                    }
+                    // }
                 }
                 else if (isRightChild === null && isLeftChild !== null) {
                     //check if parent does not have a left child
