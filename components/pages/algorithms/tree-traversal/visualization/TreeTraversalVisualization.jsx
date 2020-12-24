@@ -1,17 +1,18 @@
 import { useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
+import BinaryTree from '@classes/binary-tree';
 import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
 import D3Context from '@contexts/D3Context';
-import { Node } from '@functions/algorithms/helper/tree';
-import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@functions/algorithms/d3/tree';
+import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@d3/tree';
+import {  } from '@functions/algorithms/d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 
 // Responsibility: Render any visuals (i.e. tree and animation element) and animatinos
-function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setActiveNode }) {
+function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext);
     const { d3StructureRef } = useContext(D3Context);
     const animationElementRef = useRef(null);
@@ -34,20 +35,20 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
      * and handles the initial node case
      */
     useEffect(() => {
-        if (rootNode) {
+        if (tree) {
             // Draw tree
-            d3StructureRef.current = generateD3Tree(rootNode, width, height);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
             drawD3Tree(d3StructureRef.current, width, height, animationElementRef);
 
             // Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
-            if (rootNode.left === null && rootNode.right === null) {
-                styleActiveNode(rootNode.uuid);
+            if (tree.root.children === null) {
+                styleActiveNode(tree.root.uuid);
                 setActiveNode({
-                    uuid: rootNode.uuid,
-                    current: rootNode.value,
+                    uuid: tree.root.uuid,
+                    current: tree.root.name,
                     left: null,
                     right: null
                 });
@@ -58,7 +59,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
                 updateStepsRef.current = true;
             }
         }
-    }, [rootNode]);
+    }, [tree]);
 
     /**
      * Effect
@@ -71,7 +72,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
         if (activeUuid) { 
             styleActiveNode(activeUuid);
         }
-    }, [rootNode, activeUuid]);
+    }, [tree, activeUuid]);
 
     /**
      * Effect
@@ -91,7 +92,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
 
 
     return (
-        rootNode ? (
+        tree ? (
             <VisualizationLayout>
                 <div id="tree">
                 </div>
@@ -113,7 +114,7 @@ function TreeTraversalVisualization({ rootNode, activeUuid, width, height, setAc
 }
 
 TreeTraversalVisualization.propTypes = {
-    rootNode: PropTypes.instanceOf(Node),
+    tree: PropTypes.instanceOf(BinaryTree),
     activeUuid: PropTypes.string,
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,

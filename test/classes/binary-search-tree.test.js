@@ -1,5 +1,5 @@
 import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
-import { BinarySearchTree } from "../../classes/binary-search-tree.js";
+import BinarySearchTree from "../../classes/binary-search-tree.js";
 
 describe ("Test insertNode method", () => {
     it ("Should throw an error when missing root", () => {

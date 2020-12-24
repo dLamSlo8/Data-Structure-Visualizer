@@ -7,7 +7,7 @@ import TreeNode, { NullTreeNode } from "./tree-node.js";
  * @property {TreeNode} root - root node of binary search tree
  */
 
-export class BinarySearchTree {
+export default class BinarySearchTree {
     /**
      * Creates new binary search tree
      * @param {TreeNode} [root = null] - root node of tree structure

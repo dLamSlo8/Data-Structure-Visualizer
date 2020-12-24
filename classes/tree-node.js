@@ -20,7 +20,12 @@ export default class TreeNode {
             let { name, uuid, children } = node;
             this.name = name;
             this.uuid = uuid;
-            this.children = [...children];
+            if (children) {
+                this.children = [new TreeNode(null, null, node.children[0]), new TreeNode(null, null, node.children[1])];
+            }
+            else {
+                this.children = null;
+            }
         } else {
             this.name = value;
             // if uuid and value null, the node should be null

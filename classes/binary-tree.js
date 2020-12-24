@@ -5,14 +5,20 @@ import TreeNode, { NullTreeNode } from "./tree-node.js";
  * 
  * @property {TreeNode} root - root node of tree structure
  */
-export class BinaryTree {
+export default class BinaryTree {
     /**
      * 
      * @param {TreeNode} [root = null] - (optional) root node of tree structure
      */
-    constructor(root) {
-        this.root = root || null;
+    constructor(root, tree) {
+        if (tree) {
+            this.root = new TreeNode(null, null, tree.root);
+        }
+        else {
+            this.root = root || null;
+        }
     }
+
 
     /**
      * @return {Array} array of inorder traversal, 0 index includes array of 
@@ -117,7 +123,7 @@ export class BinaryTree {
      * @return {Array} - array of levelorder traversal, 0 index includes array of 
      *                 values, 1 index includes array of uuid
      */
-    levelOrderTraversal = () => {
+    levelOrderTraversal() {
         if (this.root === null) {
             throw ("Please insert a node into the tree.")
         }
@@ -261,7 +267,7 @@ export class BinaryTree {
      * @param {int} value - value to replace node with
      * @param {string} uuid - uuid of node we want to update value for
      */
-    replaceNodeValue = (value, uuid) => {
+    replaceNodeValue(value, uuid) {
         function helper(node, value, uuid) {
             if (node === null || node === NullTreeNode) {
                 return;
