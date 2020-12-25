@@ -91,8 +91,6 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         }
     }, [isAnimatingMode]);
 
-
-
     return (
         tree ? (
             <VisualizationLayout>
