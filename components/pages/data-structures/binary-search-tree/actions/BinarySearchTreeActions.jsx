@@ -66,17 +66,18 @@ function BinarySearchTreeActions({tree, setTree}){
             <ActionSubsection
             sectionTitle="Manage Tree"
             sectionDescription="Here you can create, delete, and find tree nodes of a Binary Search Tree."
-            propagateCollapsed
-            children={handleFind}>
+            propagateCollapsed>
                 {
-                    tree ? (
-                        <ManageSection
-                        tree = {tree}
-                        handleInsert={handleInsert}
-                        handleFind={handleFind}
-                        handleDelete={handleDelete} />
-                    ) : (
-                        <InitSection handleInit={handleInit} />
+                    ({ collapsed }) => (
+                        tree ? (
+                            <ManageSection
+                            tree = {tree}
+                            handleInsert={handleInsert}
+                            handleFind={handleFind}
+                            handleDelete={handleDelete} />
+                        ) : (
+                            <InitSection handleInit={handleInit} />
+                        )
                     )
                 }
             </ActionSubsection>

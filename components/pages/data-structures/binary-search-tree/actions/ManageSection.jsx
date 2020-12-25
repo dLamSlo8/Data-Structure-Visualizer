@@ -15,7 +15,7 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
         <>
             {/* form input and button for inserting a TreeNode*/}
             <Form
-            handleSuccess={(formData) => formData.insert && handleInsert(formData.insert)}>
+            handleSuccess={(formData) => formData.current && handleInsert(formData.current)}>
                 {
                     ({ formData, handleChange, errorMapping }) => (
                         <>
@@ -25,8 +25,8 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                                 error={errorMapping.current}
                                 inputProps={{
                                     type: 'number',
-                                    name: 'insert',
-                                    value: formData.insert,
+                                    name: 'current',
+                                    value: formData.current,
                                     onChange: handleChange,
                                 }} 
                                 rootClass="min-w-0 w-full" />
