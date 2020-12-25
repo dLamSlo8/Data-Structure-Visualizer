@@ -76,9 +76,9 @@ describe ("Test deleteNode method", () => {
 
     it ("Should throw an error when value not found", () => {
         let root = new TreeNode(5, "1");
-        root.setLeft(new TreeNode(5, "2"));
+        root.setLeft(new TreeNode(3, "2"));
         root.setRight(new TreeNode(7, "3"));
-
+        
         let input = new BinarySearchTree(root);
 
         expect(() => input.deleteNode(2)).toThrow("A node with this value does not exist in the tree");
@@ -86,6 +86,18 @@ describe ("Test deleteNode method", () => {
         expect(() => input.deleteNode()).toThrow("A node with this value does not exist in the tree");
 
 
+        // testing deleting node that doesn't exist and last node to look at has children
+        root = new TreeNode(5, "1");
+        root.setLeft(new TreeNode(3, "2"));
+        root.children[0].setRight(new TreeNode(4, "4"));
+        root.setRight(new TreeNode(7, "3"));
+        root.children[1].setLeft(new TreeNode(6, "6"));
+        
+        input = new BinarySearchTree(root);
+
+        expect(() => input.deleteNode(2)).toThrow("A node with this value does not exist in the tree");
+        expect(() => input.deleteNode(8)).toThrow("A node with this value does not exist in the tree");
+        
         // testing deleting a value that is less than root when root is the only node 
         root = new TreeNode(5, "1");
         input = new BinarySearchTree(root);

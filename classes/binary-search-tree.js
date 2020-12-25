@@ -12,8 +12,13 @@ export default class BinarySearchTree {
      * Creates new binary search tree
      * @param {TreeNode} [root = null] - root node of tree structure
      */
-    constructor(root) {
-        this.root = root || null;
+    constructor(root, tree) {
+        if (tree) {
+            this.root = new TreeNode(null, null, tree.root);
+        }
+        else {
+            this.root = root || null;
+        }
     }
     
     /**
@@ -122,7 +127,6 @@ export default class BinarySearchTree {
     /**
      * Returns array of steps that occur from deleting a node in the tree
      * as well as the new tree. Delete first node reached when duplicate value.
-     * @param {TreeNode} node - root node of the tree
      * @param {int} value - value of node to delete
      * @return {Array} - array of uuid that occur from deleting a node. If need to move
      *                 a node, last index in array is object of {id: id}
