@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import BinaryTree from '@classes/binary-tree';
 import TreeNode from '@classes/tree-node';
-// import { Node, addNode, replaceNodeValue, deleteSubtree } from '@functions/algorithms/helper/tree';
 
 import InitSection from './InitSection';
 import ManageSection from './ManageSection';
@@ -91,7 +90,7 @@ function TreeTraversalActions({ tree, activeNode, setTree, setActiveNode }) {
                 {
                     ({ collapsed }) => (
                         tree ? (
-                            <TraversalSection sectionCollapsed={collapsed} />
+                            <TraversalSection tree={tree} sectionCollapsed={collapsed} />
                         ) : (
                             <div className="mt-8">
                                 <h4 className="font-semibold text-xl text-primary">No Tree Found!</h4>

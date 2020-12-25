@@ -114,8 +114,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
             if (currentStep === steps.length - 1) { // If we're at the end, we must switch animation state from finished to paused.
                 setAnimationState('paused');
             }
-            console.log(animating);
-            console.log(currentStep);
+
             setAnimation({ ...steps[animating ? currentStep : currentStep - 1], config: { duration: 0 } });
             if (currentStep > 0 && !animating) {
                 setCurrentStep((step) => step - 1);

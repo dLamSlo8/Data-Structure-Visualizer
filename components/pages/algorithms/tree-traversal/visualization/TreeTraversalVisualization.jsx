@@ -6,7 +6,6 @@ import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
 import D3Context from '@contexts/D3Context';
 import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@d3/tree';
-import {  } from '@functions/algorithms/d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';

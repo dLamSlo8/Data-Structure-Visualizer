@@ -1,5 +1,13 @@
 import * as d3 from 'd3';
 
+export const mapTraversalToPosition = (traversalArray, d3TreeRef) => {
+    return traversalArray[1].map((uuid) => {
+        const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
+
+        return { x: node?.x, y: node?.y };
+    });
+};
+
 /**
 * Styles the currently active node
 * @param activeUuid - Uuid of active node

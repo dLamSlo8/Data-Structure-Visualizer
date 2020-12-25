@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
 import D3Context from '@contexts/D3Context';
-import { preOrderTraversalD3, inOrderTraversalD3, postOrderTraversalD3 } from '@functions/algorithms/d3/tree';
+import { mapTraversalToPosition } from '@d3/tree';
 
 import DropdownSelect from '@components/dropdown/DropdownSelect';
-import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';
 import ControlSection from '@components/animations/controls/ControlSection';
 
 /**
@@ -14,7 +13,7 @@ import ControlSection from '@components/animations/controls/ControlSection';
  * Responsibility: Render tree traversal section and handle changes to traversal function
  * @state traversalType - Type of tree traversal
  */ 
-function TraversalSection({ sectionCollapsed }) { 
+function TraversalSection({ tree, sectionCollapsed }) { 
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const { d3StructureRef } = useContext(D3Context);
     const [traversalType, setTraversalType] = useState('Preorder');
@@ -24,17 +23,28 @@ function TraversalSection({ sectionCollapsed }) {
      * Updates step generator function based on traversal type selection.
      */
     useEffect(() => {
-        if (traversalType === 'Preorder') {
-            stepGeneratorRef.current = () => preOrderTraversalD3(d3StructureRef.current);
+        let traversalRes = null;
+
+        switch (traversalType) {
+            case 'Preorder':
+                traversalRes = tree.preOrderTraversal();
+                break;
+            case 'Inorder':
+                traversalRes = tree.inOrderTraversal();
+                break;
+            case 'Postorder':
+                traversalRes = tree.postOrderTraversal();
+                break;
+            case 'Level-order':
+                traversalRes = tree.levelOrderTraversal();
+                break;
+            default:
+                break;
         }
-        else if (traversalType === 'Inorder') {
-            stepGeneratorRef.current = () => inOrderTraversalD3(d3StructureRef.current);
-        }
-        else {
-            stepGeneratorRef.current = () => postOrderTraversalD3(d3StructureRef.current);
-        }
-        updateStepsRef.current = true;
-    }, [traversalType]);
+
+        stepGeneratorRef.current = () => mapTraversalToPosition(traversalRes, d3StructureRef.current);
+        updateStepsRef.current = true; // Make sure to enable updating steps on next animating mode toggle.
+    }, [traversalType, tree]);
 
     return (
         <>
@@ -46,6 +56,8 @@ function TraversalSection({ sectionCollapsed }) {
                 title: 'Inorder'
             }, {
                 title: 'Postorder'
+            }, { 
+                title: 'Level-order'
             }]}
             value={traversalType}
             setValue={setTraversalType}
