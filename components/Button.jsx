@@ -23,9 +23,18 @@ const getStyleClass = (style) => {
     }
 }
 
-function Button({ btnStyle, children, rootClass, ...btnProps }) {
+function Button({ btnStyle, children, rootClass, onClick, isMouse, ...btnProps }) {
     return (
-        <button className={`${getStyleClass(btnStyle)} ${rootClass ? rootClass : ''}`} {...btnProps}>
+        <button 
+        className={`${getStyleClass(btnStyle)} ${rootClass ? rootClass : ''}`} 
+        onClick={(e) => {
+            onClick(e);
+
+            if (isMouse) { // If using a mouse, manually remove focus when clicked.
+                e.currentTarget.blur();
+            }
+        }}
+        {...btnProps}>
             {children}
         </button>
     )
@@ -34,6 +43,8 @@ function Button({ btnStyle, children, rootClass, ...btnProps }) {
 Button.propTypes = {
     btnStyle: PropTypes.string,
     children: PropTypes.node.isRequired,
+    onClick: PropTypes.func,
+    isMouse: PropTypes.bool,
     rootClass: PropTypes.string,
     btnProps: PropTypes.object
 }

@@ -12,6 +12,7 @@ import RightsIcon from '@icons/chevrons-right.svg';
 
 import Button from '@components/Button';
 import RangeSlider from './RangeSlider';
+import Tooltip from '@components/Tooltip';
 
 function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
@@ -55,16 +56,30 @@ function ControlSection({ extraSettings, rootClass }) {
             <h4 className={` font-semibold text-lg ${isAnimatingMode ? 'text-white' : 'text-gray-500'} mb-1`}>Controls</h4>
             <div className={`p-5 border border-gray-400 rounded-lg ${isAnimatingMode ? 'bg-white' : ''}`}>
                 <section className="flex justify-between pb-5 px-8 border-b border-gray-400">
-                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleReset()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
-                        <ResetIcon className={!isAnimatingMode && 'text-gray-400'} />
-                    </Button>
                     <Button 
+                    aria-labelledby="reset-button" 
+                    type="button" 
+                    onClick={() => isAnimatingMode && animationMethodsRef.current.handleReset()}
+                    rootClass={`group relative ${!isAnimatingMode && 'pointer-events-none'}`}
+                    isMouse>
+                        <ResetIcon className={!isAnimatingMode && 'text-gray-400'} />
+                        <Tooltip id="reset-button" position="bottom">Reset Animation</Tooltip>
+                    </Button>
+                    <Button
+                    aria-labelledby="step-backward-button" 
                     type="button" 
                     onClick={() => enableSteps && animationMethodsRef.current?.handleStepBack()} 
-                    rootClass={!enableSteps && 'pointer-events-none'}>
+                    rootClass={`group relative ${!enableSteps && 'pointer-events-none'}`}
+                    isMouse>
                         <LeftIcon className={!enableSteps && 'text-gray-400'} />
-                    </Button>
-                    <Button type="button" onClick={handlePlayPauseClick}>
+                            <Tooltip id="step-backward-button" position="bottom">Step Backward</Tooltip>
+                        </Button>
+                    <Button 
+                    aria-labelledby="play-pause-button"
+                    type="button" 
+                    onClick={handlePlayPauseClick}
+                    rootClass="group relative"
+                    isMouse>
                         {
                             running ? (
                                 <PauseIcon />
@@ -72,15 +87,25 @@ function ControlSection({ extraSettings, rootClass }) {
                                 <PlayIcon />
                             )
                         }
+                        <Tooltip id="play-pause-button" position="bottom">{running ? 'Pause Animation' : 'Play Animation'}</Tooltip>
                     </Button>
                     <Button 
+                    aria-labelledby="step-forward-button"
                     type="button" 
                     onClick={() => enableSteps && animationMethodsRef.current?.handleStepForward()} 
-                    rootClass={!enableSteps && 'pointer-events-none'}>
+                    rootClass={`group relative ${!enableSteps && 'pointer-events-none'}`}
+                    isMouse>
                         <RightIcon className={!enableSteps && 'text-gray-400'} />
+                        <Tooltip id="step-forward-button" position="bottom">Step Forward</Tooltip>
                     </Button>
-                    <Button type="button" onClick={() => isAnimatingMode && animationMethodsRef.current?.handleSkipToEnd()} rootClass={!isAnimatingMode && 'pointer-events-none'}>
+                    <Button 
+                    aria-labelledby="skip-to-end-button"
+                    type="button" 
+                    onClick={() => isAnimatingMode && animationMethodsRef.current?.handleSkipToEnd()} 
+                    rootClass={`group relative ${!isAnimatingMode && 'pointer-events-none'}`}
+                    isMouse>
                         <RightsIcon className={!isAnimatingMode && 'text-gray-400'} />
+                        <Tooltip id="skip-to-end-button" position="bottom">Skip to End</Tooltip>
                     </Button>
                 </section>
                 <section className="relative mt-3">

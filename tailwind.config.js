@@ -50,6 +50,7 @@ module.exports = {
         borderWidth: ['not:first', 'hover'],
         borderColor: ['not:first', 'hover'],
         margin: ['not:first', 'first'],
+        display: ['group-hover', 'group-focus'],
         padding: ['not:first']
     },
   },
