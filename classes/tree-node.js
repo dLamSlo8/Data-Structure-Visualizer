@@ -11,7 +11,8 @@ import { v4 as uuidv4 } from 'uuid';
 export default class TreeNode {
 
     /**
-     * @param {int} value - value of node
+     * When value and uuid are null, then it is copy constructor.
+     * @param {int} [value = null] - (optional) value of node
      * @param {string} [uuid = null] - (optional) uuid of node
      * @param {TreeNode} [node = null] - (optional) node to make copy of 
      */
@@ -20,8 +21,19 @@ export default class TreeNode {
             let { name, uuid, children } = node;
             this.name = name;
             this.uuid = uuid;
-            if (children) {
-                this.children = [new TreeNode(null, null, node.children[0]), new TreeNode(null, null, node.children[1])];
+
+            if (children !== null) {
+                // need to check if children is a null treenode
+                if (children[0] === NullTreeNode) {
+                    this.setRight(children[1]);
+                }
+                else if (children[1] === NullTreeNode) {
+                    this.setLeft(children[0]);
+                } 
+                else {
+                    this.children = children;
+                }
+                
             }
             else {
                 this.children = null;
@@ -46,7 +58,7 @@ export default class TreeNode {
      * @param {TreeNode} node - node to set as left child 
      */
     setLeft(node) {
-        if (this.children !== null) {
+        if (this.children !== null && this.children !== undefined) {
             this.children[0] = node;
         } else {
             this.children = [node, NullTreeNode];
@@ -58,7 +70,7 @@ export default class TreeNode {
      * @param {TreeNode} node - node to set as right child 
      */
     setRight(node) {
-        if (this.children !== null) {
+        if (this.children !== null && this.children !== undefined) {
             this.children[1] = node;
         } else {
             this.children = [NullTreeNode, node];
