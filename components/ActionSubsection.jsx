@@ -9,24 +9,24 @@ function ActionSubsection({ sectionTitle, sectionDescription, propagateCollapsed
     const [collapsed, setCollapsed] = useState(false);
     const sectionRef = useRef(null);
 
-    const cssTransitionLifecycle = {
-        onEnter: (node) => {
-            node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
-            node.style.opacity = 0;
-        },
-        onEntering: (node) => {
-            node.style.marginTop = 0;
-            node.style.opacity = 1;
-        },
-        onExit: (node) => {
-            node.style.marginTop = 0;
-            node.style.opacity = 1;
-        },
-        onExiting: (node) => {
-            node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
-            node.style.opacity = 0;
-        }
-    }
+    // const cssTransitionLifecycle = {
+    //     onEnter: (node) => {
+    //         node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
+    //         node.style.opacity = 0;
+    //     },
+    //     onEntering: (node) => {
+    //         node.style.marginTop = 0;
+    //         node.style.opacity = 1;
+    //     },
+    //     onExit: (node) => {
+    //         node.style.marginTop = 0;
+    //         node.style.opacity = 1;
+    //     },
+    //     onExiting: (node) => {
+    //         node.style.marginTop = `-${sectionRef.current.offsetHeight}px`;
+    //         node.style.opacity = 0;
+    //     }
+    // }
 
     return (
         <section className="relative mb-5 not:first:pt-5 not:first:border-t-2 not:first:border-gray-300">
@@ -43,18 +43,18 @@ function ActionSubsection({ sectionTitle, sectionDescription, propagateCollapsed
                 </button>
             </header>
 
-            <div className="overflow-hidden" ref={sectionRef}>
-                <CSSTransition
+            <div ref={sectionRef}>
+                {/* <CSSTransition
                 in={!collapsed}
                 timeout={300}
-                {...cssTransitionLifecycle}>
-                    <div className="section-scroll">
+                {...cssTransitionLifecycle}> */}
+                    <div className={`${collapsed ? 'hidden' : 'block'} section-scroll`}>
                         <p className="font-semibold text-gray-500 mb-3">{sectionDescription}</p>
                         {
                             propagateCollapsed ? sectionContent({ collapsed }) : sectionContent
                         }
                     </div>
-                </CSSTransition>
+                {/* </CSSTransition> */}
             </div>
         </section>
     )

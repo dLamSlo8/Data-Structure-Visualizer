@@ -13,6 +13,7 @@ import RightsIcon from '@icons/chevrons-right.svg';
 import Button from '@components/Button';
 import RangeSlider from './RangeSlider';
 import Tooltip from '@components/Tooltip';
+import DropdownSelect from '@components/dropdown/DropdownSelect';
 
 function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
@@ -141,18 +142,46 @@ function ControlSection({ extraSettings, rootClass }) {
                             )
                         }
                     </div>
-                    <div className="flex flex-col md:flex-row space-y-3 md:space-y-0">
+                    {/* <div className="flex flex-col md:flex-row space-y-3 md:space-y-0">
                         <div className="w-1/2 md:pr-5">
                             <h6>Animation Speed</h6>
-                            <RangeSlider 
+                            <DropdownSelect
+                            title="Animation Speed" 
+                            values={[{
+                                title: '0.25x'
+                            },
+                            {
+                                title: '0.5x'
+                            },
+                            {
+                                title: '0.75x'
+                            },
+                            {
+                                title: '1x'
+                            },
+                            {
+                                title: '1.25x'
+                            },
+                            {
+                                title: '1.5x'
+                            },
+                            {
+                                title: '1.75x'
+                            },
+                            {
+                                title: '2x'
+                            }]}
+                            dropdownWrapperClass="bottom-full mb-3 whitespace-nowrap" />
+
+                            {/* <RangeSlider 
                             min={0}
-                            max={5} />
+                            max={5} /> *
                         </div>
                         <div className="w-1/2">
                             <h6>Current Step</h6>
                             
                         </div>
-                    </div>
+                    </div> */}
                     {extraSettings ? extraSettings({ config, setConfig }) : null}
                 </section>  
             </div>
