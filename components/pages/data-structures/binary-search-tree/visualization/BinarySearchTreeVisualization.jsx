@@ -1,6 +1,12 @@
+import { useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import BinarySearchTree from '@classes/binary-search-tree';
+import AnimationContext from '@contexts/AnimationContext';
+import D3Context from '@contexts/D3Context';
+import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@d3/tree';
+
+import VisualizationLayout from '@components/layouts/VisualizationLayout';
 
 /**
  * @param {BinarySearchTree} tree - Binary Search Tree
@@ -8,6 +14,43 @@ import BinarySearchTree from '@classes/binary-search-tree';
  * @param {number} height- height of tree
  */
 function BinarySearchTreeVisualization({tree, width, height}) {
+    const animationElementRef = useRef(null);
+    const { d3StructureRef } = useContext(D3Context);
+    const attachTreeRef = useRef(null);
+
+    /**
+     * Effect 
+     * Draws the tree with d3 and applies appropriate click handlers, 
+     * and handles the initial node case
+     */
+    useEffect(() => {
+        if (tree) {
+            // Draw tree
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+
+            //Initial node case. When there is only the rootNode, it is set to active for ease-of-use
+            if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {
+                setActiveNode({
+                    uuid: tree.root.uuid,
+                    current: tree.root.name,
+                    left: null,
+                    right: null
+                });
+            }
+
+            // ANIMATION - Indicates that steps need to be updated when isAnimatingMode is toggled
+            if (!updateStepsRef.current) {
+                updateStepsRef.current = true;
+            }
+            */
+        }
+    }, [tree]);
+
     return (
         tree ? (
             <VisualizationLayout>

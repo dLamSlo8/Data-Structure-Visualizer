@@ -64,6 +64,32 @@ describe ("Test insertNode method", () => {
 
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
+
+
+        // testing multiple inserts
+        root = new TreeNode(5, "1");
+        
+        input = new BinarySearchTree(root);
+
+        expected = new TreeNode(5, "1");
+        expected.setLeft(new TreeNode(3, "2"));
+        expectedMoves = ["1", "2"]
+
+        result = input.insertNode(3, "2");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.root).toMatchObject(expected);
+
+        expected = new TreeNode(5, "1");
+        expected.setLeft(new TreeNode(3, "2"));
+        expected.setRight(new TreeNode(7, "3"))
+        
+        expectedMoves = ["1" , "3"];
+
+        result = input.insertNode(7, "3");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.root).toMatchObject(expected);
     })
 })
 

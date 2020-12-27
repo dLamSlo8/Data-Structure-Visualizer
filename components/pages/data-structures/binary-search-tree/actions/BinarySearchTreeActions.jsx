@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 
-
 import ActionSubsection from '@components/ActionSubsection';
 
 // reuse initsection from tree traversal
@@ -22,7 +21,6 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleInit = (value) => {
         let tree = new BinarySearchTree(new TreeNode(parseInt(value)));
-
         setTree(tree);
         
     }
@@ -33,9 +31,10 @@ function BinarySearchTreeActions({tree, setTree}){
      * @param {int} value - The value of the TreeNode to delete 
      */
     const handleDelete = (value) => {
+        value = parseInt(value);
         // store moves as local var not sure what next
         let moves = tree.deleteNode(value);
-        setTree(new BinarySearchTree(null, tree));
+        setTree(tree.root !== null ? new BinarySearchTree(null, tree) : null);
         return moves;
     }
 
@@ -46,6 +45,7 @@ function BinarySearchTreeActions({tree, setTree}){
      * @return {Array} - an Array of uuid of nodes taken to get to specified TreeNode
      */
     const handleInsert = (value) => {
+        value = parseInt(value);
         let moves = tree.insertNode(value);
         setTree(new BinarySearchTree(null, tree));
         return moves;
@@ -57,7 +57,10 @@ function BinarySearchTreeActions({tree, setTree}){
      * @return {Array} - an Array of uuid of nodes taken to get to specified TreeNode
      */
     const handleFind = (value) => {
+        value = parseInt(value);
         let moves = tree.findNode(value);
+        // the find input in form only deletes when state changes
+        //setTree(new BinarySearchTree(null, tree));
         return moves;
     }
 
