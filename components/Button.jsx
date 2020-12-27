@@ -27,13 +27,15 @@ function Button({ btnStyle, children, rootClass, onClick, isMouse, ...btnProps }
     return (
         <button 
         className={`${getStyleClass(btnStyle)} ${rootClass ? rootClass : ''}`} 
-        onClick={(e) => {
-            onClick(e);
+        {
+            ...(onClick && { onClick(e) {
+                onClick(e);
 
-            if (isMouse) { // If using a mouse, manually remove focus when clicked.
-                e.currentTarget.blur();
-            }
-        }}
+                if (isMouse) { // If using a mouse, manually remove focus when clicked.
+                    e.currentTarget.blur();
+                }
+            }})
+        }
         {...btnProps}>
             {children}
         </button>

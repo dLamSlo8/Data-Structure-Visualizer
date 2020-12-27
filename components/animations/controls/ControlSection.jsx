@@ -19,6 +19,7 @@ function ControlSection({ extraSettings, rootClass }) {
 
     const running = animationState === 'running';
     const enableSteps = isAnimatingMode && animationState && animationState !== 'running';
+    const enableSkipToEnd = isAnimatingMode && animationState !== 'finished';
 
     const updateConfig = (e, customProps) => {
         if (running) { // Ensure that any change is void if running. Enforces no modification of settings during auto-animation!
@@ -69,10 +70,11 @@ function ControlSection({ extraSettings, rootClass }) {
                     aria-labelledby="step-backward-button" 
                     type="button" 
                     onClick={() => enableSteps && animationMethodsRef.current?.handleStepBack()} 
-                    rootClass={`group relative ${!enableSteps && 'pointer-events-none'}`}
-                    isMouse>
+                    rootClass={`group relative ${!enableSteps && 'cursor-default'}`}
+                    isMouse
+                    disabled={!enableSteps}>
                         <LeftIcon className={!enableSteps && 'text-gray-400'} />
-                            <Tooltip id="step-backward-button" position="bottom">Step Backward</Tooltip>
+                            <Tooltip id="step-backward-button" position="bottom">Step Backward{!enableSteps && ' (Not available unless paused)'}</Tooltip>
                         </Button>
                     <Button 
                     aria-labelledby="play-pause-button"
@@ -93,18 +95,19 @@ function ControlSection({ extraSettings, rootClass }) {
                     aria-labelledby="step-forward-button"
                     type="button" 
                     onClick={() => enableSteps && animationMethodsRef.current?.handleStepForward()} 
-                    rootClass={`group relative ${!enableSteps && 'pointer-events-none'}`}
-                    isMouse>
+                    rootClass={`group relative ${!enableSteps && 'cursor-default'}`}
+                    isMouse
+                    disabled={!enableSteps}>
                         <RightIcon className={!enableSteps && 'text-gray-400'} />
-                        <Tooltip id="step-forward-button" position="bottom">Step Forward</Tooltip>
+                        <Tooltip id="step-forward-button" position="bottom">Step Forward{!enableSteps && ' (Not available unless paused)'}</Tooltip>
                     </Button>
                     <Button 
                     aria-labelledby="skip-to-end-button"
                     type="button" 
                     onClick={() => isAnimatingMode && animationMethodsRef.current?.handleSkipToEnd()} 
-                    rootClass={`group relative ${!isAnimatingMode && 'pointer-events-none'}`}
+                    rootClass={`group relative ${!enableSkipToEnd && 'pointer-events-none'}`}
                     isMouse>
-                        <RightsIcon className={!isAnimatingMode && 'text-gray-400'} />
+                        <RightsIcon className={!enableSkipToEnd && 'text-gray-400'} />
                         <Tooltip id="skip-to-end-button" position="bottom">Skip to End</Tooltip>
                     </Button>
                 </section>

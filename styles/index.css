@@ -813,6 +813,10 @@ button {
   border-top-width: 2px;
 }
 
+.cursor-default{
+  cursor: default;
+}
+
 .cursor-grab{
   cursor: -webkit-grab;
   cursor: grab;
