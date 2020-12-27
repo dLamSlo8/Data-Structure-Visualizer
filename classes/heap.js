@@ -6,7 +6,7 @@ import TreeNode, { NullTreeNode } from "./tree-node.js";
  * @property {function} comparator - function used to determine heap priority
  * @property {Array} elements - array of TreeNodes in heap
  */
-export default class heap {
+export default class Heap {
     /**
      * 
      * @param {TreeNode} root - root node of heap
@@ -14,7 +14,23 @@ export default class heap {
      */
     constructor(root, comparator) {
         // if going to do copy constructor or null stuff, make sure elements array match
-        this.elements = [root];
+        this.elements = [];
+        if (root !== null) {
+            let idx = 0;
+            this.elements = [root];
+            // make sure heap is completely balanced
+            // go through level order
+            while (idx < this.elements.length) {
+                let curr = this.elements[idx];
+                if (curr.children) {
+                    this.elements.push(curr.children[0]);
+                    if (curr.children[1] !== NullTreeNode) {
+                        this.elements.push(curr.children[1]);
+                    }
+                }
+                idx += 1;
+            }
+        }
         this.comparator = comparator;
     }
 
@@ -82,11 +98,27 @@ export default class heap {
 
     /**
      * Adds element to heap while maintaining heap property
+     * @param {int} value - value of node to add
+     * @param {string} [uuid = null] - (optional) uuid of node to create
      */
-    insert() {
-        if (this.root === null) {
+    insert(value, uuid) {
+        // need to discuss for insert if we want to show how we reached last element
+        function bubbleUp(index, moves) {
+            
+        }
+        if (this.elements.length === 0) {
             throw ("Please create a tree!");
         }
+
+        let newNode = TreeNode(value, uuid);
+
+        // add new node to end
+        this.elements.push(newNode);
+
+        this.updateParentChildren(this.elements.length - 1);
+
+        let moves = [];
+
         return 0;
     }
 
@@ -95,11 +127,11 @@ export default class heap {
      * @return {TreeNode} - highest priority node
      */
     top() {
-        if (this.root === null) {
+        if (this.elements.length === 0) {
             throw ("Please create a tree!");
         }
 
-        return this.root;
+        return this.elements[0];
     }
 
     /**
@@ -130,27 +162,54 @@ export default class heap {
     }
 
     /**
-     * Swaps two elements in heap. Updates TreeNode values and sets moves array
-     * @param {int} idx1 - index of first node to swap
-     * @param {int} idx2 - index of second node to swap
+     * Swaps two elements in heap. Updates TreeNode values and sets moves array. Element at idx1 will be
+     * child and element at idx2 will be parent of idx2.
+     * @param {int} idx1 - index of first node to swap, should be node that we are moving
+     * @param {int} idx2 - index of second node to swap, should be node we are putting into moves
      * @param {Array} moves - array of moves to keep track of
      */
     swap(idx1, idx2, moves) {
         moves.push(this.elements[idx2].uuid);
-        [this.elements[idx1], this.elements[idx2]] = [this.elements[idx2], this.elements[idx1]];
-        [this.elements[idx1].children, this.elements[idx2].children] = [this.elements[idx2].children, this.elements[idx1].children];
 
-        // update parents child
-        let parentIdx = this.parentIndex(idx1);
-        // make sure we have a parent
-        if (parentIdx >= 0) {
-            // if odd, then it should be left of parent
-            if (idx1 % 2 === 1) {
-                this.elements[parentIdx].children[0] = this.elements[idx1];
-            } else {
-                this.elements[parentIdx].children[1] = this.elements[idx1];
+        // swap children, need to make sure that we dont have circular children dependencies
+        // bc original parent is going to be child of original child
+        let childrenForChild = this.elements[idx2].children;
+        let childrenForParent = this.elements[idx1].children;
+
+        // find child that is refering to node at idx2, change this to be
+        // node at idx1 because the node at idx1 will be child after swap
+        for (let i = 0; i < childrenForParent.length; i++) {
+            if (childrenForParent[i] === this.elements[idx2]) {
+                childrenForParent[i] = this.elements[idx1];
             }
         }
         
+
+        // swap nodes
+        [this.elements[idx1], this.elements[idx2]] = [this.elements[idx2], this.elements[idx1]];
+
+        // update
+        this.elements[idx1].children = childrenForParent;
+        this.elements[idx2].children = childrenForChild;
+        
+        // update parents child
+        this.updateParentChildren(idx1);
+    }
+
+    /**
+     * Update parent children to be this node
+     * @param {int} idx - index of node for parent children to point to 
+     */
+    updateParentChildren(idx) {
+        let parentIdx = this.parentIndex(idx);
+        // make sure we have a parent
+        if (parentIdx >= 0) {
+            // if odd, then it should be left of parent
+            if (idx % 2 === 1) {
+                this.elements[parentIdx].setLeft(this.elements[idx]);
+            } else {
+                this.elements[parentIdx].setRight(this.elements[idx]);
+            }
+        }
     }
 }
