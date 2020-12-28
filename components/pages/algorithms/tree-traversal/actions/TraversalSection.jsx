@@ -7,6 +7,7 @@ import { mapTraversalToPosition } from '@d3/tree';
 
 import DropdownSelect from '@components/dropdown/DropdownSelect';
 import ControlSection from '@components/animations/controls/ControlSection';
+import Text from '@components/animations/elements/tree-traversal/Text';
 
 /**
  * Action section for tree traversal
@@ -14,7 +15,7 @@ import ControlSection from '@components/animations/controls/ControlSection';
  * @state traversalType - Type of tree traversal
  */ 
 function TraversalSection({ tree, sectionCollapsed }) { 
-    const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
+    const { stepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
     const { d3StructureRef } = useContext(D3Context);
     const [traversalType, setTraversalType] = useState('Preorder');
 
@@ -22,7 +23,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
      * Effect
      * Updates step generator function based on traversal type selection.
      */
-    useEffect(() => {
+    useEffect(() => { // TO-DO: We shouldn't be calling these functions and effectively doing the algorithms here. Should all be done when animating mode is opened.
         let traversalRes = null;
 
         switch (traversalType) {
@@ -41,6 +42,8 @@ function TraversalSection({ tree, sectionCollapsed }) {
             default:
                 break;
         }
+        console.log(d3StructureRef.current);
+
 
         stepGeneratorRef.current = () => mapTraversalToPosition(traversalRes, d3StructureRef.current);
         updateStepsRef.current = true; // Make sure to enable updating steps on next animating mode toggle.

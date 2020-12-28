@@ -11,6 +11,7 @@ const AnimationContext = createContext();
  *                              This is set in useAnimationControl hook.
  * @state stepGeneratorRef - Ref value that holds the function that generates steps.
  * @state updateStepsRef - Ref value that represents whether steps should be updated.
+ * @state animationElementsGeneratorRef - Ref value that holds function that generates all necessary elements for animation.
  */
 export function AnimationContextProvider({ children }) {
     const [isAnimatingMode, setAnimatingMode] = useState(null); 
@@ -20,6 +21,7 @@ export function AnimationContextProvider({ children }) {
     const animationMethodsRef = useRef(null);
     const stepGeneratorRef = useRef(null);
     const updateStepsRef = useRef(false); 
+    const animationElementGeneratorRef = useRef(null);
 
     useEffect(() => {
         setIsMounted(true);
@@ -36,7 +38,7 @@ export function AnimationContextProvider({ children }) {
     }, [isMounted]);
      
     return (
-        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, animationMethodsRef, stepGeneratorRef, updateStepsRef, animationState, setAnimationState, config, setConfig }}>
+        <AnimationContext.Provider value={{ isAnimatingMode, setAnimatingMode, animationElementGeneratorRef, animationMethodsRef, stepGeneratorRef, updateStepsRef, animationState, setAnimationState, config, setConfig }}>
             {children}
         </AnimationContext.Provider>
     )

@@ -1,15 +1,14 @@
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import { animated } from '@react-spring/web';
+import { animated, interpolate } from '@react-spring/web';
 
 // Responsibility: Render animation element
-function TreeTraversalAnimationElement({ attachRef, animationProps }) {
+function TreeTraversalAnimationElement({ xy }) {
+    console.log(xy);
     return (
-        ReactDOM.createPortal(
         <g id="animate-indicator">
-            <animated.circle r="24" cx={animationProps?.x} cy={animationProps?.y} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
-        </g>, attachRef)
+            <animated.circle r="24" cx={xy?.interpolate((x, y) => `${x}`)} cy={xy?.interpolate((x, y) => `${y}`)} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
+        </g>
     )
 }
 

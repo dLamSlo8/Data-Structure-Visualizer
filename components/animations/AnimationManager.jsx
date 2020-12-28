@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import { useState, useEffect, useContext, useCallback } from 'react';
 import { Controller, useSpring, config } from '@react-spring/web';
 
@@ -14,11 +15,13 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function AnimationManager({ initialProps, initConfig, children }) {
-    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
+export default function AnimationManager({ attachElementsRef, initialProps, initConfig, children }) {
+    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, 
+        stepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const [animating, setAnimating] = useState(false);
     const [steps, setSteps] = useState(null);
+    const [animationElements, setAnimationElements] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
 
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
@@ -32,6 +35,8 @@ export default function AnimationManager({ initialProps, initConfig, children })
             }
         }
     }));
+
+    console.log(animationProps);
 
     /**
      * React-spring script for running an animation from beginning to end.
@@ -144,6 +149,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
+            setAnimationElements(animationElementGeneratorRef.current());
             setSteps(stepGeneratorRef.current());
         }
     }, [isAnimatingMode]);
@@ -151,7 +157,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
     /**
      * Effect
      * Whenever steps is updated, make sure to set updateStepsRef to false, indicating that 
-     * we have just flushed the last update.
+     * we have just flushed/consumed the last update.
      */
     useEffect(() => {
         updateStepsRef.current = false;
@@ -181,6 +187,17 @@ export default function AnimationManager({ initialProps, initConfig, children })
     animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
 
     return (
-        children({ animationProps })
+        animationElements && animationState ? 
+            ReactDOM.createPortal(
+                <>
+                {
+                    animationElements.map(({ id, element: AnimationComponent }) => {
+                            return <AnimationComponent
+                            {...{ [id]: animationProps[id] }} /> 
+                    })
+                }
+                </>
+            , attachElementsRef)
+        : null
     )
 }                

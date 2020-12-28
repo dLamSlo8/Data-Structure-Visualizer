@@ -9,6 +9,7 @@ import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeCl
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import TreeTraversalAnimationElement from './TreeTraversalAnimationElement';
 import AnimationManager from '@components/animations/AnimationManager';
+import Text from '@components/animations/elements/tree-traversal/Text';
 
 /**
  * Visualization section of tree traversal page
@@ -16,7 +17,7 @@ import AnimationManager from '@components/animations/AnimationManager';
  * @ref attachTreeRef - Ref passed to d3 to know where to attach tree visualization
  */ 
 function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
-    const { isAnimatingMode, animationState, updateStepsRef } = useContext(AnimationContext); // ANIMATION
+    const { isAnimatingMode, animationState, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext); // ANIMATION
     const { d3StructureRef } = useContext(D3Context);
     const svgTreeRef = useRef(null);
     const gRef = useRef(null);
@@ -89,6 +90,25 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         }
     }, [isAnimatingMode]);
 
+    useEffect(() => {
+        animationElementGeneratorRef.current = () => {
+            let resArr = [{
+                id: 'xy',
+                element: TreeTraversalAnimationElement
+            }];
+            d3StructureRef.current.descendants().filter((node) => node.data.name !== null).forEach((node) => {
+                resArr.push({
+                    id: node.data.uuid,
+                    element: Text
+                });
+            });
+
+            console.log(resArr);
+            return resArr;
+        };
+    }, []);
+
+
     return (
         tree ? (
             <VisualizationLayout>
@@ -99,15 +119,8 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
                         </g>
                     </svg>
                 </div>
-                <AnimationManager initialProps={{ x: 0, y: 0 }}>
-                    {
-                        ({ animationProps }) => (
-                            animationState ? (
-                                <TreeTraversalAnimationElement attachRef={gRef.current} animationProps={animationProps} />
-                            ) : null
-                        )
-                    }
-                </AnimationManager>
+                <AnimationManager initialProps={{ xy: [0, 0] }} attachElementsRef={gRef.current} />
+
             </VisualizationLayout>
         ) : (
             <div className="h-full flex flex-col justify-center items-center px-20">
