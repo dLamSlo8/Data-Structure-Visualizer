@@ -341,3 +341,109 @@ describe ("Test remove method", () => {
         expect(input.elements).toEqual(expectedElements);
     })
 })
+
+describe ("Test insert method", () => {
+    it ("Should throw an error when empty tree", () => {
+        let result = new Heap();
+
+        expect(() => result.insert(5, "a")).toThrow("Please create a tree!");
+    })
+
+    it ("Should update tree and set moves array after insert", () => {
+        // insert left no bubble
+        let root = new TreeNode(10, "a");
+
+        let input = new Heap(root);
+
+        let expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(12, "b"));
+
+        let expectedMoves = [];
+        let expectedElements = [
+            expected,
+            expected.children[0]
+        ];
+
+        let result = input.insert(12, "b");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        // insert right no bubble
+        root = new TreeNode(10, "a");
+        root.setLeft(new TreeNode(12, "b"));
+
+        input = new Heap(root);
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(12, "b"));
+        expected.setRight(new TreeNode(14, "c"));
+
+        expectedMoves = [];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+        ];
+
+        result = input.insert(14, "c");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        root = new TreeNode(10, "a");
+        root.setLeft(new TreeNode(10, "b"));
+        root.children[0].setLeft(new TreeNode(19, "c"));
+        root.children[0].setRight(new TreeNode(16, "d"));
+        root.setRight(new TreeNode(20, "e"));
+
+        input = new Heap(root);
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(10, "b"));
+        expected.children[0].setLeft(new TreeNode(19, "c"));
+        expected.children[0].setRight(new TreeNode(16, "d"));
+        expected.setRight(new TreeNode(15, "f"));
+        expected.children[1].setLeft(new TreeNode(20, "e"));
+
+        expectedMoves = ["e"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0]
+        ];
+
+        result = input.insert(15, "f");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        root = new TreeNode(10, "a");
+        root.setLeft(new TreeNode(10, "b"));
+        root.children[0].setLeft(new TreeNode(19, "c"));
+        root.children[0].setRight(new TreeNode(16, "d"));
+        root.setRight(new TreeNode(15, "e"));
+        root.children[1].setLeft(new TreeNode(20, "f"));
+
+        input = new Heap(root);
+
+        expected = new TreeNode(-1, "g");
+        expected.setLeft(new TreeNode(10, "b"));
+        expected.children[0].setLeft(new TreeNode(19, "c"));
+        expected.children[0].setRight(new TreeNode(16, "d"));
+        expected.setRight(new TreeNode(10, "a"));
+        expected.children[1].setLeft(new TreeNode(20, "f"));
+        expected.children[1].setRight(new TreeNode(15, "e"));
+
+        expectedMoves = ["e", "a"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0], expected.children[1].children[1]
+        ];
+
+        result = input.insert(-1, "g");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+    })
+})

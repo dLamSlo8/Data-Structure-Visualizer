@@ -141,6 +141,7 @@ export default class Heap {
      * Adds element to heap while maintaining heap property
      * @param {int} value - value of node to add
      * @param {string} [uuid = null] - (optional) uuid of node to create
+     * @return {Array} - uuid of steps that we took
      */
     insert(value, uuid) {
         // need to discuss for insert if we want to show how we reached last element
@@ -148,16 +149,18 @@ export default class Heap {
             throw ("Please create a tree!");
         }
 
-        let newNode = TreeNode(value, uuid);
+        let newNode = new TreeNode(value, uuid);
 
         // add new node to end
         this.elements.push(newNode);
+
 
         this.updateParentChildren(this.elements.length - 1);
 
         let moves = [];
 
-        return 0;
+        this.bubbleUp(this.elements.length - 1, moves);
+        return moves;
     }
 
     /**
@@ -166,7 +169,24 @@ export default class Heap {
      * @param {Array} moves - array to store moves we took
      */
     bubbleUp(index, moves) {
-            
+        // no more up to go
+        if (index <= 0) {
+            return;
+        }
+
+        let parentIdx = this.parentIndex(index);
+
+        // if this node has more priority than its parent, bubble up
+        if (this.comparator(this.elements[index], this.elements[parentIdx])) {
+            // update moves
+            moves.push(this.elements[parentIdx].uuid);
+            // swap then see if we can bubble up still
+            this.swap(parentIdx, index);
+            this.bubbleUp(parentIdx, moves);
+        }
+        else {
+            return;
+        }
     }
 
     /**
