@@ -18,7 +18,8 @@ describe ("Test inOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expected = [[1, 3, 2], ["a", "c", "b"]]
+        let expectedPath = [{"visit":"a"}, {"right":"b"}, {"left":"c"}, {"visit":"c"}, {"parent":"b"}, {"visit":"b"}]
+        let expected = [[1, 3, 2], expectedPath]
 
         let result = input.inOrderTraversal();
         expect(result).toEqual(expected);
@@ -39,11 +40,15 @@ describe ("Test inOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-
-        expected = [[1,3,9,6,1,2,3], ["d","c","b","e","a","f","g"]];
+        expectedPath = [{"left":"b"}, {"left":"c"}, {"left":"d"}, {"visit":"d"}, {"parent": "c"}, {"visit":"c"}, 
+                        {"parent":"b"}, {"visit":"b"}, {"right":"e"}, {"visit":"e"}, {"parent":"b"}, {"parent":"a"}, {"visit":"a"},
+                        {"right":"f"}, {"visit":"f"}, {"right":"g"}, {"visit":"g"},   
+                    ]
+        expected = [[1,3,9,6,1,2,3], expectedPath];
 
         result = input.inOrderTraversal();
         expect(result).toEqual(expected);
+
     })
 })
 
@@ -63,7 +68,8 @@ describe ("Test preOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expected = [[1, 2, 3], ["a", "b", "c"]]
+        let expectedPath = [{"visit":"a"}, {"right":"b"}, {"visit":"b"}, {"left":"c"}, {"visit":"c"}]
+        let expected = [[1, 2, 3], expectedPath]
 
         let result = input.preOrderTraversal();
         expect(result).toEqual(expected);
@@ -85,7 +91,11 @@ describe ("Test preOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-        expected = [[1,9,3,1,6,2,3], ["a","b","c","d","e","f","g"]];
+        expectedPath = [{"visit":"a"}, {"left":"b"}, {"visit":"b"}, {"left":"c"}, {"visit":"c"}, 
+                        {"left":"d"}, {"visit":"d"}, {"parent": "c"}, {"parent":"b"}, {"right":"e"}, {"visit":"e"},
+                        {"parent":"b"}, {"parent":"a"}, {"right":"f"}, {"visit":"f"}, {"right":"g"}, {"visit":"g"}
+                    ]
+        expected = [[1,9,3,1,6,2,3], expectedPath];
 
         result = input.preOrderTraversal();
         expect(result).toEqual(expected);
@@ -108,7 +118,8 @@ describe ("Test postOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expected = [[3,2,1], ["c","b","a"]]
+        let expectedPath = [{"right":"b"}, {"left":"c"}, {"visit":"c"}, {"parent":"b"}, {"visit":"b"}, {"parent":"a"}, {"visit":"a"}]
+        let expected = [[3,2,1], expectedPath]
 
         let result = input.postOrderTraversal();
         expect(result).toEqual(expected);
@@ -129,7 +140,11 @@ describe ("Test postOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-        expected = [[1,3,6,9,3,2,1], ["d","c","e","b","g","f","a"]];
+        expectedPath = [{"left":"b"}, {"left":"c"}, {"left":"d"}, {"visit":"d"},{"parent":"c"}, {"visit":"c"}, {"right":"e"}, {"visit":"e"},
+                        {"parent":"b"}, {"visit":"b"}, {"right":"f"}, {"right":"g"}, {"visit":"g"}, {"parent":"f"}, {"visit":"f"},
+                        {"parent":"a"}, {"visit":"a"}
+                    ]
+        expected = [[1,3,6,9,3,2,1], expectedPath];
 
         result = input.postOrderTraversal();
         expect(result).toEqual(expected);
