@@ -31,10 +31,9 @@ function DropdownSelect({ title, values, value, setValue, closeTrigger, dropdown
         setValue(title);
     };
 
-    const rect = elementRef.current?.getBoundingClientRect();
 
     return (
-        <div ref={elementRef}>
+        <div className="relative" ref={elementRef}>
             <h4 className="font-semibold text-lg text-gray-500 mb-1">{title}</h4>
             <button 
             className="flex justify-between items-center w-full py-3 px-5 border border-gray-500 rounded-lg"

@@ -26,7 +26,7 @@ export default class BinaryTree {
      */
     inOrderTraversal() {
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.name === null) {
                 return;
             }
 
@@ -57,7 +57,7 @@ export default class BinaryTree {
      */
     preOrderTraversal() {
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.name === null) {
                 return;
             }
             
@@ -85,7 +85,7 @@ export default class BinaryTree {
      */
     postOrderTraversal() {
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.name === null) {
                 return;
             }
 
@@ -126,11 +126,11 @@ export default class BinaryTree {
             res[0].push(first.name);
             res[1].push(first.uuid);
             if (first.children) {
-                if (first.children[0] !== NullTreeNode) {
+                if (first.children[0].name !== null) {
                     q.push(first.children[0]);
                 }
     
-                if (first.children[1] !== NullTreeNode) {
+                if (first.children[1].name !== null) {
                     q.push(first.children[1]);
                 }
             }
@@ -208,7 +208,7 @@ export default class BinaryTree {
                         node.children[0] = new TreeNode(value, createUUID);
                     }
                     else {
-                        node.children = [new TreeNode(value, createUUID), new TreeNode(null, null)];
+                        node.children = [new TreeNode(value, createUUID), NullTreeNode];
                     }
                 } else {
                     if (node.children) {
@@ -219,7 +219,7 @@ export default class BinaryTree {
                         node.children[1] = new TreeNode(value, createUUID);
                     }
                     else {
-                        node.children = [new TreeNode(null, null), new TreeNode(value, createUUID)];
+                        node.children = [NullTreeNode, new TreeNode(value, createUUID)];
                     }
                 }
                 return;

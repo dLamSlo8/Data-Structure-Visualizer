@@ -27,9 +27,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
             setAnimating(true);
         },
         onRest: (e) => {
-            console.log(e);
             if (e.finished) {
-                console.log('finished!');
                 setAnimating(false);
             }
         }
@@ -98,8 +96,6 @@ export default function AnimationManager({ initialProps, initConfig, children })
          *  Only step forward if not on last step. Even though the UI should account for disabling this button, 
          *  we need to have this safeguard in case a user manually enables it through DevTools.
          */ 
-        console.log(currentStep);
-        console.log(animating);
         if (currentStep < steps.length - 1) {
             setAnimation({ ...steps[currentStep + 1], config: { duration: 0 } });
             if (currentStep + 1 === steps.length - 1) { // If next step is the last one, ensure that if play is pressed again, it will reset accordingly.
@@ -123,7 +119,7 @@ export default function AnimationManager({ initialProps, initConfig, children })
     }
 
     const handleRun = () => {
-        if (isAnimatingMode && steps) { // TO-DO: Issue where after opening and closing animating mode, we now have steps, and so it will run both handleRun AND the useEffect!
+        if (isAnimatingMode && steps) { 
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 setAnimation({ to: handleResetAndRunScript });
             }
@@ -143,32 +139,38 @@ export default function AnimationManager({ initialProps, initConfig, children })
     /**
      * Effect
      * Whenever animating mode is turned on and iff there is a new tree to be drawn,
-     * generate the steps for this new tree and toggle off drewTree such that if animating
-     * mode is toggled on and off and the tree hasn't changed, nothing will happen (as
-     * the steps are the exact same. This is great for performance as we don't need
+     * generate the steps for this new tree. This is great for performance as we don't need
      * to do expensive calculations each time we turn on animating mode.)
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
             setSteps(stepGeneratorRef.current());
-            
-            updateStepsRef.current = false;
         }
     }, [isAnimatingMode]);
 
     /**
      * Effect
+     * Whenever steps is updated, make sure to set updateStepsRef to false, indicating that 
+     * we have just flushed the last update.
+     */
+    useEffect(() => {
+        updateStepsRef.current = false;
+    }, [steps]);
+
+    /**
+     * Effect
      * Clears and resets animation when animating mode is turned off. When turned on
-     * and steps are available, run animation. This is assuming that the only way to turn
+     * and steps are fully updated, run animation. This is assuming that the only way to turn
      * on animating mode is by 'playing' the animation.
      */
     useEffect(() => {
+        console.log('isAnimatingMode useEffect');
         if (!isAnimatingMode) {
             stopAnimation();
             setAnimationState(null);
             setCurrentStep(0);
         }
-        else if (isAnimatingMode && steps) {
+        else if (isAnimatingMode && steps && !updateStepsRef.current) { // 
             setAnimation({ ...steps[0], config: { duration: 0 } }); // Account for resetting animation props.
             setAnimation({ to: handleRunScript });  
             setAnimationState('running');

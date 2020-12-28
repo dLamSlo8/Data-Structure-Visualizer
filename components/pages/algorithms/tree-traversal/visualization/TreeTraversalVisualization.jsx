@@ -2,7 +2,6 @@ import { useEffect, useContext, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import BinaryTree from '@classes/binary-tree';
-import useAnimationControl from '@hooks/useAnimationControl';
 import AnimationContext from '@contexts/AnimationContext';
 import D3Context from '@contexts/D3Context';
 import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@d3/tree';

@@ -5,7 +5,7 @@ export const mapTraversalToPosition = (traversalArray, d3TreeRef) => {
         const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
 
         return { x: node?.x, y: node?.y };
-    });
+    })
 };
 
 /**
