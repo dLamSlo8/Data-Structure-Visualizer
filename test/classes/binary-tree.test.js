@@ -18,12 +18,20 @@ describe ("Test inOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expectedPath = [{"visit":"a"}, {"right":"b"}, {"left":"c"}, {"visit":"c"}, {"parent":"b"}, {"visit":"b"}]
-        let expected = [[1, 3, 2], expectedPath]
+        let expectedPath = [
+            {"type": "visit", "uuid": "a"},
+            {"type": "right", "uuid": "b"},
+            {"type": "left", "uuid" :"c"},
+            {"type": "visit", "uuid" :"c"},
+            {"type": "parent", "uuid" :"b"},
+            {"type": "visit", "uuid" :"b"}
+        ]
+        let expected = [[1, 3, 2], expectedPath];
 
         let result = input.inOrderTraversal();
         expect(result).toEqual(expected);
 
+        
         root = new TreeNode(1, "a");
         // root.left, [1,9,2,3,6,null,3,1] lc representation
         root.setLeft(new TreeNode(9, "b"));
@@ -40,15 +48,30 @@ describe ("Test inOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-        expectedPath = [{"left":"b"}, {"left":"c"}, {"left":"d"}, {"visit":"d"}, {"parent": "c"}, {"visit":"c"}, 
-                        {"parent":"b"}, {"visit":"b"}, {"right":"e"}, {"visit":"e"}, {"parent":"b"}, {"parent":"a"}, {"visit":"a"},
-                        {"right":"f"}, {"visit":"f"}, {"right":"g"}, {"visit":"g"},   
-                    ]
+        expectedPath = [
+            {"type": "left", "uuid":"b"},
+            {"type": "left", "uuid":"c"},
+            {"type": "left", "uuid":"d"},
+            {"type": "visit", "uuid":"d"},
+            {"type": "parent", "uuid": "c"},
+            {"type": "visit", "uuid":"c"}, 
+            {"type": "parent", "uuid":"b"},
+            {"type": "visit", "uuid":"b"},
+            {"type": "right", "uuid":"e"},
+            {"type": "visit", "uuid":"e"},
+            {"type": "parent", "uuid":"b"},
+            {"type": "parent", "uuid":"a"},
+            {"type": "visit", "uuid":"a"},
+            {"type": "right", "uuid":"f"},
+            {"type": "visit", "uuid":"f"},
+            {"type": "right", "uuid":"g"},
+            {"type": "visit", "uuid":"g"}
+        ]
         expected = [[1,3,9,6,1,2,3], expectedPath];
 
         result = input.inOrderTraversal();
         expect(result).toEqual(expected);
-
+        
     })
 })
 
@@ -68,7 +91,13 @@ describe ("Test preOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expectedPath = [{"visit":"a"}, {"right":"b"}, {"visit":"b"}, {"left":"c"}, {"visit":"c"}]
+        let expectedPath = [
+            {"type": "visit", "uuid": "a"},
+            {"type": "right", "uuid": "b"},
+            {"type": "visit", "uuid": "b"},
+            {"type": "left", "uuid": "c"},
+            {"type": "visit", "uuid": "c"}
+        ]
         let expected = [[1, 2, 3], expectedPath]
 
         let result = input.preOrderTraversal();
@@ -91,10 +120,25 @@ describe ("Test preOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-        expectedPath = [{"visit":"a"}, {"left":"b"}, {"visit":"b"}, {"left":"c"}, {"visit":"c"}, 
-                        {"left":"d"}, {"visit":"d"}, {"parent": "c"}, {"parent":"b"}, {"right":"e"}, {"visit":"e"},
-                        {"parent":"b"}, {"parent":"a"}, {"right":"f"}, {"visit":"f"}, {"right":"g"}, {"visit":"g"}
-                    ]
+        expectedPath = [
+            {"type": "visit", "uuid" :"a"},
+            {"type": "left", "uuid" :"b"},
+            {"type": "visit", "uuid" :"b"},
+            {"type": "left", "uuid" :"c"},
+            {"type": "visit", "uuid" :"c"}, 
+            {"type": "left", "uuid" :"d"},
+            {"type": "visit", "uuid" :"d"},
+            {"type": "parent", "uuid" : "c"},
+            {"type": "parent", "uuid" :"b"},
+            {"type": "right", "uuid" :"e"},
+            {"type": "visit", "uuid" :"e"},
+            {"type": "parent", "uuid" :"b"},
+            {"type": "parent", "uuid" :"a"},
+            {"type": "right", "uuid" :"f"},
+            {"type": "visit", "uuid" :"f"},
+            {"type": "right", "uuid" :"g"},
+            {"type": "visit", "uuid" :"g"}
+        ]
         expected = [[1,9,3,1,6,2,3], expectedPath];
 
         result = input.preOrderTraversal();
@@ -118,7 +162,15 @@ describe ("Test postOrderTraversal method", () => {
         
         let input = new BinaryTree(root);
 
-        let expectedPath = [{"right":"b"}, {"left":"c"}, {"visit":"c"}, {"parent":"b"}, {"visit":"b"}, {"parent":"a"}, {"visit":"a"}]
+        let expectedPath = [
+            {"type": "right", "uuid": "b"},
+            {"type": "left", "uuid": "c"},
+            {"type": "visit", "uuid": "c"},
+            {"type": "parent", "uuid": "b"},
+            {"type": "visit", "uuid": "b"},
+            {"type": "parent", "uuid": "a"},
+            {"type": "visit", "uuid": "a"}
+        ]
         let expected = [[3,2,1], expectedPath]
 
         let result = input.postOrderTraversal();
@@ -140,10 +192,25 @@ describe ("Test postOrderTraversal method", () => {
 
         input = new BinaryTree(root);
 
-        expectedPath = [{"left":"b"}, {"left":"c"}, {"left":"d"}, {"visit":"d"},{"parent":"c"}, {"visit":"c"}, {"right":"e"}, {"visit":"e"},
-                        {"parent":"b"}, {"visit":"b"}, {"right":"f"}, {"right":"g"}, {"visit":"g"}, {"parent":"f"}, {"visit":"f"},
-                        {"parent":"a"}, {"visit":"a"}
-                    ]
+        expectedPath = [
+            {"type": "left", "uuid": "b"},
+            {"type": "left", "uuid": "c"},
+            {"type": "left", "uuid": "d"},
+            {"type": "visit", "uuid": "d"},
+            {"type": "parent", "uuid": "c"},
+            {"type": "visit", "uuid": "c"},
+            {"type": "right", "uuid": "e"},
+            {"type": "visit", "uuid": "e"},
+            {"type": "parent", "uuid": "b"},
+            {"type": "visit", "uuid": "b"},
+            {"type": "right", "uuid": "f"},
+            {"type": "right", "uuid": "g"},
+            {"type": "visit", "uuid": "g"},
+            {"type": "parent", "uuid": "f"},
+            {"type": "visit", "uuid": "f"},
+            {"type": "parent", "uuid": "a"},
+            {"type": "visit", "uuid": "a"}
+        ]
         expected = [[1,3,6,9,3,2,1], expectedPath];
 
         result = input.postOrderTraversal();

@@ -51,11 +51,15 @@ export default class BinaryTree {
             }
 
             if (node.children) {
-                node.children[0].uuid ? res[1].push({"left":node.children[0].uuid}) : "";
+                //if left child exist, branch there
+                if (node.children[0].uuid !== null) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
+                
                 let leftChild = helper(node.children[0], res);
                 // if leftChild is null, that means we do not need to add it
                 if (leftChild !== null) {
-                    res[1].push({"parent":node.uuid});
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
                 
 
@@ -63,14 +67,18 @@ export default class BinaryTree {
             
 
             res[0].push(node.name);
-            res[1].push({"visit" : node.uuid});
+            res[1].push({"uuid": node.uuid, "type": "visit"});
 
             if (node.children) {
-                node.children[1].uuid ? res[1].push({"right":node.children[1].uuid}) : "";
+                //if right child exist, branch there
+                if (node.children[1].uuid !== null) {
+                    res[1].push({"uuid": node.children[1].uuid, "type":"right"});
+                }
+
                 let rightChild = helper(node.children[1], res);
                 // if rightChild is null, that means we do not need to add it
                 if (rightChild !== null) {
-                    res[1].push({"parent":node.uuid});
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
             }
         }
@@ -85,7 +93,7 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['visit']) {
+            if (obj['type'] === "visit") {
                 break;
             }
             res[1].pop();
@@ -108,21 +116,27 @@ export default class BinaryTree {
             }
             
             res[0].push(node.name);
-            res[1].push({"visit" : node.uuid});
+            res[1].push({"uuid":node.uuid, "type":"visit"});
 
             if (node.children) {
-                node.children[0].uuid ? res[1].push({"left":node.children[0].uuid}) : "";
+                //if left child exist, branch there
+                if (node.children[0].uuid) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
                 let leftChild = helper(node.children[0], res);
                 // if leftChild is null, that means we do not need to add it
                 if (leftChild !== null) {
-                    res[1].push({"parent":node.uuid});
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
 
-                node.children[1].uuid ? res[1].push({"right":node.children[1].uuid}) : "";
+                if (node.children[1].uuid) {
+                    res[1].push({"uuid":node.children[1].uuid, "type":"right"});
+                }
+
                 let rightChild = helper(node.children[1], res);
                  // if rightChild is null, that means we do not need to add it
-                 if (rightChild !== null) {
-                    res[1].push({"parent":node.uuid});
+                if (rightChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
             }
 
@@ -137,7 +151,7 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['visit']) {
+            if (obj['type'] === "visit") {
                 break;
             }
             res[1].pop();
@@ -160,19 +174,26 @@ export default class BinaryTree {
             }
 
             if (node.children) {
-                node.children[0].uuid ? res[1].push({"left":node.children[0].uuid}) : "";
+
+                //if left child exist, branch there
+                if (node.children[0].uuid) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
                 let leftChild = helper(node.children[0], res);
 
-                node.children[1].uuid ? res[1].push({"right":node.children[1].uuid}) : "";
+                if (node.children[1].uuid) {
+                    res[1].push({"uuid": node.children[1].uuid, "type": "right"});
+                }
+
                 let rightChild = helper(node.children[1], res);
                  // if rightChild is null, that means we do not need to add it
                  if (rightChild !== null) {
-                    res[1].push({"parent":node.uuid});
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
             }
 
             res[0].push(node.name);
-            res[1].push({"visit" : node.uuid});
+            res[1].push({"uuid": node.uuid, "type": "visit"});
         }
 
         if (this.root === null) {
@@ -185,7 +206,7 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['visit']) {
+            if (obj['type'] === "visit") {
                 break;
             }
             res[1].pop();
