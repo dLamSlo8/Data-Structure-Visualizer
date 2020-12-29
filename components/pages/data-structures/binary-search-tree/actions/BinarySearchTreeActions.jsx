@@ -22,7 +22,6 @@ function BinarySearchTreeActions({tree, setTree}){
     const handleInit = (value) => {
         let tree = new BinarySearchTree(new TreeNode(parseInt(value)));
         setTree(tree);
-        
     }
 
     /**
@@ -34,7 +33,7 @@ function BinarySearchTreeActions({tree, setTree}){
         value = parseInt(value);
         // store moves as local var not sure what next
         let moves = tree.deleteNode(value);
-        setTree(tree.root !== null ? new BinarySearchTree(null, tree) : null);
+        setTree(new BinarySearchTree(null, tree));
         return moves;
     }
 
@@ -72,15 +71,13 @@ function BinarySearchTreeActions({tree, setTree}){
             propagateCollapsed>
                 {
                     ({ collapsed }) => (
-                        tree ? (
+                        
                             <ManageSection
                             tree = {tree}
                             handleInsert={handleInsert}
                             handleFind={handleFind}
                             handleDelete={handleDelete} />
-                        ) : (
-                            <InitSection handleInit={handleInit} />
-                        )
+                        
                     )
                 }
             </ActionSubsection>

@@ -6,8 +6,10 @@ import BinarySearchTreeActions from '@components/pages/data-structures/binary-se
 import BinarySearchTreeVisualization from '@components/pages/data-structures/binary-search-tree/visualization/BinarySearchTreeVisualization';
 import TreeTraversalVisualization from '@components/pages/algorithms/tree-traversal/visualization/TreeTraversalVisualization';
 
+import BST from '@classes/binary-search-tree';
+
 export default function BinarySearchTree() {
-    const [tree, setTree] = useState(null);
+    const [tree, setTree] = useState(new BST());
 
     return (
         <DSAPageLayout
