@@ -63,7 +63,8 @@ export default class BinarySearchTree {
         
         // if tree doesn't exist create a new node;
         if (this.root === null) {
-            throw ("Please create a tree!");
+            this.root = new TreeNode(value, uuid);
+            return [uuid];
         }
 
         let moves = [];
@@ -108,10 +109,6 @@ export default class BinarySearchTree {
             }
         }
 
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
-        }
 
         let moves = [];
         helper(this.root, value, moves);
@@ -262,11 +259,6 @@ export default class BinarySearchTree {
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
-        }
-
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
         }
 
         let moves = [];

@@ -2,27 +2,33 @@ import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
 import BinarySearchTree from "../../classes/binary-search-tree.js";
 
 describe ("Test insertNode method", () => {
-    it ("Should throw an error when missing root", () => {
+    it ("Should give proper moves array and tree", () =>{
+        // insert into empty tree
         let input = new BinarySearchTree();
 
-        expect(() => input.insertNode()).toThrow("Please create a tree!");
-    })
-    
-    it ("Should give proper moves array and tree", () =>{
+        let expectedMoves = ["4"];
+
+        let expected = new TreeNode(5, "4");
+
+        let result = input.insertNode(5, "4");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.root).toMatchObject(expected);
+
         let root = new TreeNode(5, "1");
         root.setLeft(new TreeNode(5, "2"));
         root.setRight(new TreeNode(7, "3"));
 
-        let input = new BinarySearchTree(root);
+        input = new BinarySearchTree(root);
 
-        let expectedMoves = ["1", "2", "4"];
+        expectedMoves = ["1", "2", "4"];
 
-        let expected = new TreeNode(5, "1");
+        expected = new TreeNode(5, "1");
         expected.setLeft(new TreeNode(5, "2"));
         expected.children[0].setLeft(new TreeNode(5, "4"));
         expected.setRight(new TreeNode(7, "3"));
 
-        let result = input.insertNode(5, "4");
+        result = input.insertNode(5, "4");
 
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
@@ -97,7 +103,7 @@ describe ("Test deleteNode method", () => {
     it ("Should throw an error when missing root", () => {
         let input = new BinarySearchTree();
 
-        expect(() => input.deleteNode(5)).toThrow("Please create a tree!");
+        expect(() => input.deleteNode(5)).toThrow("A node with this value does not exist in the tree");
     })
 
     it ("Should throw an error when value not found", () => {
@@ -469,7 +475,7 @@ describe ("Test findNode method", () => {
     it ("Should throw an error when missing root", () => {
         let input = new BinarySearchTree();
 
-        expect(() => input.findNode(5)).toThrow("Please create a tree!");
+        expect(() => input.findNode(5)).toThrow("A node with this value does not exist in the tree");
     })
 
     it ("Should throw an error when value not found", () => {
