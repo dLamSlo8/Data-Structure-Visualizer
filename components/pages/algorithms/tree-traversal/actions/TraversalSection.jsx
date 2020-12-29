@@ -8,8 +8,12 @@ import DropdownSelect from '@components/dropdown/DropdownSelect';
 import SelectableDropdownItem from '@components/dropdown/SelectableDropdownItem';
 import ControlSection from '@components/animations/controls/ControlSection';
 
-// Responsibility: Render tree traversal section and handle changes to traversal function.
-function TreeTraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed is not being passed!
+/**
+ * Action section for tree traversal
+ * Responsibility: Render tree traversal section and handle changes to traversal function
+ * @state traversalType - Type of tree traversal
+ */ 
+function TraversalSection({ sectionCollapsed }) { 
     const { stepGeneratorRef, updateStepsRef } = useContext(AnimationContext);
     const [traversalType, setTraversalType] = useState('Preorder');
 
@@ -34,57 +38,24 @@ function TreeTraversalSection({ sectionCollapsed }) { // TO-DO: sectionCollapsed
         <>
             <DropdownSelect
             title="Traversal Type"
-            defaultValue="Preorder"
+            values={[{
+                title: 'Preorder'
+            }, {
+                title: 'Inorder'
+            }, {
+                title: 'Postorder'
+            }]}
+            value={traversalType}
+            setValue={setTraversalType}
             dropdownWrapperClass="mt-1 w-full"
-            >
-                {
-                    ({ selectedItem, setSelectedItem, setOpen }) => {
-                        /**
-                         * Effect
-                         * When this section is collapsed, we need to close the menu!
-                         */
-                        useEffect(() => {
-                            if (sectionCollapsed) {
-                                setOpen(false);
-                            }
-                        }, [sectionCollapsed]);
-
-                        /**
-                         * Updates appropriate state on click of new item
-                         * @param {string} item Currently selected item 
-                         */
-                        const handleClick = (item) => {
-                            setSelectedItem(item);
-                            setTraversalType(item);
-                            setOpen(false);
-                        }
-
-                        return (
-                            <>
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Preorder'}
-                                title="Preorder"
-                                handleClick={() => handleClick('Preorder')} />
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Inorder'}
-                                title="Inorder"
-                                handleClick={() => handleClick('Inorder')} />
-                                <SelectableDropdownItem
-                                isSelected={selectedItem === 'Postorder'}
-                                title="Postorder"
-                                handleClick={() => handleClick('Postorder')} />
-                            </>
-                        )
-                    }
-                }
-            </DropdownSelect>
+            closeTrigger={sectionCollapsed} />
             <ControlSection rootClass="mt-3" />
         </>
     )
 }
 
-TreeTraversalSection.propTypes = {
+TraversalSection.propTypes = {
     sectionCollapsed: PropTypes.bool // Whether the section is collapsed or not
 };
 
-export default TreeTraversalSection;
+export default TraversalSection;
