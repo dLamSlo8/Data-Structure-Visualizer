@@ -343,28 +343,37 @@ describe ("Test remove method", () => {
 })
 
 describe ("Test insert method", () => {
-    it ("Should throw an error when empty tree", () => {
-        let result = new Heap();
-
-        expect(() => result.insert(5, "a")).toThrow("Please create a tree!");
-    })
-
     it ("Should update tree and set moves array after insert", () => {
-        // insert left no bubble
-        let root = new TreeNode(10, "a");
-
-        let input = new Heap(root);
+        // insert into empty tree
+        let input = new Heap();
 
         let expected = new TreeNode(10, "a");
-        expected.setLeft(new TreeNode(12, "b"));
 
         let expectedMoves = [];
         let expectedElements = [
+            expected
+        ];
+
+        let result = input.insert(10, "a");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        // insert left no bubble
+        let root = new TreeNode(10, "a");
+
+        input = new Heap(root);
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(12, "b"));
+
+        expectedMoves = [];
+        expectedElements = [
             expected,
             expected.children[0]
         ];
 
-        let result = input.insert(12, "b");
+        result = input.insert(12, "b");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
@@ -442,6 +451,233 @@ describe ("Test insert method", () => {
         ];
 
         result = input.insert(-1, "g");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+    })
+})
+
+describe ("Test insert and delete", () => {
+    it ("Should update tree and set moves after series of insert and delete", () => {
+        // taken from backtobackswe binheap example
+        let input = new Heap();
+
+        let expected = new TreeNode(10, "a");
+
+        let expectedMoves = [];
+        let expectedElements = [
+            expected
+        ];
+
+        let result = input.insert(10, "a");
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(4, "b");
+
+        expected = new TreeNode(4, "b");
+        expected.setLeft(new TreeNode(10, "a"));
+
+        expectedMoves = ["a"];
+        expectedElements = [
+            expected,
+            expected.children[0]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(15, "c");
+
+        expected = new TreeNode(4, "b");
+        expected.setLeft(new TreeNode(10, "a"));
+        expected.setRight(new TreeNode(15, "c"));
+
+        expectedMoves = [];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.remove();
+
+        let expectedNode = new TreeNode(4, "b");
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(15, "c"));
+
+        expectedMoves = ["c", "a"];
+        expectedElements = [
+            expected,
+            expected.children[0]
+        ];
+
+        expect(result[0]).toMatchObject(expectedNode);
+        expect(result[1]).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(20, "d");
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(15, "c"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = [];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(0, "e");
+
+        expected = new TreeNode(0, "e");
+        expected.setLeft(new TreeNode(10, "a"));
+        expected.children[0].setLeft(new TreeNode(15, "c"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = ["c", "a"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(30, "f");
+
+        expected = new TreeNode(0, "e");
+        expected.setLeft(new TreeNode(10, "a"));
+        expected.children[0].setLeft(new TreeNode(15, "c"));
+        expected.children[0].setRight(new TreeNode(30, "f"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = [];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.remove();
+
+        expectedNode = new TreeNode(0, "e");
+
+        expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(15, "c"));
+        expected.children[0].setLeft(new TreeNode(30, "f"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = ["f", "a", "c"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0]
+        ];
+
+        expect(result[0]).toMatchObject(expectedNode);
+        expect(result[1]).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.remove();
+
+        expectedNode = new TreeNode(10, "a");
+
+        expected = new TreeNode(15, "c");
+        expected.setLeft(new TreeNode(30, "f"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = ["f", "c"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+        ];
+
+        expect(result[0]).toMatchObject(expectedNode);
+        expect(result[1]).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(2, "g");
+
+        expected = new TreeNode(2, "g");
+        expected.setLeft(new TreeNode(15, "c"));
+        expected.children[0].setLeft(new TreeNode(30, "f"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = ["f", "c"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(4, "h");
+
+        expected = new TreeNode(2, "g");
+        expected.setLeft(new TreeNode(4, "h"));
+        expected.children[0].setLeft(new TreeNode(30, "f"));
+        expected.children[0].setRight(new TreeNode(15, "c"));
+        expected.setRight(new TreeNode(20, "d"));
+
+        expectedMoves = ["c"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(-1, "i");
+
+        expected = new TreeNode(-1, "i");
+        expected.setLeft(new TreeNode(4, "h"));
+        expected.children[0].setLeft(new TreeNode(30, "f"));
+        expected.children[0].setRight(new TreeNode(15, "c"));
+        expected.setRight(new TreeNode(2, "g"));
+        expected.children[1].setLeft(new TreeNode(20, "d"));
+
+        expectedMoves = ["d", "g"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0]
+        ];
+
+        expect(result).toEqual(expectedMoves);
+        expect(input.elements).toEqual(expectedElements);
+
+        result = input.insert(-3, "j");
+
+        expected = new TreeNode(-3, "j");
+        expected.setLeft(new TreeNode(4, "h"));
+        expected.children[0].setLeft(new TreeNode(30, "f"));
+        expected.children[0].setRight(new TreeNode(15, "c"));
+        expected.setRight(new TreeNode(-1, "i"));
+        expected.children[1].setLeft(new TreeNode(20, "d"));
+        expected.children[1].setRight(new TreeNode(2, "g"));
+
+        expectedMoves = ["g", "i"];
+        expectedElements = [
+            expected,
+            expected.children[0], expected.children[1],
+            expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0], expected.children[1].children[1]
+        ];
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);

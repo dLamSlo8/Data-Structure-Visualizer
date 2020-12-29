@@ -145,9 +145,6 @@ export default class Heap {
      */
     insert(value, uuid) {
         // need to discuss for insert if we want to show how we reached last element
-        if (this.elements.length === 0) {
-            throw ("Please create a tree!");
-        }
 
         let newNode = new TreeNode(value, uuid);
 
@@ -157,6 +154,7 @@ export default class Heap {
 
         this.updateParentChildren(this.elements.length - 1);
 
+        // right now moves array is only updated from bubble up operation
         let moves = [];
 
         this.bubbleUp(this.elements.length - 1, moves);
