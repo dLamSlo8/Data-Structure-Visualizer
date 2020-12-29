@@ -1,11 +1,27 @@
 import * as d3 from 'd3';
 
-export const mapTraversalToPosition = (traversalArray, d3TreeRef) => {
-    return traversalArray[1].map((uuid) => {
-        const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
+export const mapTraversalToPosition = (traversalArray, d3TreeRef, type) => {
+    if (type !== 'Level-order') {
+        const traversalUuids = traversalArray[1];
 
-        return { xy: [node?.x, node?.y] };
-    })
+        return traversalUuids.map((obj) => {
+            let uuid = Object.values(obj)[0];
+    
+            const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
+    
+            return { xy: [node?.x, node?.y] };
+        });
+    }
+    else {
+        const traversalUuids = traversalArray[1];
+
+        return traversalUuids.map((uuid) => {
+            const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
+    
+            return { xy: [node?.x, node?.y] };
+        })
+    }
+
 };
 
 /**

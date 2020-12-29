@@ -4,7 +4,6 @@ import { animated, interpolate } from '@react-spring/web';
 
 // Responsibility: Render animation element
 function TreeTraversalAnimationElement({ xy }) {
-    console.log(xy);
     return (
         <g id="animate-indicator">
             <animated.circle r="24" cx={xy?.interpolate((x, y) => `${x}`)} cy={xy?.interpolate((x, y) => `${y}`)} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>

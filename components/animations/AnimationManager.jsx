@@ -1,8 +1,11 @@
 import ReactDOM from 'react-dom';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
 import { Controller, useSpring, config } from '@react-spring/web';
 
 import AnimationContext from '@contexts/AnimationContext';
+// TODO: Consider having multiple props associated with a component in case they want that behavior. Maybe append prop name to component id? Could be easy implementation if using useSprings.
+// TODO: Decide on whether to use useSprings or not (having separate configuration, esp timing.)
+
 /**
  * 
  * @param initialProps - Initial properties for the spring 
@@ -15,29 +18,36 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function AnimationManager({ attachElementsRef, initialProps, initConfig, children }) {
+export default function AnimationManager({ attachElementsRef, initConfig, children }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, 
-        stepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
+        stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const [animating, setAnimating] = useState(false);
     const [steps, setSteps] = useState(null);
     const [animationElements, setAnimationElements] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
 
-    const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
-        from: initialProps,
-        onStart: (e) => {
-            setAnimating(true);
-        },
-        onRest: (e) => {
-            if (e.finished) {
-                setAnimating(false);
+    const initialAnimationProps = useMemo(() => {
+        let resObj = {};
+
+        if (animationElements) {
+            for (let { id, initialAnimationProp } of animationElements) {
+                resObj[id] = initialAnimationProp;
             }
         }
+        return resObj;
+    }, [animationElements]);
+
+    console.log(animating);
+    // console.log(initialAnimationProps);
+
+    const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
+        // TODO: we must provide another layer to render the animation, when the steps and elements are already generated, such that we can initially set the from prop!
+
     }));
 
-    console.log(animationProps);
 
+    // console.log(animationProps);
     /**
      * React-spring script for running an animation from beginning to end.
      */
@@ -149,8 +159,10 @@ export default function AnimationManager({ attachElementsRef, initialProps, init
      */
     useEffect(() => {
         if (updateStepsRef.current && isAnimatingMode) {
-            setAnimationElements(animationElementGeneratorRef.current());
-            setSteps(stepGeneratorRef.current());
+            const steps = stepGeneratorRef.current();
+
+            setAnimationElements(animationElementGeneratorRef.current(steps));
+            setSteps(animationStepGeneratorRef.current(steps));
         }
     }, [isAnimatingMode]);
 
@@ -163,6 +175,22 @@ export default function AnimationManager({ attachElementsRef, initialProps, init
         updateStepsRef.current = false;
     }, [steps]);
 
+    useEffect(() => {
+        if (initialAnimationProps) {
+            setAnimation({ from: initialAnimationProps,
+                onStart: (e) => {
+                    // console.log(e);
+                    setAnimating(true);
+                },
+                onRest: (e) => {
+                    // console.log('anything?');
+                    if (e.finished) {
+                        setAnimating(false);
+                    }
+                } });
+        }
+    }, [initialAnimationProps]);
+    
     /**
      * Effect
      * Clears and resets animation when animating mode is turned off. When turned on
@@ -170,7 +198,6 @@ export default function AnimationManager({ attachElementsRef, initialProps, init
      * on animating mode is by 'playing' the animation.
      */
     useEffect(() => {
-        console.log('isAnimatingMode useEffect');
         if (!isAnimatingMode) {
             stopAnimation();
             setAnimationState(null);
@@ -182,6 +209,8 @@ export default function AnimationManager({ attachElementsRef, initialProps, init
             setAnimationState('running');
         }
     }, [isAnimatingMode, steps]);
+
+
     
     // Update animation methods to be used elsewhere.
     animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
@@ -191,9 +220,10 @@ export default function AnimationManager({ attachElementsRef, initialProps, init
             ReactDOM.createPortal(
                 <>
                 {
-                    animationElements.map(({ id, element: AnimationComponent }) => {
+                    animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }) => {
                             return <AnimationComponent
-                            {...{ [id]: animationProps[id] }} /> 
+                            {...{ [animationProp]: animationProps[id] }}
+                            {...componentProps} /> 
                     })
                 }
                 </>

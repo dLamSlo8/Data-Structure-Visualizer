@@ -90,36 +90,17 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         }
     }, [isAnimatingMode]);
 
-    useEffect(() => {
-        animationElementGeneratorRef.current = () => {
-            let resArr = [{
-                id: 'xy',
-                element: TreeTraversalAnimationElement
-            }];
-            d3StructureRef.current.descendants().filter((node) => node.data.name !== null).forEach((node) => {
-                resArr.push({
-                    id: node.data.uuid,
-                    element: Text
-                });
-            });
-
-            console.log(resArr);
-            return resArr;
-        };
-    }, []);
-
-
     return (
         tree ? (
             <VisualizationLayout>
                 <div id="tree"> 
                     <svg cursor="grab" width={width} height={height} ref={svgTreeRef}>
-                        <g transform="translate(0, 30)" ref={gRef}>
+                        <g transform="translate(0, 60)" ref={gRef}>
 
                         </g>
                     </svg>
                 </div>
-                <AnimationManager initialProps={{ xy: [0, 0] }} attachElementsRef={gRef.current} />
+                <AnimationManager attachElementsRef={gRef.current} />
 
             </VisualizationLayout>
         ) : (
