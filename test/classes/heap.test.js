@@ -207,7 +207,7 @@ describe ("Test top method", () => {
     it ("Should throw an error when empty tree", () => {
         let result = new Heap();
 
-        expect(() => result.top()).toThrow("Please create a tree!");
+        expect(() => result.top()).toThrow("Please insert a node into the tree!");
     })
 
     it ("Should return highest priority node", () => {
@@ -231,7 +231,7 @@ describe ("Test remove method", () => {
     it ("Should throw an error when empty tree", () => {
         let result = new Heap();
 
-        expect(() => result.remove()).toThrow("Please create a tree!");
+        expect(() => result.remove()).toThrow("Please insert a node into the tree!");
     })
 
     it ("Should set tree and update moves array after remove", () => {

@@ -51,7 +51,7 @@ export default class Heap {
      */
     remove() {
         if (this.elements.length === 0) {
-            throw ("Please create a tree!");
+            throw ("Please insert a node into the tree!");
         }
 
         // priority element
@@ -193,7 +193,7 @@ export default class Heap {
      */
     top() {
         if (this.elements.length === 0) {
-            throw ("Please create a tree!");
+            throw ("Please insert a node into the tree!");
         }
 
         return this.elements[0];
