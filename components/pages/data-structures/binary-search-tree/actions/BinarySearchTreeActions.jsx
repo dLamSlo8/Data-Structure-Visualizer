@@ -33,7 +33,10 @@ function BinarySearchTreeActions({tree, setTree}){
         value = parseInt(value);
         // store moves as local var not sure what next
         let moves = tree.deleteNode(value);
-        setTree(new BinarySearchTree(null, tree));
+        console.log(tree)
+        let newTree = new BinarySearchTree(null, tree)
+        console.log(newTree)
+        setTree(newTree);
         return moves;
     }
 

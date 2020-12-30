@@ -14,7 +14,7 @@ export default class BinarySearchTree {
      */
     constructor(root, tree) {
         if (tree) {
-            this.root = new TreeNode(null, null, tree.root);
+            this.root = tree.root ? new TreeNode(null, null, tree.root) : null;
         }
         else {
             this.root = root || null;

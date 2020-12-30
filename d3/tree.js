@@ -26,7 +26,6 @@ export const styleActiveNode = (activeUuid) => {
 export const generateD3Tree = (rootNode, width) => {
 
     // Generate binary tree using d3.
-
     const hierarchyNode = d3.hierarchy(rootNode);
     const height = hierarchyNode.height * 100;
 
@@ -47,6 +46,10 @@ export const drawD3Tree = (attachRef, d3TreeRef, width, height, transformRef) =>
     let canvas = d3.select(attachRef);
 
     canvas.select('svg').remove(); // Remove previous tree if any
+
+    if (d3TreeRef === null) {
+        return;
+    }
 
     canvas.append('svg')
         .attr('id', 'tree-svg')
