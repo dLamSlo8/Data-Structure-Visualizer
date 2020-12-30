@@ -19,6 +19,22 @@ export default class BinaryTree {
         }
     }
 
+    /**
+     * @param {TreeNode} node - the root node of tree structure
+     * @return {number} the number of nodes in the tree
+     */
+    nodeCount = (node) =>{
+        if (node.name === null) {
+            return 0;
+        }
+        else if (node.children === null){
+            return 1;
+        }
+        let leftCount = this.nodeCount(node.children[0]);
+        let rightCount = this.nodeCount(node.children[1]);
+
+        return leftCount + rightCount + 1;
+    }
 
     /**
      * @return {Array} array of inorder traversal, 0 index includes array of 
@@ -30,19 +46,40 @@ export default class BinaryTree {
          * @param {Array} res - array to store inorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
-                return;
+            if (node === null || node.isNull()) {
+                return null;
             }
 
             if (node.children) {
-                helper(node.children[0], res);
+                //if left child exist, branch there
+                if (node.children[0].uuid !== null) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
+                
+                let leftChild = helper(node.children[0], res);
+                // if leftChild is null, that means we do not need to add it
+                if (leftChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
+                }
+                
+
             }
             
+
             res[0].push(node.name);
-            res[1].push(node.uuid);
+            res[1].push({"uuid": node.uuid, "type": "visit"});
 
             if (node.children) {
-                helper(node.children[1], res);
+                //if right child exist, branch there
+                if (node.children[1].uuid !== null) {
+                    res[1].push({"uuid": node.children[1].uuid, "type":"right"});
+                }
+
+                let rightChild = helper(node.children[1], res);
+                // if rightChild is null, that means we do not need to add it
+                if (rightChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
+                }
             }
         }
 
@@ -52,6 +89,15 @@ export default class BinaryTree {
 
         let res = [[], []];
         helper(this.root, res);
+
+        // strips the last few moves in the result that just parents up to the top
+        for (let i = res[1].length-1; i >=0; i--) {
+            let obj = res[1][i];
+            if (obj['type'] === "visit") {
+                break;
+            }
+            res[1].pop();
+        }
         return res;
     }
 
@@ -65,16 +111,33 @@ export default class BinaryTree {
          * @param {Array} res - array to store preorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
-                return;
+            if (node === null || node.isNull()) {
+                return null;
             }
             
             res[0].push(node.name);
-            res[1].push(node.uuid);
+            res[1].push({"uuid":node.uuid, "type":"visit"});
 
             if (node.children) {
-                helper(node.children[0], res);
-                helper(node.children[1], res);
+                //if left child exist, branch there
+                if (node.children[0].uuid) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
+                let leftChild = helper(node.children[0], res);
+                // if leftChild is null, that means we do not need to add it
+                if (leftChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
+                }
+
+                if (node.children[1].uuid) {
+                    res[1].push({"uuid":node.children[1].uuid, "type":"right"});
+                }
+
+                let rightChild = helper(node.children[1], res);
+                 // if rightChild is null, that means we do not need to add it
+                if (rightChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
+                }
             }
 
         }
@@ -84,6 +147,15 @@ export default class BinaryTree {
 
         let res = [[], []];
         helper(this.root, res);
+
+        // strips the last few moves in the result that just parents up to the top
+        for (let i = res[1].length-1; i >=0; i--) {
+            let obj = res[1][i];
+            if (obj['type'] === "visit") {
+                break;
+            }
+            res[1].pop();
+        }
         return res;
     }
 
@@ -97,17 +169,31 @@ export default class BinaryTree {
          * @param {Array} res - array to store postorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 
             if (node.children) {
-                helper(node.children[0], res);
-                helper(node.children[1], res);
+
+                //if left child exist, branch there
+                if (node.children[0].uuid) {
+                    res[1].push({"uuid": node.children[0].uuid, "type":"left"});
+                }
+                let leftChild = helper(node.children[0], res);
+
+                if (node.children[1].uuid) {
+                    res[1].push({"uuid": node.children[1].uuid, "type": "right"});
+                }
+
+                let rightChild = helper(node.children[1], res);
+                 // if rightChild is null, that means we do not need to add it
+                 if (rightChild !== null) {
+                    res[1].push({"uuid": node.uuid, "type": "parent"});
+                }
             }
 
             res[0].push(node.name);
-            res[1].push(node.uuid);
+            res[1].push({"uuid": node.uuid, "type": "visit"});
         }
 
         if (this.root === null) {
@@ -116,6 +202,15 @@ export default class BinaryTree {
 
         let res = [[], []];
         helper(this.root, res);
+
+        // strips the last few moves in the result that just parents up to the top
+        for (let i = res[1].length-1; i >=0; i--) {
+            let obj = res[1][i];
+            if (obj['type'] === "visit") {
+                break;
+            }
+            res[1].pop();
+        }
         return res;
     }
 
@@ -138,11 +233,11 @@ export default class BinaryTree {
             res[0].push(first.name);
             res[1].push(first.uuid);
             if (first.children) {
-                if (first.children[0] !== NullTreeNode) {
+                if (!first.children[0].isNull()) {
                     q.push(first.children[0]);
                 }
     
-                if (first.children[1] !== NullTreeNode) {
+                if (!first.children[1].isNull()) {
                     q.push(first.children[1]);
                 }
             }
@@ -166,7 +261,7 @@ export default class BinaryTree {
             }
 
             // if nulltree, return the nulltree node
-            if (node === NullTreeNode) {
+            if (node.isNull()) {
                 return node;
             }
 
@@ -181,7 +276,7 @@ export default class BinaryTree {
                 let right = helper(node.children[1], uuid);
 
                 // if no child left, set children back to null
-                if ((left === null || left === NullTreeNode) && (right === null || right === NullTreeNode)) {
+                if ((left === null || left.isNull()) && (right === null || right.isNull())) {
                     node.children = null;
                 } else {
                     // add set left and right child
@@ -199,7 +294,7 @@ export default class BinaryTree {
 
         this.root = helper(this.root, uuid);
 
-        this.root = this.root !== NullTreeNode ? this.root : null;
+        this.root = !this.root.isNull() ? this.root : null;
     }
 
     /**
@@ -219,7 +314,7 @@ export default class BinaryTree {
          * @param {string} [createUUID = null] - (optional) uuid of node created
          */
         function helper(node, value, isLeft, matchUUID, createUUID) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 
@@ -269,7 +364,7 @@ export default class BinaryTree {
      */
     replaceNodeValue(value, uuid) {
         function helper(node, value, uuid) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 

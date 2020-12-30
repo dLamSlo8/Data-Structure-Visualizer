@@ -19,15 +19,6 @@ describe ("Test constructor", () => {
         expected = new TreeNode(5, "a");
         expected.setLeft(new TreeNode(3, "b"));
 
-        expect(result).toMatchObject(expected)        
-
-        // copy when one left child
-        root = new TreeNode(5, "a");
-        root.setLeft(new TreeNode(3, "b"));
-
-        expected = new TreeNode(5, "a");
-        expected.setLeft(new TreeNode(3, "b"));
-
         result = new TreeNode(null, null, root);
 
         expect(result).toMatchObject(expected);

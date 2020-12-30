@@ -26,13 +26,13 @@ export default class Heap {
             if (root !== null && root !== undefined) {
                 let idx = 0;
                 this.elements = [root];
-                // make sure heap is completely balanced
+                // make !sure heap is com.isNull()
                 // go through level order
                 while (idx < this.elements.length) {
                     let curr = this.elements[idx];
                     if (curr.children) {
                         this.elements.push(curr.children[0]);
-                        if (curr.children[1] !== NullTreeNode) {
+                        if (!curr.children[1].isNull()) {
                             this.elements.push(curr.children[1]);
                         }
                     }
@@ -75,7 +75,7 @@ export default class Heap {
 
         // reassign lastElement to root and set its children
         this.elements[0] = lastElement;
-        
+
         // keep check of how many null children there are
         let nullCount = 0;
 
@@ -84,7 +84,7 @@ export default class Heap {
             if (priorityNode.children[i] === lastElement) {
                 priorityNode.children[i] = NullTreeNode;
             }
-            if (priorityNode.children[i] === NullTreeNode) {
+            if (priorityNode.children[i].isNull()) {
                 nullCount += 1;
             }
         }
@@ -265,7 +265,7 @@ export default class Heap {
      * @param {TreeNode} parent - parent node
      * @param {TreeNode} child - former child of parent 
      */
-    clearParentChildren(parent, child) {
+    clearParentChildren(parent, child){
         if (parent.children === null) {
             return;
         }
@@ -274,7 +274,7 @@ export default class Heap {
             if (parent.children[i] === child) {
                 parent.children[i] = NullTreeNode;
             }
-            if (parent.children[i] === NullTreeNode) {
+            if (parent.children[i].isNull()) {
                 nullCount += 1;
             }
         }
