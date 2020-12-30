@@ -26,7 +26,7 @@ export default class Heap {
                 let curr = this.elements[idx];
                 if (curr.children) {
                     this.elements.push(curr.children[0]);
-                    if (curr.children[1] !== NullTreeNode) {
+                    if (!curr.children[1].isNull()) {
                         this.elements.push(curr.children[1]);
                     }
                 }
@@ -75,7 +75,7 @@ export default class Heap {
             if (priorityNode.children[i] === lastElement) {
                 priorityNode.children[i] = NullTreeNode;
             }
-            if (priorityNode.children[i] === NullTreeNode) {
+            if (priorityNode.children[i].isNull()) {
                 nullCount += 1;
             }
         }
@@ -265,7 +265,7 @@ export default class Heap {
             if (parent.children[i] === child) {
                 parent.children[i] = NullTreeNode;
             }
-            if (parent.children[i] === NullTreeNode) {
+            if (parent.children[i].isNull()) {
                 nullCount += 1;
             }
         }
