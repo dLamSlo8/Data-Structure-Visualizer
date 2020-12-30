@@ -76,11 +76,10 @@ function TraversalSection({ tree, sectionCollapsed }) {
             console.log(positions);
             return positions;
         };
-        animationElementGeneratorRef.current = () => {
+        animationElementGeneratorRef.current = (algorithmRes) => {
             let resArr = [{
                 id: 'xy',
                 component: TreeTraversalAnimationElement,
-                initialAnimationProp: [0, 0],
                 animationProp: 'xy'
             }];
 
@@ -94,7 +93,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                             x: idx === 0 ? node.x - 50 : (idx === 1 ? node.x : node.x + 50),
                             y: node.y - 30
                         },
-                        initialAnimationProp: 'black',
+                        defaultAnimationProp: 'black',
                         animationProp: 'fill'
                     });
     

@@ -1,8 +1,9 @@
-import ReactDOM from 'react-dom';
-import { useState, useEffect, useContext, useCallback, useMemo } from 'react';
-import { Controller, useSpring, config } from '@react-spring/web';
+import { useState, useEffect, useContext, useMemo } from 'react';
 
 import AnimationContext from '@contexts/AnimationContext';
+
+import AnimationManagerInner from './AnimationManagerInner';
+
 // TODO: Consider having multiple props associated with a component in case they want that behavior. Maybe append prop name to component id? Could be easy implementation if using useSprings.
 // TODO: Decide on whether to use useSprings or not (having separate configuration, esp timing.)
 
@@ -18,216 +19,79 @@ import AnimationContext from '@contexts/AnimationContext';
  *                      Assign syntax: initConfig: { ... }
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
-export default function AnimationManager({ attachElementsRef, initConfig, children }) {
-    const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, 
-        stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
+export default function AnimationManager({ attachElementsRef, initConfig }) {
+    const { isAnimatingMode, setAnimationState, stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
-    const [animating, setAnimating] = useState(false);
     const [steps, setSteps] = useState(null);
     const [animationElements, setAnimationElements] = useState(null);
-    const [currentStep, setCurrentStep] = useState(0);
 
+    /**
+     * Object that represents initial animation props (essentially based on
+     * the first step.) If no initial animation prop is given, will rely on the 
+     * default animation prop supplied by 'defaultAnimationProp'. 
+     */
     const initialAnimationProps = useMemo(() => {
         let resObj = {};
 
         if (animationElements) {
-            for (let { id, initialAnimationProp } of animationElements) {
-                resObj[id] = initialAnimationProp;
+            for (let { id, initialAnimationProp, defaultAnimationProp } of animationElements) {
+                if (!initialAnimationProp && !defaultAnimationProp) { // Catch dev error (must provide props)
+                    throw new Error(`Animation element with id ${id} does not have an initialAnimationProp or defaultAnimationProp.`);
+                }
+                resObj[id] = initialAnimationProp ?? defaultAnimationProp;
             }
         }
         return resObj;
     }, [animationElements]);
-
-    console.log(animating);
-    // console.log(initialAnimationProps);
-
-    const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
-        // TODO: we must provide another layer to render the animation, when the steps and elements are already generated, such that we can initially set the from prop!
-
-    }));
-
-
-    // console.log(animationProps);
-    /**
-     * React-spring script for running an animation from beginning to end.
-     */
-    const handleRunScript = async (next) => {
-        setCurrentStep(0);
-        for (let idx = 1; idx < steps.length; idx++) {            
-            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });  
-            setCurrentStep((step) => step + 1);
-        }
-        setAnimationState('finished');
-    }
-
-    /**
-     * React-spring script for running an animation from its current step to the end.
-     */
-    const handleContinueScript = async (next) => {
-        for (let idx = currentStep + 1; idx < steps.length; idx++) {    
-            await next({ ...steps[idx], config: { duration: undefined }, delay: config.animationSpeed - 250, ...(config.animationsOff && { immediate: true }) });      
-            setCurrentStep((step) => step + 1);
-        }
-        setAnimationState('finished');
-    };
-
-    /**
-     * React-spring script that skips to the end of an animation (i.e. the last step of the animation)
-     */
-    const handleSkipRun = async (next) => {
-        await next({ ...steps[steps.length - 1], config: { duration: 0 } });
-    }
-
-    /**
-     * React-spring script that instantly resets the animation to its original position (from initialProps)
-     */
-    const handleResetScript = async (next) => {
-        await next({ ...steps[0], config: { duration: 0 } });
-    };
-
-
-    /**
-     * React-spring script that resets an animation to its initial state before running to completion
-     */
-    const handleResetAndRunScript = async (next) => {
-        await next({ to: handleResetScript });
-        await next({ to: handleRunScript });
-    }
-
-    const handleSkipToEnd = () => {
-        setAnimation({ to: handleSkipRun });
-        setCurrentStep(steps.length - 1);
-        setAnimationState('finished');
-    }
-
-    const handleReset = () => {
-        setAnimation({ to: handleResetScript });
-        setCurrentStep(0);
-        setAnimationState('reset');
-    }
-
-    const handleStepForward = () => {
-        /**
-         *  Only step forward if not on last step. Even though the UI should account for disabling this button, 
-         *  we need to have this safeguard in case a user manually enables it through DevTools.
-         */ 
-        if (currentStep < steps.length - 1) {
-            setAnimation({ ...steps[currentStep + 1], config: { duration: 0 } });
-            if (currentStep + 1 === steps.length - 1) { // If next step is the last one, ensure that if play is pressed again, it will reset accordingly.
-                setAnimationState('finished');
-            }
-            setCurrentStep((step) => step + 1);
-        }
-    }
-
-    const handleStepBack = () => {
-        if (currentStep >= 0) {
-            if (currentStep === steps.length - 1) { // If we're at the end, we must switch animation state from finished to paused.
-                setAnimationState('paused');
-            }
-
-            setAnimation({ ...steps[animating ? currentStep : currentStep - 1], config: { duration: 0 } });
-            if (currentStep > 0 && !animating) {
-                setCurrentStep((step) => step - 1);
-            }
-        }
-    }
-
-    const handleRun = () => {
-        if (isAnimatingMode && steps) { 
-            if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
-                setAnimation({ to: handleResetAndRunScript });
-            }
-            else {
-                setAnimation({ to: handleContinueScript });
-            }
-            setAnimationState('running');
-        }
-
-    };
-
-    const handlePause = () => {
-        stopAnimation();
-        setAnimationState('paused');
-    }
 
     /**
      * Effect
      * Whenever animating mode is turned on and iff there is a new tree to be drawn,
      * generate the steps for this new tree. This is great for performance as we don't need
      * to do expensive calculations each time we turn on animating mode.)
+     * 
+     * When animating mode is turned off make sure to reset animation state.
      */
     useEffect(() => {
-        if (updateStepsRef.current && isAnimatingMode) {
+        if (isAnimatingMode !== null && !isAnimatingMode) { // Reset animation state if turned off.
+            setAnimationState(null);
+        }
+        else if (updateStepsRef.current && isAnimatingMode) { 
+            /**
+             * If new steps need to be generated, do so here. Currently we're assuming that
+             * whenever steps need to be updated, there probably need to be new elements with 
+             * different initial animation props.
+             */
             const steps = stepGeneratorRef.current();
+            const animationSteps = animationStepGeneratorRef.current(steps);
+            let animationElements = animationElementGeneratorRef.current(steps, animationSteps);
 
-            setAnimationElements(animationElementGeneratorRef.current(steps));
-            setSteps(animationStepGeneratorRef.current(steps));
+            /**
+             * Add initial props based on the first animation step, if available. Otherwise, when 
+             * generating initial animation props, will use defaultAnimationProp instead! (view above
+             * at definition of initialAnimationProps.)
+             */ 
+            animationElements.forEach((elementObj) => {
+                if (animationSteps[0][elementObj.id]) {
+                    elementObj.initialAnimationProp = animationSteps[0][elementObj.id];
+                }
+            })
+
+            setAnimationElements(animationElements);
+            setSteps(animationSteps);
+            
+            /**
+             * Make sure that we have consumed the last step update by setting this variable to false.
+             * This will ensure that the next time we trigger isAnimatingMode, we don't go through
+             * this process of updating steps and animation elements. 
+             */
+            updateStepsRef.current = false; 
         }
     }, [isAnimatingMode]);
 
-    /**
-     * Effect
-     * Whenever steps is updated, make sure to set updateStepsRef to false, indicating that 
-     * we have just flushed/consumed the last update.
-     */
-    useEffect(() => {
-        updateStepsRef.current = false;
-    }, [steps]);
-
-    useEffect(() => {
-        if (initialAnimationProps) {
-            setAnimation({ from: initialAnimationProps,
-                onStart: (e) => {
-                    // console.log(e);
-                    setAnimating(true);
-                },
-                onRest: (e) => {
-                    // console.log('anything?');
-                    if (e.finished) {
-                        setAnimating(false);
-                    }
-                } });
-        }
-    }, [initialAnimationProps]);
-    
-    /**
-     * Effect
-     * Clears and resets animation when animating mode is turned off. When turned on
-     * and steps are fully updated, run animation. This is assuming that the only way to turn
-     * on animating mode is by 'playing' the animation.
-     */
-    useEffect(() => {
-        if (!isAnimatingMode) {
-            stopAnimation();
-            setAnimationState(null);
-            setCurrentStep(0);
-        }
-        else if (isAnimatingMode && steps && !updateStepsRef.current) { // 
-            setAnimation({ ...steps[0], config: { duration: 0 } }); // Account for resetting animation props.
-            setAnimation({ to: handleRunScript });  
-            setAnimationState('running');
-        }
-    }, [isAnimatingMode, steps]);
-
-
-    
-    // Update animation methods to be used elsewhere.
-    animationMethodsRef.current = { handleRun, handlePause, handleStepForward, handleStepBack, handleSkipToEnd, handleReset, setSteps };
-
     return (
-        animationElements && animationState ? 
-            ReactDOM.createPortal(
-                <>
-                {
-                    animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }) => {
-                            return <AnimationComponent
-                            {...{ [animationProp]: animationProps[id] }}
-                            {...componentProps} /> 
-                    })
-                }
-                </>
-            , attachElementsRef)
-        : null
+        isAnimatingMode && steps && animationElements && (
+            <AnimationManagerInner steps={steps} animationElements={animationElements} initialAnimationProps={initialAnimationProps} attachElementsRef={attachElementsRef} />
+        )
     )
 }                
