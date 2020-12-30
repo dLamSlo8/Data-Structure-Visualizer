@@ -12,36 +12,45 @@ export default class Heap {
      * @param {TreeNode} root - root node of heap
      * @param {string} [mode = null] - (optional) "min" or "max" heap
      * @param {function} [comparator = null] - (optional) function used to determine heap priority
+     * @param {Heap} heap - heap to make a copy of
      */
-    constructor(root, mode, comparator) {
-        // if going to do copy constructor or null stuff, make sure elements array match
-        this.elements = [];
-
-        if (root !== null && root !== undefined) {
-            let idx = 0;
-            this.elements = [root];
-            // make sure heap is completely balanced
-            // go through level order
-            while (idx < this.elements.length) {
-                let curr = this.elements[idx];
-                if (curr.children) {
-                    this.elements.push(curr.children[0]);
-                    if (curr.children[1] !== NullTreeNode) {
-                        this.elements.push(curr.children[1]);
-                    }
-                }
-                idx += 1;
-            }
-        }
-        if ((mode === "min" || mode === undefined || mode === null) && (comparator === undefined || comparator === null)) {
-            this.comparator = minComparator;
-        }
-        else if (mode === "max") {
-            this.comparator = maxComparator;
+    constructor(root, mode, comparator, heap) {
+        // copy constructor
+        if (heap) {
+            this.elements = heap.elements;
+            this.comparator = heap.comparator;
         }
         else {
-            this.comparator = comparator;
-        }
+            this.elements = [];
+
+            if (root !== null && root !== undefined) {
+                let idx = 0;
+                this.elements = [root];
+                // make sure heap is completely balanced
+                // go through level order
+                while (idx < this.elements.length) {
+                    let curr = this.elements[idx];
+                    if (curr.children) {
+                        this.elements.push(curr.children[0]);
+                        if (curr.children[1] !== NullTreeNode) {
+                            this.elements.push(curr.children[1]);
+                        }
+                    }
+                    idx += 1;
+                }
+            }
+            if ((mode === "min" || mode === undefined || mode === null) && (comparator === undefined || comparator === null)) {
+                this.comparator = minComparator;
+            }
+            else if (mode === "max") {
+                this.comparator = maxComparator;
+            }
+            else {
+                this.comparator = comparator;
+            }
+
+        } 
+        
     }
 
     /**

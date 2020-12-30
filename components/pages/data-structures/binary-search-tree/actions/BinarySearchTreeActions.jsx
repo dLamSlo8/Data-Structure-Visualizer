@@ -22,7 +22,6 @@ function BinarySearchTreeActions({tree, setTree}){
     const handleInit = (value) => {
         let tree = new BinarySearchTree(new TreeNode(parseInt(value)));
         setTree(tree);
-        
     }
 
     /**

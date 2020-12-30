@@ -5,10 +5,9 @@ import Form from '@components/forms/Form';
 import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
-import BinarySearchTree from '@classes/binary-search-tree';
+import Heap from '@classes/heap';
 
-
-function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
+function ManageSection({heap, handleInsert, handleDelete}) {
 
     return (
         <>
@@ -39,10 +38,10 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                 }
             </Form>
             
-            {/* form input and button for deleting a TreeNode*/}
+            {/* form input and button for deleting a TreeNode, shouldn't need form input to remove.*/}
             <Form
             initValues={{delete: ''}}
-            handleSuccess={(formData) => formData.delete && handleDelete(formData.delete)}>
+            handleSuccess={(formData) => formData.delete && handleDelete()}>
                 {
                     ({ formData, handleChange, errorMapping }) => (
                         <>
@@ -59,48 +58,19 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                                 rootClass="min-w-0 w-full" />
                                 <Button
                                 btnStyle={formData.delete ? 'primary' : 'disabled'}
-                                rootClass="w-full lg:self-end">Delete</Button>
+                                rootClass="w-full lg:self-end">Remove</Button>
                             </div>
                         </>
                     )
                 }
             </Form>
-            
-            {/* form input and button for finding a TreeNode*/}
-            <Form
-            initValues={{find: ''}}
-            handleSuccess={(formData) => formData.find && handleFind(formData.find)}>
-                {
-                    ({ formData, handleChange, errorMapping }) => (
-                        <>
-                            <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
-                                <FormInput 
-                                label="Find a Node"
-                                error={errorMapping.find}
-                                inputProps={{
-                                    type: 'number',
-                                    name: 'find',
-                                    value: formData.find,
-                                    onChange: handleChange,
-                                }} 
-                                rootClass="min-w-0 w-full" />
-                                <Button
-                                btnStyle={formData.find ? 'primary' : 'disabled'}
-                                rootClass="w-full lg:self-end">Find</Button>
-                            </div>
-                        </>
-                    )
-                }
-            </Form>
-
         </>
     )
 }
 
 ManageSection.propTypes = {
-    tree: PropTypes.instanceOf(BinarySearchTree),
+    heap: PropTypes.instanceOf(Heap),
     handleInsert: PropTypes.func.isRequired, // Callback for inserting node
-    handleFind: PropTypes.func.isRequired, // Callback for finding node
     handleDelete: PropTypes.func.isRequired // Callback for deleting node
 };
 
