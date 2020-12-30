@@ -12,7 +12,7 @@ export default class Heap {
      * @param {TreeNode} root - root node of heap
      * @param {string} [mode = null] - (optional) "min" or "max" heap
      * @param {function} [comparator = null] - (optional) function used to determine heap priority
-     * @param {Heap} heap - heap to make a copy of
+     * @param {Heap} [heap = null]- heap to make a copy of
      */
     constructor(root, mode, comparator, heap) {
         // copy constructor

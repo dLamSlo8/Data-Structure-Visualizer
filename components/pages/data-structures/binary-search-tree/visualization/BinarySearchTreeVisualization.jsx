@@ -25,8 +25,9 @@ function BinarySearchTreeVisualization({tree, width, height}) {
      */
     useEffect(() => {
         if (tree) {
-            // Draw tree
+        
             d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
             drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
 
             /*

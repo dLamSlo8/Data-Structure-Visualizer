@@ -24,10 +24,10 @@ export default class TreeNode {
 
             if (children !== null) {
                 // need to check if children is a null treenode
-                if (children[0] === NullTreeNode) {
+                if (children[0].isNull()) {
                     this.setRight(children[1]);
                 }
-                else if (children[1] === NullTreeNode) {
+                else if (children[1].isNull()) {
                     this.setLeft(children[0]);
                 } 
                 else {
@@ -77,6 +77,10 @@ export default class TreeNode {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 456a7f47a0b6b0f44912f7958b5236d6e40c8f46
     /**
      * Checks if current node is null
      * @return {boolean} - whether or not this node is null
@@ -87,7 +91,10 @@ export default class TreeNode {
         }
         return false;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 456a7f47a0b6b0f44912f7958b5236d6e40c8f46
 }
 
 export const NullTreeNode = new TreeNode(null, null);

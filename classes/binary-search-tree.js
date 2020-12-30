@@ -14,7 +14,7 @@ export default class BinarySearchTree {
      */
     constructor(root, tree) {
         if (tree) {
-            this.root = new TreeNode(null, null, tree.root);
+            this.root = tree.root ? new TreeNode(null, null, tree.root) : null;
         }
         else {
             this.root = root || null;
@@ -68,7 +68,8 @@ export default class BinarySearchTree {
         
         // if tree doesn't exist create a new node;
         if (this.root === null) {
-            throw ("Please create a tree!");
+            this.root = new TreeNode(value, uuid);
+            return [uuid];
         }
 
         let moves = [];
@@ -113,10 +114,6 @@ export default class BinarySearchTree {
             }
         }
 
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
-        }
 
         let moves = [];
         helper(this.root, value, moves);
@@ -266,11 +263,6 @@ export default class BinarySearchTree {
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
-        }
-
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
         }
 
         let moves = [];
