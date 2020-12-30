@@ -46,7 +46,7 @@ export default class BinaryTree {
          * @param {Array} res - array to store inorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return null;
             }
 
@@ -103,7 +103,7 @@ export default class BinaryTree {
          * @param {Array} res - array to store preorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return null;
             }
             
@@ -155,7 +155,7 @@ export default class BinaryTree {
          * @param {Array} res - array to store postorder traversal
          */
         function helper(node, res) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 
@@ -212,11 +212,11 @@ export default class BinaryTree {
             res[0].push(first.name);
             res[1].push(first.uuid);
             if (first.children) {
-                if (first.children[0] !== NullTreeNode) {
+                if (!first.children[0].isNull()) {
                     q.push(first.children[0]);
                 }
     
-                if (first.children[1] !== NullTreeNode) {
+                if (!first.children[1].isNull()) {
                     q.push(first.children[1]);
                 }
             }
@@ -240,7 +240,7 @@ export default class BinaryTree {
             }
 
             // if nulltree, return the nulltree node
-            if (node === NullTreeNode) {
+            if (node.isNull()) {
                 return node;
             }
 
@@ -255,7 +255,7 @@ export default class BinaryTree {
                 let right = helper(node.children[1], uuid);
 
                 // if no child left, set children back to null
-                if ((left === null || left === NullTreeNode) && (right === null || right === NullTreeNode)) {
+                if ((left === null || left.isNull()) && (right === null || right.isNull())) {
                     node.children = null;
                 } else {
                     // add set left and right child
@@ -273,7 +273,7 @@ export default class BinaryTree {
 
         this.root = helper(this.root, uuid);
 
-        this.root = this.root !== NullTreeNode ? this.root : null;
+        this.root = !this.root.isNull() ? this.root : null;
     }
 
     /**
@@ -293,7 +293,7 @@ export default class BinaryTree {
          * @param {string} [createUUID = null] - (optional) uuid of node created
          */
         function helper(node, value, isLeft, matchUUID, createUUID) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 
@@ -343,7 +343,7 @@ export default class BinaryTree {
      */
     replaceNodeValue(value, uuid) {
         function helper(node, value, uuid) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 return;
             }
 
