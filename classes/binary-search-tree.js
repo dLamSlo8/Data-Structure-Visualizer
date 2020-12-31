@@ -125,6 +125,7 @@ export default class BinarySearchTree {
      *                 a node, last index in array is object of {id: id}
      */
     deleteNode(value) {
+        let type = {};
         /**
          * Deletes node in tree
          * @param {TreeNode} node - root node of tree structure
@@ -136,25 +137,31 @@ export default class BinarySearchTree {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 throw "A node with this value does not exist in the tree";
             }
-            moves.push(node.uuid);
+            moves[0].push(node.uuid);
 
             if (value === node.name) {
                 if (node.children == null) {
+                    type['type'] = 0;
                     return NullTreeNode;
                 }
                 else if (node.children[0] === null || node.children[0].isNull()) {
+                    moves[1].push(node.children[1].uuid);
+                    type['type'] = 1;
                     return node.children[1];
                 }
                 else if (node.children[1] === null || node.children[1].isNull()) {
+                    moves[1].push(node.children[0].uuid);
+                    type['type'] = 1;
                     return node.children[0];
                 }
                 else {
-                    let tmp = inorderSuccessor(node);
-                    moves.push({"id": tmp.uuid});
+                    let tmp = inorderSuccessor(node, moves);
+                    //moves[1].push(tmp.uuid);
                     tmp.children = [];
                     tmp.children[0] = node.children[0];
                     tmp.children[1] = node.children[1];
                     node.children = null;
+                    type['type'] = 2;
                     return tmp;
                 }
             }
@@ -192,11 +199,11 @@ export default class BinarySearchTree {
         /**
          * Returns node of inorder successor of node and removes that node from
          * tree
-         * @param {TreeNode} node - root node of the tree structure
          * @param {TreeNode} nodeForSuccessor - node that we want to find succesor for
+         * @param {Array} moves - an array that holds the direction of uuid to get to a node
          * @return {TreeNode} - inorder successor of node
          */
-        function inorderSuccessor(nodeForSuccessor) {
+        function inorderSuccessor(nodeForSuccessor, moves) {
             /**
              * Finds the minimum node and removes that node from tree
              * @param {TreeNode} node - node we want to find min of
@@ -204,7 +211,11 @@ export default class BinarySearchTree {
              * @param {TreeNode} isLeftChild - Parent of node if node is a left child
              */
             function findMin(node, isRightChild, isLeftChild) {
+                moves[1].push(node.uuid);
                 if (node.children !== null) {
+                    // if this is the direct right child of node to delete, do not add
+                    // moves[1].push(node.uuid);
+                    
                     // found last node in left branch
                     if (node.children[0] === null || node.children[0].isNull()) {
                         // successor has a right child, transfer successor's right child to parent
@@ -255,16 +266,18 @@ export default class BinarySearchTree {
                         isLeftChild.children[0] = NullTreeNode;
                     }
                 }
+
                 return node
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
         }
 
-        let moves = [];
+        let moves = [[],[]];
         let result = helper(this.root, value, moves);
         this.root = ( result.isNull()) ? null: result;
         
-        return moves;
+        type['moves'] = moves;
+        return type;
     }
 }

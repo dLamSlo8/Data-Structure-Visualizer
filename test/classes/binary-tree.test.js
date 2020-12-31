@@ -243,7 +243,6 @@ describe ("Test postOrderTraversal method", () => {
         expected = [[1,3,6,9,3,2,1], expectedPath];
 
         result = input.postOrderTraversal();
-        console.log(result)
         expect(result).toEqual(expected);
     })
 })

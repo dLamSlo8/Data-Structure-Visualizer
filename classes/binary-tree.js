@@ -19,22 +19,6 @@ export default class BinaryTree {
         }
     }
 
-    /**
-     * @param {TreeNode} node - the root node of tree structure
-     * @return {number} the number of nodes in the tree
-     */
-    nodeCount = (node) =>{
-        if (node.name === null) {
-            return 0;
-        }
-        else if (node.children === null){
-            return 1;
-        }
-        let leftCount = this.nodeCount(node.children[0]);
-        let rightCount = this.nodeCount(node.children[1]);
-
-        return leftCount + rightCount + 1;
-    }
 
     /**
      * @return {Array} array of inorder traversal, 0 index includes array of 
