@@ -11,7 +11,6 @@ function AnimationManagerInner({ steps, animationElements, initialAnimationProps
     const [currentStep, setCurrentStep] = useState(0);
     
     const [animationProps, setAnimation, stopAnimation] = useSpring(() => ({ 
-        // TODO: we must provide another layer to render the animation, when the steps and elements are already generated, such that we can initially set the from prop!
         from: initialAnimationProps,
         onStart: (e) => {
             setAnimating(true);
@@ -148,18 +147,18 @@ function AnimationManagerInner({ steps, animationElements, initialAnimationProps
 
     return (
         animationState ? 
-        ReactDOM.createPortal(
-            <>
-            {
-                animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }) => {
-                        return <AnimationComponent
-                        key={id}
-                        {...{ [animationProp]: animationProps[id] }}
-                        {...componentProps} /> 
-                })
-            }
-            </>
-        , attachElementsRef) : null
+            ReactDOM.createPortal(
+                <>
+                {
+                    animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }) => {
+                            return <AnimationComponent
+                            key={id}
+                            {...{ [animationProp]: animationProps[id] }}
+                            {...componentProps} /> 
+                    })
+                }
+                </>
+            , attachElementsRef) : null
     )
 }
 
