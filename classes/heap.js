@@ -20,18 +20,6 @@ export default class Heap {
             this.elements = heap.elements;
             this.comparator = heap.comparator;
             this.isMin = heap.isMin;
-            // if (mode === "min") {
-            //     this.comparator = minComparator;
-            //     this.isMin = true;
-            // }
-            // else if (mode === "max") {
-            //     this.comparator = maxComparator;
-            //     this.isMin = false;
-            // }
-            // else {
-            //     this.comparator = heap.comparator;
-            //     this.isMin = heap.isMin;
-            // }
         }
         else {
             this.elements = [];
