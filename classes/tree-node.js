@@ -77,7 +77,6 @@ export default class TreeNode {
         }
     }
 
-
     /**
      * Checks if current node is null
      * @return {boolean} - whether or not this node is null

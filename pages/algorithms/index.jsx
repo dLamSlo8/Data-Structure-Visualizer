@@ -23,9 +23,9 @@ export default function Algorithms() {
                 title="Trees"
                 listLabel="Tree Data Structures">
                     <NavSectionItem
-                    title="Binary Search Tree"
+                    title="Tree Traversal"
                     img={<BinarySearchTreeIcon />}
-                    description={`Visualize a BST through adding, deleting, and searching for nodes, with animated steps.`} 
+                    description={`Visualize a inorder, preorder, postorder, or level order traversals on a binary tree.`} 
                     routeName="/algorithms/tree-traversal" />
                 </NavSection>
             </main>

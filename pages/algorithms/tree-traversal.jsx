@@ -26,7 +26,7 @@ export default function TreeTraversal() {
             width={width} 
             height={height} 
             setActiveNode={setActiveNode} />)}
-            visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
-            The selected node is highlighted blue." />
+        visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
+        The selected node is highlighted blue." />
     )
 }

@@ -44,6 +44,20 @@ describe ("Test constructor", () => {
         expectedElements = [expected, expected.children[0], expected.children[1], expected.children[0].children[0], expected.children[0].children[1]];
         expect(result.elements).toEqual(expectedElements);
     })
+
+    it ("Should make a copy of original heap for copy constructor", () => {
+        let expected = new TreeNode(10, "a");
+        expected.setLeft(new TreeNode(8, "b"));
+        expected.children[0].setLeft(new TreeNode(5, "c"));
+        expected.setRight(new TreeNode(6, "d"));
+
+        let expectedElements = [expected, expected.children[0], expected.children[1], expected.children[0].children[0]];
+
+        let input = new Heap(expected);
+        let result = new Heap(null, null, null, input);
+
+        expect(result.elements).toEqual(expectedElements);
+    })
 })
 
 describe ("Test updateParentChildren method", () => {
