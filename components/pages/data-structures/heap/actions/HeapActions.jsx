@@ -59,6 +59,7 @@ function HeapActions({heap, setHeap}){
                     ({ collapsed }) => (
                         <ManageSection
                         heap = {heap}
+                        setHeap = {setHeap}
                         handleInsert={handleInsert}
                         handleDelete={handleDelete} />
                         

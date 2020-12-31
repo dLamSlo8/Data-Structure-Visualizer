@@ -19,15 +19,23 @@ export default function DataStructures() {
         </header>
         <main className="px-12 mt-12">
             <NavSection
-            title="Trees"
+            title="Data Structures"
             listLabel="Tree Data Structures">
                 <NavSectionItem
                 title="Binary Search Tree"
                 img={<BinarySearchTreeIcon />}
                 description={`Visualize a BST through adding, deleting, and searching for nodes, with animated steps.`} 
                 routeName="/data-structures/binary-search-tree" />
+                
+                <NavSectionItem
+                title="Heap"
+                img={<BinarySearchTreeIcon />}
+                description={`Visualize a min or max heap through inserting or removing from the heap, with animated steps.`} 
+                routeName="/data-structures/heap" />
             </NavSection>
+
         </main>
+        
     </>
     )
 }

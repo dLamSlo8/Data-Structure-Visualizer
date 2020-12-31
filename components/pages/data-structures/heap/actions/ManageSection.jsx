@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import Form from '@components/forms/Form';
@@ -7,7 +7,17 @@ import Button from '@components/Button';
 
 import Heap from '@classes/heap';
 
-function ManageSection({heap, handleInsert, handleDelete}) {
+function ManageSection({heap, setHeap, handleInsert, handleDelete}) {
+    const [isMin, setIsMin] = useState(heap.isMin);
+
+    const toggleHeap = () => {
+        setIsMin((isMin) => !isMin);
+    }
+
+    useEffect(() =>{
+       setHeap(new Heap(null, isMin ? "min": "max"));
+    }, [isMin])
+
 
     return (
         <>
@@ -38,32 +48,16 @@ function ManageSection({heap, handleInsert, handleDelete}) {
                 }
             </Form>
             
-            {/* form input and button for deleting a TreeNode, shouldn't need form input to remove.*/}
-            <Form
-            initValues={{delete: ''}}
-            handleSuccess={(formData) => formData.delete && handleDelete()}>
-                {
-                    ({ formData, handleChange, errorMapping }) => (
-                        <>
-                            <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
-                                <FormInput 
-                                label="Delete a Node"
-                                error={errorMapping.delete}
-                                inputProps={{
-                                    type: 'number',
-                                    name: 'delete',
-                                    value: formData.delete,
-                                    onChange: handleChange,
-                                }} 
-                                rootClass="min-w-0 w-full" />
-                                <Button
-                                btnStyle={formData.delete ? 'primary' : 'disabled'}
-                                rootClass="w-full lg:self-end">Remove</Button>
-                            </div>
-                        </>
-                    )
-                }
-            </Form>
+            <Button
+            onClick={handleDelete}
+            btnStyle={ heap.elements.length === 0 ? 'disabled':'primary'}
+            rootClass="w-full lg:self-end">Remove</Button>
+
+            <Button
+            onClick={toggleHeap}
+            btnStyle='primary'
+            rootClass="w-full lg:self-end">Convert to {isMin ? "Max" : "Min"}</Button>
+
         </>
     )
 }

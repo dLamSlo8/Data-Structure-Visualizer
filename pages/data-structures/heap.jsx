@@ -8,7 +8,7 @@ import BinaryHeap from '@classes/heap'
 
 
 export default function Heap() {
-    const [heap, setHeap] = useState(new BinaryHeap());
+    const [heap, setHeap] = useState(new BinaryHeap(null));
 
     return (
         <DSAPageLayout 

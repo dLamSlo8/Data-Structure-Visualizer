@@ -19,6 +19,19 @@ export default class Heap {
         if (heap) {
             this.elements = heap.elements;
             this.comparator = heap.comparator;
+            this.isMin = heap.isMin;
+            // if (mode === "min") {
+            //     this.comparator = minComparator;
+            //     this.isMin = true;
+            // }
+            // else if (mode === "max") {
+            //     this.comparator = maxComparator;
+            //     this.isMin = false;
+            // }
+            // else {
+            //     this.comparator = heap.comparator;
+            //     this.isMin = heap.isMin;
+            // }
         }
         else {
             this.elements = [];
@@ -39,11 +52,14 @@ export default class Heap {
                     idx += 1;
                 }
             }
+
             if ((mode === "min" || mode === undefined || mode === null) && (comparator === undefined || comparator === null)) {
                 this.comparator = minComparator;
+                this.isMin = true;
             }
             else if (mode === "max") {
                 this.comparator = maxComparator;
+                this.isMin = false;
             }
             else {
                 this.comparator = comparator;
