@@ -45,7 +45,7 @@ function HeapActions({heap, setHeap}){
     const handleDelete = () => {
         // store moves as local var not sure what next
         let moves = heap.remove();
-        setHeap(heap.elements.length !== 0 ? new Heap(null, null, null, heap) : null);
+        setHeap(new Heap(null, null, null, heap));
         return moves;
     }
 
@@ -57,14 +57,11 @@ function HeapActions({heap, setHeap}){
             propagateCollapsed>
                 {
                     ({ collapsed }) => (
-                        heap ? (
-                            <ManageSection
-                            heap = {heap}
-                            handleInsert={handleInsert}
-                            handleDelete={handleDelete} />
-                        ) : (
-                            <InitSection handleInit={handleInit} />
-                        )
+                        <ManageSection
+                        heap = {heap}
+                        handleInsert={handleInsert}
+                        handleDelete={handleDelete} />
+                        
                     )
                 }
             </ActionSubsection>

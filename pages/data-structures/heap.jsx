@@ -4,10 +4,11 @@ import DSAPageLayout from '@components/layouts/DSAPageLayout';
 import HeapActions from '@components/pages/data-structures/heap/actions/HeapActions';
 import HeapVisualization from '@components/pages/data-structures/heap/visualization/HeapVisualization';
 
+import BinaryHeap from '@classes/heap'
 
 
 export default function Heap() {
-    const [heap, setHeap] = useState(null);
+    const [heap, setHeap] = useState(new BinaryHeap());
 
     return (
         <DSAPageLayout 

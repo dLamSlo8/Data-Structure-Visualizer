@@ -33,6 +33,55 @@ function BinarySearchTreeVisualization({tree, width, height}) {
             /*
             //Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            // Draw tree
+            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            /*
+            //Apply click handlers for active node change
+            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             //Initial node case. When there is only the rootNode, it is set to active for ease-of-use
             if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {

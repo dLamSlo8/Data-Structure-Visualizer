@@ -26,7 +26,8 @@ function HeapVisualization({heap, width, height}) {
     useEffect(() => {
         if (heap) {
             // Draw tree
-            d3StructureRef.current = generateD3Tree(heap.elements[0], width, height);
+            let root = heap.elements.length === 0 ? null : heap.elements[0]; 
+            d3StructureRef.current = generateD3Tree(root, width, height);
             drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
 
             /*

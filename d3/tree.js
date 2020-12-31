@@ -24,7 +24,7 @@ export const styleActiveNode = (activeUuid) => {
 * @returns {Object} D3 tree
 */
 export const generateD3Tree = (rootNode, width) => {
-    if (rootNode === null) {
+    if (rootNode === null || rootNode === undefined) {
         return null;
     }
 
