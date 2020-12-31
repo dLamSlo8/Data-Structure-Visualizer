@@ -61,9 +61,14 @@ export default class BinaryTree {
                 if (leftChild !== null) {
                     res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
-                
-
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "left"});
+                }  
             }
+            // signal we are at leaf node
+            else {
+                res[1].push({"uuid": node.uuid, "type": "left"});
+            }  
             
 
             res[0].push(node.name);
@@ -80,6 +85,13 @@ export default class BinaryTree {
                 if (rightChild !== null) {
                     res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "right"});
+                }
+            }
+            // signal we are at leaf node
+            else {
+                res[1].push({"uuid": node.uuid, "type": "right"});
             }
         }
 
@@ -128,7 +140,16 @@ export default class BinaryTree {
                 if (leftChild !== null) {
                     res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "left"});
+                }
+            }
+            else {
+                res[1].push({"uuid": node.uuid, "type": "left"});
+            }
 
+
+            if (node.children) {
                 if (node.children[1].uuid) {
                     res[1].push({"uuid":node.children[1].uuid, "type":"right"});
                 }
@@ -138,6 +159,12 @@ export default class BinaryTree {
                 if (rightChild !== null) {
                     res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "right"});
+                }
+            }
+            else {
+                res[1].push({"uuid": node.uuid, "type": "right"});
             }
 
         }
@@ -170,7 +197,7 @@ export default class BinaryTree {
          */
         function helper(node, res) {
             if (node === null || node.isNull()) {
-                return;
+                return null;
             }
 
             if (node.children) {
@@ -180,6 +207,22 @@ export default class BinaryTree {
                     res[1].push({"uuid": node.children[0].uuid, "type":"left"});
                 }
                 let leftChild = helper(node.children[0], res);
+                // if leftChild is null, that means we do not need to add it
+                if (leftChild !== null) {
+                    if (node.children[1].isNull()) {
+                        res[1].push({"uuid": node.uuid, "type": "parent"});
+                    }
+                    
+                }
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "left"});
+                }
+            }
+            else{
+                res[1].push({"uuid": node.uuid, "type": "left"});
+            }
+
+            if (node.children) {
 
                 if (node.children[1].uuid) {
                     res[1].push({"uuid": node.children[1].uuid, "type": "right"});
@@ -190,6 +233,12 @@ export default class BinaryTree {
                  if (rightChild !== null) {
                     res[1].push({"uuid": node.uuid, "type": "parent"});
                 }
+                else {
+                    res[1].push({"uuid": node.uuid, "type": "right"});
+                }
+            }
+            else {
+                res[1].push({"uuid": node.uuid, "type": "right"});
             }
 
             res[0].push(node.name);
