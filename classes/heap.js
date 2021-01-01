@@ -31,6 +31,8 @@ export default class Heap {
                 // go through level order
                 while (idx < this.elements.length) {
                     let curr = this.elements[idx];
+                    // add index field into node
+                    this.elements[idx].idx = idx;
                     if (curr.children) {
                         this.elements.push(curr.children[0]);
                         if (!curr.children[1].isNull()) {
@@ -60,7 +62,7 @@ export default class Heap {
     /**
      * Removes top element from heap and moves elements to maintain heap
      * property
-     * @return {TreeNode} - highest priority node
+     * @return {Array} - Array of priority TreeNode and moves taken to remove
      */
     remove() {
         if (this.elements.length === 0) {
@@ -74,11 +76,13 @@ export default class Heap {
 
         // if root has no children, only one element in heap, so root should be empty
         if (priorityNode.children === null) {
-            return [priorityNode, []];
+            return [priorityNode, [[], []]];
         }        
 
         // reassign lastElement to root and set its children
         this.elements[0] = lastElement;
+        // set idx to end
+        lastElement.idx = 0;
 
         // keep check of how many null children there are
         let nullCount = 0;
@@ -105,7 +109,7 @@ export default class Heap {
         // is now root node
         this.clearParentChildren(parent, lastElement);
 
-        let moves = [lastElement.uuid];
+        let moves = [[lastElement.uuid], [this.elements.length]];
         this.bubbleDown(0, moves);
 
         // empty out children
@@ -141,7 +145,8 @@ export default class Heap {
             // if higher child has greater priority, then swap
             if (this.comparator(this.elements[greaterIdx], this.elements[index])) {
                 this.swap(index, greaterIdx, moves);
-                moves.push(this.elements[index].uuid);
+                moves[0].push(this.elements[index].uuid);
+                moves[1].push(greaterIdx);
                 this.bubbleDown(greaterIdx, moves);
             } else {
                 // if curr is highest priority then don't bubble anymore
@@ -160,6 +165,7 @@ export default class Heap {
         // need to discuss for insert if we want to show how we reached last element
 
         let newNode = new TreeNode(value, uuid);
+        newNode.idx = this.elements.length;
 
         // add new node to end
         this.elements.push(newNode);
@@ -168,7 +174,7 @@ export default class Heap {
         this.updateParentChildren(this.elements.length - 1);
 
         // right now moves array is only updated from bubble up operation
-        let moves = [];
+        let moves = [[], []];
 
         this.bubbleUp(this.elements.length - 1, moves);
         return moves;
@@ -190,7 +196,8 @@ export default class Heap {
         // if this node has more priority than its parent, bubble up
         if (this.comparator(this.elements[index], this.elements[parentIdx])) {
             // update moves
-            moves.push(this.elements[parentIdx].uuid);
+            moves[0].push(this.elements[parentIdx].uuid);
+            moves[1].push(this.elements[parentIdx].idx);
             // swap then see if we can bubble up still
             this.swap(parentIdx, index);
             this.bubbleUp(parentIdx, moves);
@@ -243,8 +250,9 @@ export default class Heap {
         // update parents child
         this.updateParentChildren(idx1);
 
-        // console.log(this.elements[idx1]);
-        // console.log(this.elements[idx2]);
+        // update idx of node's position after swap
+        this.elements[idx1].idx = idx1;
+        this.elements[idx2].idx = idx2;
     }
 
     /**
@@ -322,10 +330,7 @@ export default class Heap {
  * @return {boolean} - whether node1 has higher priority than node2 
  */
 export function minComparator(node1, node2) {
-    if (node1.name < node2.name) {
-        return true;
-    }
-    return false;
+    return (node1.name < node2.name);
 }
 
 /**
@@ -335,8 +340,30 @@ export function minComparator(node1, node2) {
  * @return {boolean} - whether node1 has higher priority than node2 
  */
 export function maxComparator(node1, node2) {
-    if (node1.name > node2.name) {
-        return true;
+    return (node1.name > node2.name);
+}
+
+/**
+ * Updates index in level-order fashion of root node. Use only for testing
+ * @param {TreeNode} node - root node of structure
+ */
+export function updateIdx(node) {
+    let idx = 0;
+    let q = [];
+    q.push(node);
+    while (q.length > 0) {
+        let curr = q.shift();
+        curr.idx = idx;
+        idx++;
+        
+        if (curr.children) {
+            if (!curr.children[0].isNull()) {
+                q.push(curr.children[0]);
+            }
+
+            if (!curr.children[1].isNull()) {
+                q.push(curr.children[1]);
+            }
+        }
     }
-    return false;
 }
