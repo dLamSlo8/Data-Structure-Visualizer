@@ -59,28 +59,55 @@ function TraversalSection({ tree, sectionCollapsed }) {
     }, [traversalType, tree]);
 
     useEffect(() => {
-        animationStepGeneratorRef.current = (algorithmRes) => { // TODO: Change according to new format (i.e. { uuid: <uuid>, type: <type> }) when it is ready
+        animationStepGeneratorRef.current = (algorithmRes, animationElements) => { 
             let steps = mapTraversalToPosition(algorithmRes, d3StructureRef.current, traversalType);
+            let textAnimationElements = animationElements.slice(1);
 
-            let traversalArray = algorithmRes[1];
+            if (traversalType !== 'Level-order') {
+                let traversalArray = algorithmRes[1];
 
-            let currentUuid = d3StructureRef.current.descendants()[0].data.uuid; // Always begin with root uuid.
-            let positionsIdx = 0;
-            for (let { uuid, type } of traversalArray) {
-                if (type !== 'parent') {
-                    steps[positionsIdx][`${currentUuid}-${type === 'visit' ? 'root' : type}`] = {
-                        state: {
-                            fill: 'red'
-                        },
-                        config: {
-                            duration: 0
-                        }
-                    };
+                let currentUuid = d3StructureRef.current.descendants()[0].data.uuid; // Always begin with root uuid.
+                let positionsIdx = 1;
+                let activeTextElements = {};
+
+                for (let idx = 0; idx < traversalArray.length; idx++) {
+                    let { uuid, type } = traversalArray[idx];
+
+                    if (type !== 'parent') {
+                        activeTextElements[`${currentUuid}-${type === 'visit' ? 'root' : type}`] = positionsIdx;
+                    }
+
+                    currentUuid = uuid;
+                    positionsIdx++;
                 }
-                
-                currentUuid = uuid;
-                positionsIdx++;
+
+                for (let { id } of textAnimationElements) {
+                    let activeIdx = activeTextElements[id];
+
+                    for (let idx = 0; idx < activeIdx; idx++) {
+                        steps[idx][id] = {
+                            state: {
+                                fill: 'black'
+                            },
+                            config: {
+                                duration: 0
+                            }
+                        };
+                    }
+
+                    for (let idx = activeIdx; idx < steps.length; idx++) {
+                        steps[idx][id] = {
+                            state: {
+                                fill: 'red'
+                            },
+                            config: {
+                                duration: 0
+                            }
+                        }
+                    }
+                }
             }
+            
             // }
             // for (let idx = 0; idx < positions.length; idx++) {
             //     let { uuid, type } = traversalArray[idx];
@@ -89,7 +116,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
             //         positions[idx][`${uuid}-${type === 'visit' ? 'root' : type}`] = 'red';
             //     }
             // }
-
+            console.log(steps);
             return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {

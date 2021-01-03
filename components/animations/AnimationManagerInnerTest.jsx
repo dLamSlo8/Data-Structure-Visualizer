@@ -91,7 +91,9 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
      * change animation state from finished to paused.
      */
     const handleStepBack = async () => {
+        console.log('stepping back');
         if (currentStep > 0) {
+            console.log(isAnimating);
             let animationRes = await setAnimation((idx) => ({
                 ...getStep(idx, isAnimating ? currentStep : currentStep - 1),
                 config: { duration: 0 }
@@ -103,6 +105,9 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
                 }
                 if (!isAnimating) {
                     setCurrentStep((currentStep) => currentStep - 1);
+                }
+                if (isAnimating) {
+                    setAnimating(false);
                 }
             }
         }
@@ -123,11 +128,31 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
                 if (currentStep + 1 === steps.length - 1) {
                     setAnimationState('finished');
                 }
+                if (isAnimating) {
+                    setAnimating(false);
+                }
                 setCurrentStep((currentStep) => currentStep + 1);
             }
         }
     }
 
+    /**
+     * Moves animation to end (i.e. last step.)
+     */
+    const handleSkipToEnd = async () => {
+        if (animationState !== 'finished') {
+            let animationRes = await setAnimation((idx) => ({
+                ...getStep(idx, steps.length - 1),
+                config: { duration: 0 }
+            }));
+
+            if (animationRes.finished) {
+                setAnimating(false);
+                setAnimationState('finished');
+                setCurrentStep(steps.length - 1);
+            }
+        }
+    }
 
     /**
      * Effect
@@ -189,7 +214,7 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
 
 
 
-    animationMethodsRef.current = { handleRun, handlePause, handleReset, handleStepBack, handleStepForward };
+    animationMethodsRef.current = { handleRun, handlePause, handleReset, handleStepBack, handleStepForward, handleSkipToEnd };
 
     return (
             ReactDOM.createPortal(

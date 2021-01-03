@@ -64,8 +64,8 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
              * different initial animation props.
              */
             const steps = stepGeneratorRef.current();
-            const animationSteps = animationStepGeneratorRef.current(steps);
-            let animationElements = animationElementGeneratorRef.current(steps, animationSteps);
+            let animationElements = animationElementGeneratorRef.current(steps);
+            const animationSteps = animationStepGeneratorRef.current(steps, animationElements);
 
             /**
              * Add initial props based on the first animation step, if available. Otherwise, when 
@@ -77,6 +77,8 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
                     elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
                 }
             })
+
+            console.log(animationSteps);
 
             setAnimationElements(animationElements);
             setSteps(animationSteps);
