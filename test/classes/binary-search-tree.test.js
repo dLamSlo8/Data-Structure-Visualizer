@@ -7,12 +7,13 @@ describe ("Test insertNode method", () => {
         // insert into empty tree
         let input = new BinarySearchTree();
 
-        let expectedMoves = ["4"];
+        let expectedMoves = [
+            {"type": "visit", "uuid": "4"}
+        ];
 
         let expected = new TreeNode(5, "4");
 
         let result = input.insertNode(5, "4");
-
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
 
@@ -22,7 +23,13 @@ describe ("Test insertNode method", () => {
 
         input = new BinarySearchTree(root);
 
-        expectedMoves = ["1", "2", "4"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "left", "uuid": "2"},
+            {"type": "visit", "uuid": "2"},
+            {"type": "left", "uuid": "4"},
+            {"type": "visit", "uuid": "4"},
+        ];
 
         expected = new TreeNode(5, "1");
         expected.setLeft(new TreeNode(5, "2"));
@@ -41,7 +48,13 @@ describe ("Test insertNode method", () => {
 
         input = new BinarySearchTree(root);
 
-        expectedMoves = ["1", "2", "4"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "left", "uuid": "2"},
+            {"type": "visit", "uuid": "2"},
+            {"type": "right", "uuid": "4"},
+            {"type": "visit", "uuid": "4"},
+        ];
 
         expected = new TreeNode(5, "1");
         expected.setLeft(new TreeNode(3, "2"));
@@ -60,7 +73,13 @@ describe ("Test insertNode method", () => {
 
         input = new BinarySearchTree(root);
 
-        expectedMoves = ["1", "3", "4"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "right", "uuid": "3"},
+            {"type": "visit", "uuid": "3"},
+            {"type": "left", "uuid": "4"},
+            {"type": "visit", "uuid": "4"},
+        ];
 
         expected = new TreeNode(5, "1");
         expected.setLeft(new TreeNode(3, "2"));
@@ -80,7 +99,11 @@ describe ("Test insertNode method", () => {
 
         expected = new TreeNode(5, "1");
         expected.setLeft(new TreeNode(3, "2"));
-        expectedMoves = ["1", "2"]
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "left", "uuid": "2"},
+            {"type": "visit", "uuid": "2"},
+        ];
 
         result = input.insertNode(3, "2");
 
@@ -91,7 +114,11 @@ describe ("Test insertNode method", () => {
         expected.setLeft(new TreeNode(3, "2"));
         expected.setRight(new TreeNode(7, "3"))
         
-        expectedMoves = ["1" , "3"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "right", "uuid": "3"},
+            {"type": "visit", "uuid": "3"},
+        ];
 
         result = input.insertNode(7, "3");
 
@@ -155,11 +182,14 @@ describe ("Test deleteNode method", () => {
 
         let expectedMoves = {
             "type": 0, 
-            "moves": [["1"],[]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"}
+            ], []]
         };
 
         let result = input.deleteNode(5);
 
+        
         expect(result).toEqual(expectedMoves);
         expect(input.root).toBeNull();
 
@@ -172,7 +202,11 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 0, 
-            "moves":[["1", "2"],[]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "left", "uuid": "2"},
+                {"type": "visit", "uuid": "2"},
+            ], []]
         };
 
         let expected = new TreeNode(5, "1");
@@ -193,8 +227,14 @@ describe ("Test deleteNode method", () => {
         input = new BinarySearchTree(root);
 
         expectedMoves = {
-            "type":0, 
-            "moves":[["1", "3", "4"],[]]
+            "type": 0, 
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "right", "uuid": "3"},
+                {"type": "visit", "uuid": "3"},
+                {"type": "left", "uuid": "4"},
+                {"type": "visit", "uuid": "4"}
+            ], []]
         };
 
         expected = new TreeNode(5, "1");
@@ -214,8 +254,10 @@ describe ("Test deleteNode method", () => {
         input = new BinarySearchTree(root);
 
         expectedMoves = {
-            "type":1, 
-            "moves":[["1"],["3"]]
+            "type": 1, 
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["3"]]
         };
 
         expected = new TreeNode(7, "3");
@@ -236,7 +278,11 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 1, 
-            "moves": [["1", "2"],["4"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "left", "uuid": "2"},
+                {"type": "visit", "uuid": "2"},
+            ], ["4"]]
         };
 
         expected = new TreeNode(5, "1");
@@ -260,7 +306,13 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 0, 
-            "moves": [["1", "3", "5"],[]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "right", "uuid": "3"},
+                {"type": "visit", "uuid": "3"},
+                {"type": "right", "uuid": "5"},
+                {"type": "visit", "uuid": "5"}
+            ], []]
         };
 
         expected = new TreeNode(5, "1");
@@ -286,7 +338,11 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 2, 
-            "moves": [["1", "2"],["4", "5"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "left", "uuid": "2"},
+                {"type": "visit", "uuid": "2"},
+            ], ["4", "5"]]
         };
 
         expected = new TreeNode(6, "1");
@@ -314,7 +370,13 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 2, 
-            "moves": [["1", "3", "7"],["6"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "right", "uuid": "3"},
+                {"type": "visit", "uuid": "3"},
+                {"type": "left", "uuid": "7"},
+                {"type": "visit", "uuid": "7"}
+            ], ["6"]]
         };
 
         expected = new TreeNode(6, "1");
@@ -336,8 +398,10 @@ describe ("Test deleteNode method", () => {
         input = new BinarySearchTree(root);
 
         expectedMoves = {
-            "type":0, 
-            "moves":[["1"],[]]
+            "type": 0, 
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], []]
         };
 
         expected = null;
@@ -356,7 +420,9 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 1, 
-            "moves": [["1"],["2"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["2"]]
         };
 
         expected = new TreeNode(5, "2");
@@ -376,7 +442,9 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 2, 
-            "moves": [["1"],["3"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["3"]]
         };
 
         expected = new TreeNode(10, "3");
@@ -396,8 +464,12 @@ describe ("Test deleteNode method", () => {
         input = new BinarySearchTree(root);
 
         expectedMoves = {
-            "type":0, 
-            "moves":[["1", "2"],[]]
+            "type": 0, 
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "left", "uuid": "2"},
+                {"type": "visit", "uuid": "2"},
+            ], []]
         };
         expected = new TreeNode(6, "1");
 
@@ -415,7 +487,11 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 0, 
-            "moves": [["1", "2"],[]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+                {"type": "right", "uuid": "2"},
+                {"type": "visit", "uuid": "2"},
+            ], []]
         };
         expected = new TreeNode(6, "1");
 
@@ -434,8 +510,10 @@ describe ("Test deleteNode method", () => {
         input = new BinarySearchTree(root);
 
         expectedMoves = {
-            "type":  2, 
-            "moves": [["1"],["3", "4"]]
+            "type": 2, 
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["3","4"]]
         };
 
         expected = new TreeNode(15, "4");
@@ -458,7 +536,9 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 2, 
-            "moves": [["1"], ["3"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["3"]]
         };
 
         expected = new TreeNode(20, "3");
@@ -481,7 +561,9 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 2, 
-            "moves": [["1"], ["3", "4"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["3", "4"]]
         };
                     
         expected = new TreeNode(15, "4");
@@ -503,7 +585,9 @@ describe ("Test deleteNode method", () => {
 
         expectedMoves = {
             "type": 1, 
-            "moves": [["1"], ["2"]]
+            "moves": [[
+                {"type": "visit", "uuid": "1"},
+            ], ["2"]]
         };
         expected = new TreeNode(20, "2");
 
@@ -541,10 +625,15 @@ describe ("Test findNode method", () => {
 
         let input = new BinarySearchTree(root);
         
-        let expectedMoves = ["1", "2", "4"];
+        let expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "left", "uuid": "2"},
+            {"type": "visit", "uuid": "2"},
+            {"type": "right", "uuid": "4"},
+            {"type": "visit", "uuid": "4"},
+        ];
 
         let result = input.findNode(4);
-
         expect(result).toEqual(expectedMoves);
 
 
@@ -559,7 +648,13 @@ describe ("Test findNode method", () => {
 
         input = new BinarySearchTree(root);
         
-        expectedMoves = ["1", "3", "6"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "right", "uuid": "3"},
+            {"type": "visit", "uuid": "3"},
+            {"type": "left", "uuid": "6"},
+            {"type": "visit", "uuid": "6"},
+        ];
         
         result = input.findNode(6);
 
@@ -575,8 +670,11 @@ describe ("Test findNode method", () => {
 
         input = new BinarySearchTree(root);
         
-        expectedMoves = ["1", "2"];
-
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "left", "uuid": "2"},
+            {"type": "visit", "uuid": "2"},
+        ];
         result = input.findNode(3);
 
         expect(result).toEqual(expectedMoves);
@@ -590,7 +688,11 @@ describe ("Test findNode method", () => {
 
         input = new BinarySearchTree(root);
         
-        expectedMoves = ["1", "3"];
+        expectedMoves = [
+            {"type": "visit", "uuid": "1"},
+            {"type": "right", "uuid": "3"},
+            {"type": "visit", "uuid": "3"},
+        ];
 
         result = input.findNode(7);
 

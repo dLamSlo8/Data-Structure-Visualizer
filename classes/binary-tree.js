@@ -89,7 +89,7 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['type'] === "visit") {
+            if (obj['type'] === "visit" || obj['type'] === "left" || obj['type'] === "right") {
                 break;
             }
             res[1].pop();
@@ -162,9 +162,10 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['type'] === "visit") {
+            if (obj['type'] === "visit" || obj['type'] === "left" || obj['type'] === "right") {
                 break;
             }
+
             res[1].pop();
         }
         return res;
@@ -239,7 +240,7 @@ export default class BinaryTree {
         // strips the last few moves in the result that just parents up to the top
         for (let i = res[1].length-1; i >=0; i--) {
             let obj = res[1][i];
-            if (obj['type'] === "visit") {
+            if (obj['type'] === "visit" || obj['type'] === "left" || obj['type'] === "right") {
                 break;
             }
             res[1].pop();

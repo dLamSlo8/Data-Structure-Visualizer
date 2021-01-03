@@ -41,25 +41,49 @@ export default class BinarySearchTree {
         function helper(node, value, uuid, moves) {
             if (node === null || node.isNull()) {
                 let newNode = new TreeNode(value, uuid);
-                moves.push(newNode.uuid);
                 return newNode;
             }
-            moves.push(node.uuid);
+            moves.push({"type": "visit", uuid: node.uuid});
             if (value <= node.name) {
                 // make sure children exists
                 if (node.children !== null) {
-                    node.setLeft(helper(node.children[0], value, uuid, moves));
+                    if (node.children[0].uuid !== null) {
+                        moves.push({"type": "left", uuid: node.children[0].uuid});
+                        node.setLeft(helper(node.children[0], value, uuid, moves));
+                    }
+                    else {
+                        let newNode = helper(node.children[0], value, uuid, moves);
+                        moves.push({"type": "left", uuid: newNode.uuid});
+                        moves.push({"type": "visit", uuid: newNode.uuid});
+                        node.setLeft(newNode);
+                    }
                 } else {
                     // pass in null as node so we insert at left
-                    node.setLeft(helper(null, value, uuid, moves));
+                    let newNode = helper(null, value, uuid, moves)
+                    node.setLeft(newNode);
+                    moves.push({"type": "left", uuid: newNode.uuid});
+                    moves.push({"type": "visit", uuid: newNode.uuid});
                 }
             } else {
                 // makes sure children exists
                 if (node.children !== null) {
-                    node.setRight(helper(node.children[1], value, uuid, moves));
+                    if (node.children[1].uuid !== null) {
+                        moves.push({"type": "right", uuid: node.children[1].uuid});
+                        node.setRight(helper(node.children[1], value, uuid, moves));
+                    }
+                    else {
+                        let newNode = helper(node.children[1], value, uuid, moves);
+                        moves.push({"type": "right", uuid: newNode.uuid});
+                        moves.push({"type": "visit", uuid: newNode.uuid});
+                        node.setRight(newNode);
+                    }
+                    
                 } else {
                     // pass in null as node so we insert at right
-                    node.setRight(helper(null, value, uuid, moves));
+                    let newNode = helper(null, value, uuid, moves)
+                    node.setRight(newNode);
+                    moves.push({"type": "right", uuid: newNode.uuid});
+                    moves.push({"type": "visit", uuid: newNode.uuid});
                 } 
             }
             return node;
@@ -69,7 +93,7 @@ export default class BinarySearchTree {
         // if tree doesn't exist create a new node;
         if (this.root === null) {
             this.root = new TreeNode(value, uuid);
-            return [uuid];
+            return [{"type": "visit", "uuid": uuid}];
         }
 
         let moves = [];
@@ -93,13 +117,16 @@ export default class BinarySearchTree {
             if (node === null || node.isNull()) {
                 throw ("A node with this value does not exist in the tree");
             }
-            moves.push(node.uuid);
+            moves.push({"type": "visit", "uuid": node.uuid});
 
             if (node.name === value) {
                 return;
             }
             else if (value <= node.name) {
                 if (node.children) {
+                    if (!node.children[0].isNull()) {
+                        moves.push({"type": "left", "uuid": node.children[0].uuid});
+                    }
                     helper(node.children[0], value, moves);
                 } else {
                     helper(null, value, moves);
@@ -107,6 +134,9 @@ export default class BinarySearchTree {
             }
             else {
                 if (node.children) {
+                    if (!node.children[1].isNull()) {
+                        moves.push({"type": "right", "uuid": node.children[1].uuid});
+                    }
                     helper(node.children[1], value, moves);
                 } else {
                     helper(null, value, moves);
@@ -141,7 +171,7 @@ export default class BinarySearchTree {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 throw "A node with this value does not exist in the tree";
             }
-            moves[0].push(node.uuid);
+            moves[0].push({"type": "visit", uuid: node.uuid});
 
             if (value === node.name) {
                 if (node.children == null) {
@@ -171,7 +201,9 @@ export default class BinarySearchTree {
             }
             else if (value < node.name) {
                 if (node.children !== null) {
+                    moves[0].push({"type": "left", uuid: node.children[0].uuid});
                     let newNode = helper(node.children[0], value, moves);
+                    
                     // checks if delete this node should result in children being null or NullTreeNode
                     if (node.children[1].isNull() && newNode.isNull()) {
                         node.children = null;
@@ -185,7 +217,9 @@ export default class BinarySearchTree {
             }
             else {
                 if (node.children !== null) {
+                    moves[0].push({"type": "right", uuid: node.children[1].uuid});
                     let newNode = helper(node.children[1], value, moves);
+                    
                     // checks if delete this node should result in children being null or NullTreeNode
                     if (node.children[0].isNull() && newNode.isNull()) {
                         node.children = null;
