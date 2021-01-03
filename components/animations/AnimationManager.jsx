@@ -35,11 +35,11 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
         let resObj = {};
 
         if (animationElements) {
-            for (let { id, initialAnimationProp, defaultAnimationProp } of animationElements) {
-                if (!initialAnimationProp && !defaultAnimationProp) { // Catch dev error (must provide props)
+            for (let { id, initialAnimationProps, defaultAnimationProps } of animationElements) {
+                if (!initialAnimationProps && !defaultAnimationProps) { // Catch dev error (must provide props)
                     throw new Error(`Animation element with id ${id} does not have an initialAnimationProp or defaultAnimationProp.`);
                 }
-                resObj[id] = initialAnimationProp ?? defaultAnimationProp;
+                resObj[id] = initialAnimationProps ?? defaultAnimationProps;
             }
         }
         return resObj;
@@ -69,12 +69,12 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
 
             /**
              * Add initial props based on the first animation step, if available. Otherwise, when 
-             * generating initial animation props, will use defaultAnimationProp instead! (view above
+             * generating initial animation props, will use defaultAnimationProps instead! (view above
              * at definition of initialAnimationProps.)
              */ 
             animationElements.forEach((elementObj) => {
                 if (animationSteps[0][elementObj.id]) {
-                    elementObj.initialAnimationProp = animationSteps[0][elementObj.id];
+                    elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
                 }
             })
 
@@ -84,7 +84,7 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
             /**
              * Make sure that we have consumed the last step update by setting this variable to false.
              * This will ensure that the next time we trigger isAnimatingMode, we don't go through
-             * this process of updating steps and animation elements. 
+             * this process of updating steps and animation elements if it doesn't need to be updated!
              */
             updateStepsRef.current = false; 
         }
@@ -92,8 +92,8 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
 
     return (
         isAnimatingMode && steps && animationElements && (
-            // <AnimationManagerInnerTest steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
-            <AnimationManagerInner steps={steps} animationElements={animationElements} initialAnimationProps={initialAnimationProps} attachElementsRef={attachElementsRef} />
+            <AnimationManagerInnerTest steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
+            // <AnimationManagerInner steps={steps} animationElements={animationElements} initialAnimationProps={initialAnimationProps} attachElementsRef={attachElementsRef} />
         )
     )
 }                

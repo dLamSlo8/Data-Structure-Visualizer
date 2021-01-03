@@ -4,13 +4,48 @@ export const mapTraversalToPosition = (traversalArray, d3TreeRef, type) => {
     if (type !== 'Level-order') {
         const traversalUuids = traversalArray[1];
 
-        return traversalUuids.map((obj) => {
-            let uuid = Object.values(obj)[0];
-    
-            const node = d3TreeRef.descendants().find((node) => node.data.uuid === uuid);
-    
-            return { xy: [node?.x, node?.y] };
+        const nodes = d3TreeRef.descendants();
+        let currentNode = nodes[0];
+
+        let res = traversalUuids.map(({ uuid, type }) => {
+            switch (type) {
+                case 'visit':
+                    break;
+                case 'left':
+                    if (currentNode.children) {
+                        currentNode = currentNode.children[0];
+                    }
+                    break;
+                case 'right':
+                    if (currentNode.children) {
+                        currentNode = currentNode.children[1];
+                    }
+                    break;
+                case 'parent':
+                    currentNode = currentNode.parent;
+                    break;
+                default: 
+                    break;
+            }
+
+            return { 
+                'traversal-ring': {
+                    state: {
+                        xy: [currentNode?.x, currentNode?.y]
+                    }  
+                }
+
+            };
         });
+        res.unshift({ 
+            'traversal-ring': {
+                state: {
+                    xy: [nodes[0].x, nodes[0].y] 
+                }
+            }
+        });
+
+        return res;
     }
     else {
         const traversalUuids = traversalArray[1];

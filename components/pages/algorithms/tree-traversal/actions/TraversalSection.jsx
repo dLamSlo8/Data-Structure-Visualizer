@@ -50,6 +50,8 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     break;
             }
 
+            console.log(traversalRes);
+
             return traversalRes;
         };
 
@@ -58,32 +60,61 @@ function TraversalSection({ tree, sectionCollapsed }) {
 
     useEffect(() => {
         animationStepGeneratorRef.current = (algorithmRes) => { // TODO: Change according to new format (i.e. { uuid: <uuid>, type: <type> }) when it is ready
-            let positions = mapTraversalToPosition(algorithmRes, d3StructureRef.current, traversalType);
+            let steps = mapTraversalToPosition(algorithmRes, d3StructureRef.current, traversalType);
 
             let traversalArray = algorithmRes[1];
 
-            for (let idx = 0; idx < positions.length; idx++) {
-                let traversalObj = traversalArray[idx];
-                let uuid = Object.values(traversalObj)[0];
-                let textValue = Object.keys(traversalObj)[0];
-
-                if (textValue !== 'parent') {
-                    positions[idx][`${uuid}-${textValue === 'visit' ? 'root' : textValue}`] = 'red';
+            let currentUuid = d3StructureRef.current.descendants()[0].data.uuid; // Always begin with root uuid.
+            let positionsIdx = 0;
+            for (let { uuid, type } of traversalArray) {
+                if (type !== 'parent') {
+                    steps[positionsIdx][`${currentUuid}-${type === 'visit' ? 'root' : type}`] = {
+                        state: {
+                            fill: 'red'
+                        },
+                        config: {
+                            duration: 0
+                        }
+                    };
                 }
+                
+                currentUuid = uuid;
+                positionsIdx++;
             }
-            console.log(traversalArray);
+            // }
+            // for (let idx = 0; idx < positions.length; idx++) {
+            //     let { uuid, type } = traversalArray[idx];
 
-            console.log(positions);
-            return positions;
+            //     if (type !== 'parent') {
+            //         positions[idx][`${uuid}-${type === 'visit' ? 'root' : type}`] = 'red';
+            //     }
+            // }
+
+            return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {
             let resArr = [{
-                id: 'xy',
+                id: 'traversal-ring',
                 component: TreeTraversalAnimationElement,
-                animationProp: 'xy'
             }];
 
             if (traversalType !== 'Level-order') {
+                let textContent;
+    
+                switch (traversalType) {
+                    case 'Preorder':
+                        textContent = ['root', 'left', 'right'];
+                        break;
+                    case 'Inorder':
+                        textContent = ['left', 'root', 'right'];
+                        break;
+                    case 'Postorder':
+                        textContent = ['left', 'right', 'root'];
+                        break;
+                    default: 
+                        break;
+                }
+
                 d3StructureRef.current.descendants().filter((node) => node.data.name !== null).forEach((node) => {
                     const toTextNode = (text, idx) => ({
                         id: `${node.data.uuid}-${text}`,
@@ -93,25 +124,11 @@ function TraversalSection({ tree, sectionCollapsed }) {
                             x: idx === 0 ? node.x - 50 : (idx === 1 ? node.x : node.x + 50),
                             y: node.y - 30
                         },
-                        defaultAnimationProp: 'black',
-                        animationProp: 'fill'
+                        defaultAnimationProps: {
+                            fill: 'black'
+                        },
+                        toggleableProps: ['fill']
                     });
-    
-                    let textContent;
-    
-                    switch (traversalType) {
-                        case 'Preorder':
-                            textContent = ['root', 'left', 'right'];
-                            break;
-                        case 'Inorder':
-                            textContent = ['left', 'root', 'right'];
-                            break;
-                        case 'Postorder':
-                            textContent = ['left', 'right', 'root'];
-                            break;
-                        default: 
-                            break;
-                    }
     
                     resArr = resArr.concat(textContent.map((val, idx) => toTextNode(val, idx)));
                 });
