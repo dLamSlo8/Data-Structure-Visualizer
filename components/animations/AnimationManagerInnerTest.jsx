@@ -56,8 +56,9 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
      * current step.
      */
     const handleRun = async () => {
+        console.log(isAnimatingMode);
         if (isAnimatingMode && steps) { 
-            console.log(animationState);
+            console.log('no way');
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 await resetAnimation();
                 setCurrentStep(0);
@@ -91,9 +92,7 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
      * change animation state from finished to paused.
      */
     const handleStepBack = async () => {
-        console.log('stepping back');
         if (currentStep > 0) {
-            console.log(isAnimating);
             let animationRes = await setAnimation((idx) => ({
                 ...getStep(idx, isAnimating ? currentStep : currentStep - 1),
                 config: { duration: 0 }
@@ -210,6 +209,11 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
     useEffect(() => {
         setCurrentStep(0);
         setAnimationState('running');
+
+        return () => {
+            stopAnimation();
+            animationMethodsRef.current = null;
+        }
     }, []);
 
 

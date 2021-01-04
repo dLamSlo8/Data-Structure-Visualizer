@@ -74,7 +74,10 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     let { uuid, type } = traversalArray[idx];
 
                     if (type !== 'parent') {
-                        activeTextElements[`${currentUuid}-${type === 'visit' ? 'root' : type}`] = positionsIdx;
+                        let id = `${currentUuid}-${type === 'visit' ? 'root' : type}`;
+                        if (!activeTextElements[id]) {
+                            activeTextElements[id] = positionsIdx;
+                        }
                     }
 
                     currentUuid = uuid;
@@ -107,15 +110,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     }
                 }
             }
-            
-            // }
-            // for (let idx = 0; idx < positions.length; idx++) {
-            //     let { uuid, type } = traversalArray[idx];
 
-            //     if (type !== 'parent') {
-            //         positions[idx][`${uuid}-${type === 'visit' ? 'root' : type}`] = 'red';
-            //     }
-            // }
             console.log(steps);
             return steps;
         };
@@ -150,11 +145,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                             value: `${text[0].toUpperCase()}${text.slice(1)}`,
                             x: idx === 0 ? node.x - 50 : (idx === 1 ? node.x : node.x + 50),
                             y: node.y - 30
-                        },
-                        defaultAnimationProps: {
-                            fill: 'black'
-                        },
-                        toggleableProps: ['fill']
+                        }
                     });
     
                     resArr = resArr.concat(textContent.map((val, idx) => toTextNode(val, idx)));

@@ -26,24 +26,24 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
     const [steps, setSteps] = useState(null);
     const [animationElements, setAnimationElements] = useState(null);
 
-    /**
-     * Object that represents initial animation props (essentially based on
-     * the first step.) If no initial animation prop is given, will rely on the 
-     * default animation prop supplied by 'defaultAnimationProp'. 
-     */
-    const initialAnimationProps = useMemo(() => {
-        let resObj = {};
+    // /**
+    //  * Object that represents initial animation props (essentially based on
+    //  * the first step.) If no initial animation prop is given, will rely on the 
+    //  * default animation prop supplied by 'defaultAnimationProp'. 
+    //  */
+    // const initialAnimationProps = useMemo(() => {
+    //     let resObj = {};
 
-        if (animationElements) {
-            for (let { id, initialAnimationProps, defaultAnimationProps } of animationElements) {
-                if (!initialAnimationProps && !defaultAnimationProps) { // Catch dev error (must provide props)
-                    throw new Error(`Animation element with id ${id} does not have an initialAnimationProp or defaultAnimationProp.`);
-                }
-                resObj[id] = initialAnimationProps ?? defaultAnimationProps;
-            }
-        }
-        return resObj;
-    }, [animationElements]);
+    //     if (animationElements) {
+    //         for (let { id, initialAnimationProps, defaultAnimationProps } of animationElements) {
+    //             if (!initialAnimationProps && !defaultAnimationProps) { // Catch dev error (must provide props)
+    //                 throw new Error(`Animation element with id ${id} does not have an initialAnimationProp or defaultAnimationProp.`);
+    //             }
+    //             resObj[id] = initialAnimationProps ?? defaultAnimationProps;
+    //         }
+    //     }
+    //     return resObj;
+    // }, [animationElements]);
 
     /**
      * Effect
@@ -77,8 +77,6 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
                     elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
                 }
             })
-
-            console.log(animationSteps);
 
             setAnimationElements(animationElements);
             setSteps(animationSteps);

@@ -18,7 +18,6 @@ import DropdownSelect from '@components/dropdown/DropdownSelect';
 function ControlSection({ extraSettings, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
 
-    console.log(animationState);
     const running = animationState === 'running';
     const enableSteps = isAnimatingMode && animationState && animationState !== 'running';
     const enableSkipToEnd = isAnimatingMode && animationState !== 'finished';
