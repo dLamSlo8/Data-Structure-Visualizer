@@ -1,100 +1,102 @@
 import * as d3 from 'd3';
 
-export const mapTraversalToPosition = (traversalArray, d3TreeRef, type) => {
-    // if (type !== 'Level-order') {
-    //     const traversalUuids = traversalArray[1];
-
-    //     const nodes = d3TreeRef.descendants();
-    //     let currentNode = nodes[0];
-
-    //     let res = traversalUuids.map(({ uuid, type }) => {
-    //         switch (type) {
-    //             case 'visit':
-    //                 break;
-    //             case 'left':
-    //                 if (currentNode.children) {
-    //                     currentNode = currentNode.children[0];
-    //                 }
-    //                 break;
-    //             case 'right':
-    //                 if (currentNode.children) {
-    //                     currentNode = currentNode.children[1];
-    //                 }
-    //                 break;
-    //             case 'parent':
-    //                 currentNode = currentNode.parent;
-    //                 break;
-    //             default: 
-    //                 break;
-    //         }
-
-    //         return { 
-    //             'traversal-ring': {
-    //                 state: {
-    //                     xy: [currentNode?.x, currentNode?.y]
-    //                 }  
-    //             }
-
-    //         };
-    //     });
-    //     res.unshift({ 
-    //         'traversal-ring': {
-    //             state: {
-    //                 xy: [nodes[0].x, nodes[0].y] 
-    //             }
-    //         }
-    //     });
-
-    //     return res;
-    // }
-    const traversalUuids = traversalArray[1];
-    const nodes = d3TreeRef.descendants();
-    if (type !== 'Level-order') {
-        let foundNodes = {};
-
-        let res = traversalUuids.map(({ uuid }) => {
-            let node;
-    
-            if (foundNodes[uuid]) {
-                node = foundNodes[uuid];
-            }
-            else {
-                node = nodes.find((node) => node.data.uuid === uuid);
-                foundNodes[uuid] = node;
-            }
-    
-            return { 
-                'traversal-ring': {
-                    state: {
-                        xy: [node?.x, node?.y] 
-                    }
-                }
-            }
-        });
-        res.unshift({ 
-            'traversal-ring': {
-                state: {
-                    xy: [nodes[0].x, nodes[0].y] 
-                }
-            }
-        });
-
-        return res;
+/**
+ * Generates the preorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Preorder traversal in xy-coordinates
+ */
+export const preOrderTraversalD3 = (d3TreeRef) => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+        
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
     }
-    else {
-        return traversalUuids.map((uuid) => {
-            let node = nodes.find((node) => node.data.uuid === uuid);
+    
+    let res = [];
 
-            return {
-                'traversal-ring': {
-                    state: {
-                        xy: [node?.x, node?.y]
-                    }
-                }
-            }
-        })
+    helper(d3TreeRef, res);
+    return res;
+}
+
+/**
+ * Generates the inorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Inorder traversal in xy-coordinates
+ */
+export const inOrderTraversalD3 = (d3TreeRef) => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+
+        if (node.children) {
+            helper(node.children[0], l);
+        }
+        l.push({ x: node.x, y: node.y });
+        if (node.children) {
+            helper(node.children[1], l);
+        }
     }
-};
+    
+    let res = [];
+
+    helper(d3TreeRef, res);
+    return res;
+}
+
+/**
+ * Generates the postorder traversal of the current d3 tree
+ * @param d3TreeRef Current d3 tree
+ * 
+ * @returns {Array} Postorder traversal in xy-coordinates
+ */
+export const postOrderTraversalD3 = (d3TreeRef) => {
+    function helper(node, l) {
+        if (!node.data.name) { 
+            return;
+        }
+        if (node.children) {
+            helper(node.children[0], l);
+            helper(node.children[1], l);
+        }
+
+        l.push({ x: node.x, y: node.y });
+    }
+    
+    let res = [];
+
+    helper(d3TreeRef, res);
+    return res;
+}
+
+/**
+ * Returns D3 representation of tree node.
+ * @param node - root node of the tree structure
+ */
+export const nodeToD3 = (node) => {
+    if (node === null) {
+        return { name: null, uuid: null };
+    }
+
+    if (node.left === null && node.right === null) { // End case
+        return { name: node.value, uuid: node.uuid };
+    }
+
+    let data = { name: node.value, uuid: node.uuid, children: [
+        nodeToD3(node.left),
+        nodeToD3(node.right)
+    ] };
+    
+    return data;
+}
 
 /**
 * Styles the currently active node
@@ -120,44 +122,50 @@ export const styleActiveNode = (activeUuid) => {
 * @returns {Object} D3 tree
 */
 export const generateD3Tree = (rootNode, width) => {
-    if (rootNode === null || rootNode === undefined) {
-        return null;
-    }
+    const data = nodeToD3(rootNode);
 
     // Generate binary tree using d3.
-    const hierarchyNode = d3.hierarchy(rootNode);
+
+    const hierarchyNode = d3.hierarchy((data));
     const height = hierarchyNode.height * 100;
 
-    const tree = d3.tree().size([width, height])(hierarchyNode);
+    const tree = d3.tree().size([width, height])(d3.hierarchy(data));
+    
     return tree;
 }
 
-
 /**
  * Draws tree for #tree selector.
- * @param attachRef - ref representing dom element to attach tree to
  * @param d3TreeRef - ref representing current d3 tree
  * @param width - width of canvas
  * @param height - height of canvas
- * @param transformRef - ref to keep track of current transform of canvas
+ * @param animationElementRef - ref to keep track of transform for traversal animation element
  */
-export const drawD3Tree = (svgRef, d3TreeRef, width, height) => {
+export const drawD3Tree = (d3TreeRef, width, height, animationElementRef) => {
+    d3.select('#tree-svg').remove(); // Remove previous tree if any. 
 
-    let canvas = d3.select(svgRef);
+    const canvas = d3.select('#tree')
+        .append('svg')
+        .attr('id', 'tree-svg')
+        .attr('cursor', 'grab')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', 'translate(0, 30)');
 
-    canvas.selectAll('g > *').remove(); // Remove previous nodes and links if any
     // Sets up zoom and pan. 
-    canvas.call(d3.zoom()
+    d3.select('#tree-svg').call(d3.zoom()
         .extent([[0, 0], [width, height + 50]])
         .scaleExtent([0.5, 8])
         .filter(function filter(event) { // Only allows zoom and pan when holding down shift key (on non-mobile screens!)
             return document.documentElement.clientWidth <= 640 || event.shiftKey;
         })
         .on('zoom', function zoomed({transform}) {
-            d3.select(svgRef).select('g').attr('transform', transform);
+            animationElementRef.current = transform;
+            d3.selectAll('#tree-svg > g')
+                .attr('transform', transform);
         }))
 
-    canvas = canvas.select('g'); // Enter the <g> tag within <svg>.
 
     canvas.append('g')
         .attr('class', 'links');
@@ -202,7 +210,10 @@ export const drawD3Tree = (svgRef, d3TreeRef, width, height) => {
         .attr('y', function(d) { return d.y; })
         .attr('text-anchor', 'middle')
         .attr('dy', '6')
-        .attr('font-family', '"Inter", serif');
+        .attr('font-family', '"Lora", serif');
+
+
+    return { nodes };
 }
 
 /**

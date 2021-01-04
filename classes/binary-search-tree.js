@@ -12,8 +12,13 @@ export default class BinarySearchTree {
      * Creates new binary search tree
      * @param {TreeNode} [root = null] - root node of tree structure
      */
-    constructor(root) {
-        this.root = root || null;
+    constructor(root, tree) {
+        if (tree) {
+            this.root = tree.root ? new TreeNode(null, null, tree.root) : null;
+        }
+        else {
+            this.root = root || null;
+        }
     }
     
     /**
@@ -34,27 +39,51 @@ export default class BinarySearchTree {
          * @param {Array} moves - array to store moves we took
          */
         function helper(node, value, uuid, moves) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 let newNode = new TreeNode(value, uuid);
-                moves.push(newNode.uuid);
                 return newNode;
             }
-            moves.push(node.uuid);
+            moves.push({"type": "visit", uuid: node.uuid});
             if (value <= node.name) {
                 // make sure children exists
                 if (node.children !== null) {
-                    node.setLeft(helper(node.children[0], value, uuid, moves));
+                    if (node.children[0].uuid !== null) {
+                        moves.push({"type": "left", uuid: node.children[0].uuid});
+                        node.setLeft(helper(node.children[0], value, uuid, moves));
+                    }
+                    else {
+                        let newNode = helper(node.children[0], value, uuid, moves);
+                        moves.push({"type": "left", uuid: newNode.uuid});
+                        moves.push({"type": "visit", uuid: newNode.uuid});
+                        node.setLeft(newNode);
+                    }
                 } else {
                     // pass in null as node so we insert at left
-                    node.setLeft(helper(null, value, uuid, moves));
+                    let newNode = helper(null, value, uuid, moves)
+                    node.setLeft(newNode);
+                    moves.push({"type": "left", uuid: newNode.uuid});
+                    moves.push({"type": "visit", uuid: newNode.uuid});
                 }
             } else {
                 // makes sure children exists
                 if (node.children !== null) {
-                    node.setRight(helper(node.children[1], value, uuid, moves));
+                    if (node.children[1].uuid !== null) {
+                        moves.push({"type": "right", uuid: node.children[1].uuid});
+                        node.setRight(helper(node.children[1], value, uuid, moves));
+                    }
+                    else {
+                        let newNode = helper(node.children[1], value, uuid, moves);
+                        moves.push({"type": "right", uuid: newNode.uuid});
+                        moves.push({"type": "visit", uuid: newNode.uuid});
+                        node.setRight(newNode);
+                    }
+                    
                 } else {
                     // pass in null as node so we insert at right
-                    node.setRight(helper(null, value, uuid, moves));
+                    let newNode = helper(null, value, uuid, moves)
+                    node.setRight(newNode);
+                    moves.push({"type": "right", uuid: newNode.uuid});
+                    moves.push({"type": "visit", uuid: newNode.uuid});
                 } 
             }
             return node;
@@ -63,7 +92,8 @@ export default class BinarySearchTree {
         
         // if tree doesn't exist create a new node;
         if (this.root === null) {
-            throw ("Please create a tree!");
+            this.root = new TreeNode(value, uuid);
+            return [{"type": "visit", "uuid": uuid}];
         }
 
         let moves = [];
@@ -84,16 +114,19 @@ export default class BinarySearchTree {
          * @param {Array} moves - array to store moves we took
          */
         function helper(node, value, moves) {
-            if (node === null || node === NullTreeNode) {
+            if (node === null || node.isNull()) {
                 throw ("A node with this value does not exist in the tree");
             }
-            moves.push(node.uuid);
+            moves.push({"type": "visit", "uuid": node.uuid});
 
             if (node.name === value) {
                 return;
             }
             else if (value <= node.name) {
                 if (node.children) {
+                    if (!node.children[0].isNull()) {
+                        moves.push({"type": "left", "uuid": node.children[0].uuid});
+                    }
                     helper(node.children[0], value, moves);
                 } else {
                     helper(null, value, moves);
@@ -101,6 +134,9 @@ export default class BinarySearchTree {
             }
             else {
                 if (node.children) {
+                    if (!node.children[1].isNull()) {
+                        moves.push({"type": "right", "uuid": node.children[1].uuid});
+                    }
                     helper(node.children[1], value, moves);
                 } else {
                     helper(null, value, moves);
@@ -108,10 +144,6 @@ export default class BinarySearchTree {
             }
         }
 
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
-        }
 
         let moves = [];
         helper(this.root, value, moves);
@@ -122,12 +154,12 @@ export default class BinarySearchTree {
     /**
      * Returns array of steps that occur from deleting a node in the tree
      * as well as the new tree. Delete first node reached when duplicate value.
-     * @param {TreeNode} node - root node of the tree
      * @param {int} value - value of node to delete
      * @return {Array} - array of uuid that occur from deleting a node. If need to move
      *                 a node, last index in array is object of {id: id}
      */
     deleteNode(value) {
+        let type = {};
         /**
          * Deletes node in tree
          * @param {TreeNode} node - root node of tree structure
@@ -139,33 +171,41 @@ export default class BinarySearchTree {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 throw "A node with this value does not exist in the tree";
             }
-            moves.push(node.uuid);
+            moves[0].push({"type": "visit", uuid: node.uuid});
 
             if (value === node.name) {
                 if (node.children == null) {
+                    type['type'] = 0;
                     return NullTreeNode;
                 }
-                else if (node.children[0] === null || node.children[0] === NullTreeNode) {
+                else if (node.children[0] === null || node.children[0].isNull()) {
+                    moves[1].push(node.children[1].uuid);
+                    type['type'] = 1;
                     return node.children[1];
                 }
-                else if (node.children[1] === null || node.children[1] === NullTreeNode) {
+                else if (node.children[1] === null || node.children[1].isNull()) {
+                    moves[1].push(node.children[0].uuid);
+                    type['type'] = 1;
                     return node.children[0];
                 }
                 else {
-                    let tmp = inorderSuccessor(node);
-                    moves.push({"id": tmp.uuid});
+                    let tmp = inorderSuccessor(node, moves);
+                    //moves[1].push(tmp.uuid);
                     tmp.children = [];
                     tmp.children[0] = node.children[0];
                     tmp.children[1] = node.children[1];
                     node.children = null;
+                    type['type'] = 2;
                     return tmp;
                 }
             }
             else if (value < node.name) {
                 if (node.children !== null) {
+                    moves[0].push({"type": "left", uuid: node.children[0].uuid});
                     let newNode = helper(node.children[0], value, moves);
+                    
                     // checks if delete this node should result in children being null or NullTreeNode
-                    if (node.children[1] === NullTreeNode && newNode === NullTreeNode) {
+                    if (node.children[1].isNull() && newNode.isNull()) {
                         node.children = null;
                     } else {
                         node.setLeft(newNode);
@@ -177,9 +217,11 @@ export default class BinarySearchTree {
             }
             else {
                 if (node.children !== null) {
+                    moves[0].push({"type": "right", uuid: node.children[1].uuid});
                     let newNode = helper(node.children[1], value, moves);
+                    
                     // checks if delete this node should result in children being null or NullTreeNode
-                    if (node.children[0] === NullTreeNode && newNode === NullTreeNode) {
+                    if (node.children[0].isNull() && newNode.isNull()) {
                         node.children = null;
                     } else {
                         node.setRight(newNode);
@@ -195,11 +237,11 @@ export default class BinarySearchTree {
         /**
          * Returns node of inorder successor of node and removes that node from
          * tree
-         * @param {TreeNode} node - root node of the tree structure
          * @param {TreeNode} nodeForSuccessor - node that we want to find succesor for
+         * @param {Array} moves - an array that holds the direction of uuid to get to a node
          * @return {TreeNode} - inorder successor of node
          */
-        function inorderSuccessor(nodeForSuccessor) {
+        function inorderSuccessor(nodeForSuccessor, moves) {
             /**
              * Finds the minimum node and removes that node from tree
              * @param {TreeNode} node - node we want to find min of
@@ -207,21 +249,25 @@ export default class BinarySearchTree {
              * @param {TreeNode} isLeftChild - Parent of node if node is a left child
              */
             function findMin(node, isRightChild, isLeftChild) {
+                moves[1].push(node.uuid);
                 if (node.children !== null) {
+                    // if this is the direct right child of node to delete, do not add
+                    // moves[1].push(node.uuid);
+                    
                     // found last node in left branch
-                    if (node.children[0] === null || node.children[0] === NullTreeNode) {
+                    if (node.children[0] === null || node.children[0].isNull()) {
                         // successor has a right child, transfer successor's right child to parent
 
                         if (isRightChild !== null && isLeftChild === null) {
                             // successor has a right child, which means it's right child must be set to successor's right child
-                            if (node.children[1] !== NullTreeNode) {
+                            if (!node.children[1].isNull()) {
                                 //attach this node's right children to its parent
                                 isRightChild.children[1] = node.children[1];
                             }
                         }
                         else if (isRightChild === null && isLeftChild !== null) {
                             // a left child can have right have right children it needs to attach to parent
-                            if (node.children[1] !== NullTreeNode) {
+                            if (!node.children[1].isNull()) {
                                 //attach this node's right children to its parent
                                 isLeftChild.children[0] = node.children[1];
                             }
@@ -252,27 +298,24 @@ export default class BinarySearchTree {
                 }
                 else if (isRightChild === null && isLeftChild !== null) {
                     //check if parent does not have a left child
-                    if (isLeftChild.children[1] === NullTreeNode) {
+                    if (isLeftChild.children[1].isNull()) {
                         isLeftChild.children = null;
                     } else{
                         isLeftChild.children[0] = NullTreeNode;
                     }
                 }
+
                 return node
             }
 
             return findMin(nodeForSuccessor.children[1], nodeForSuccessor, null);
         }
 
-        // if tree doesn't exist create a new node;
-        if (this.root === null) {
-            throw ("Please create a tree!");
-        }
-
-        let moves = [];
+        let moves = [[],[]];
         let result = helper(this.root, value, moves);
-        this.root = ( result === NullTreeNode) ? null: result;
+        this.root = ( result.isNull()) ? null: result;
         
-        return moves;
+        type['moves'] = moves;
+        return type;
     }
 }
