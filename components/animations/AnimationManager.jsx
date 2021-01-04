@@ -56,8 +56,6 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
     useEffect(() => {
         if (isAnimatingMode !== null && !isAnimatingMode) { // Reset animation state if turned off.
             setAnimationState(null);
-            setAnimationElements(null);
-            setSteps(null);
         }
         else if (updateStepsRef.current && isAnimatingMode) { 
             /**
@@ -93,7 +91,7 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
     }, [isAnimatingMode]);
 
     return (
-        isAnimatingMode && steps && animationElements && (
+        isAnimatingMode && steps && animationElements && !updateStepsRef.current && (
             <AnimationManagerInnerTest steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
             // <AnimationManagerInner steps={steps} animationElements={animationElements} initialAnimationProps={initialAnimationProps} attachElementsRef={attachElementsRef} />
         )
