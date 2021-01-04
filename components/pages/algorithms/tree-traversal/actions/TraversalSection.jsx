@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 
 import AnimationContext from '@contexts/AnimationContext';
 import D3Context from '@contexts/D3Context';
-import { mapTraversalToPosition } from '@d3/tree';
+import { mapTraversalToPosition } from '@d3/tree-traversal';
 
 import DropdownSelect from '@components/dropdown/DropdownSelect';
 import ControlSection from '@components/animations/controls/ControlSection';
-import Text from '@components/animations/elements/tree-traversal/Text';
-import TreeTraversalAnimationElement from '../visualization/TreeTraversalAnimationElement';
+import Text from '@components/animations/elements/Text';
+import TraversalAnimationElement from '@components/animations/elements/TraversalAnimationElement';
 
 /**
  * Action section for tree traversal
@@ -23,7 +23,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
     /**
      * Effect
      * Updates step generator function based on traversal type.
-     * This is what is passed into the animationElementsGenerator and
+     * The result what is passed into the animationElementsGenerator and
      * animationStepsGenerator functions, as more often than not, both the elements required
      * for animation and the steps generated for animation rely on what is 
      * returned from the algorithm we are working on. 
@@ -50,31 +50,35 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     break;
             }
 
-            // console.log(traversalRes);
-
             return traversalRes;
         };
 
         updateStepsRef.current = true; // Make sure to enable updating steps on next animating mode toggle.
     }, [traversalType, tree]);
 
+    /**
+     * Effect
+     * When a new traversal type is selected, we update the animation step and elements
+     * generator functions to match. 
+     */
     useEffect(() => {
         animationStepGeneratorRef.current = (algorithmRes, animationElements) => { 
-            let steps = mapTraversalToPosition(algorithmRes, d3StructureRef.current, traversalType);
+            let steps = mapTraversalToPosition(algorithmRes[1], d3StructureRef.current, traversalType);
             let textAnimationElements = animationElements.slice(1);
 
-            if (traversalType !== 'Level-order') {
+            if (traversalType !== 'Level-order') { // If level order, we don't need to add text element steps.
                 let traversalArray = algorithmRes[1];
 
                 let currentUuid = d3StructureRef.current.descendants()[0].data.uuid; // Always begin with root uuid.
                 let positionsIdx = 1;
-                let activeTextElements = {};
+                let activeTextElements = {}; // Mark where every text element becomes active
 
                 for (let idx = 0; idx < traversalArray.length; idx++) {
                     let { uuid, type } = traversalArray[idx];
 
                     if (type !== 'parent') {
                         let id = `${currentUuid}-${type === 'visit' ? 'root' : type}`;
+                        
                         if (!activeTextElements[id]) {
                             activeTextElements[id] = positionsIdx;
                         }
@@ -85,6 +89,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     positionsIdx++;
                 }
 
+                // For every text element, fill in steps array with state depending on when they become active.
                 for (let { id } of textAnimationElements) {
                     let activeIdx = activeTextElements[id];
 
@@ -117,7 +122,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
         animationElementGeneratorRef.current = (algorithmRes) => {
             let resArr = [{
                 id: 'traversal-ring',
-                component: TreeTraversalAnimationElement,
+                component: TraversalAnimationElement,
             }];
 
             if (traversalType !== 'Level-order') {

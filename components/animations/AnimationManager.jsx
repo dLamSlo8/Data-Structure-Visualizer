@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 
 import AnimationContext from '@contexts/AnimationContext';
 
-import AnimationManagerInnerTest from './AnimationManagerInnerTest';
+import AnimationRenderer from './AnimationRenderer';
 
 // TODO: Consider having multiple props associated with a component in case they want that behavior. Maybe append prop name to component id? Could be easy implementation if using useSprings.
 // TODO: Decide on whether to use useSprings or not (having separate configuration, esp timing.)
@@ -20,7 +20,7 @@ import AnimationManagerInnerTest from './AnimationManagerInnerTest';
  *                      TO-DO: Extend functionality of initConfig to match these requirements!
  */
 export default function AnimationManager({ attachElementsRef, initConfig }) {
-    const { isAnimatingMode, setAnimationState, stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
+    const { isAnimatingMode, setAnimationState, algorithmStepsRef, stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
     const [animationElements, setAnimationElements] = useState(null);
@@ -62,14 +62,12 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
              * whenever steps need to be updated, there probably need to be new elements with 
              * different initial animation props.
              */
-            const steps = stepGeneratorRef.current();
+            const steps = algorithmStepsRef.current ?? stepGeneratorRef.current();
             let animationElements = animationElementGeneratorRef.current(steps);
             const animationSteps = animationStepGeneratorRef.current(steps, animationElements);
 
             /**
-             * Add initial props based on the first animation step, if available. Otherwise, when 
-             * generating initial animation props, will use defaultAnimationProps instead! (view above
-             * at definition of initialAnimationProps.)
+             * Add initial props based on the first animation step.
              */ 
             animationElements.forEach((elementObj) => {
                 if (animationSteps[0][elementObj.id]) {
@@ -91,7 +89,7 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
 
     return (
         isAnimatingMode && steps && animationElements && !updateStepsRef.current && (
-            <AnimationManagerInnerTest steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
+            <AnimationRenderer steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
         )
     )
 }                

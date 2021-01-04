@@ -1,19 +1,30 @@
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import AnimationContext from '@contexts/AnimationContext';
 import ActionSubsection from '@components/ActionSubsection';
 
 // reuse initsection from tree traversal
 import InitSection from '@components/pages/algorithms/tree-traversal/actions/InitSection';
 import ManageSection from './ManageSection';
+import TraversalAnimationElement from '@components/animations/elements/TraversalAnimationElement';
 
 import BinarySearchTree from '@classes/binary-search-tree';
 import TreeNode from '@classes/tree-node';
+import D3Context from '@contexts/D3Context';
 
 /**
  * @param {BinarySearchTree} - Binary Search Tree
- * @param {function} - function to set statea of tree
+ * @param {function} - function to set state of tree
  */
 function BinarySearchTreeActions({tree, setTree}){
+    const { d3StructureRef } = useContext(D3Context);
+    const { setAnimatingMode, updateStepsRef, algorithmStepsRef, animationStepGeneratorRef, animationElementGeneratorRef } = useContext(AnimationContext);
+
+    const handleTreeUpdate = () => {
+        updateStepsRef.current = true;
+        setAnimatingMode(true);
+    }
 
     /**
      * Initialize BST
@@ -31,13 +42,22 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleDelete = (value) => {
         value = parseInt(value);
-        // store moves as local var not sure what next
-        let moves = tree.deleteNode(value);
+
+        algorithmStepsRef.current = tree.deleteNode(value);
+        animationElementGeneratorRef.current = (algorithmRes) => {
+            let resArr = [{
+                id: 'traversal-ring',
+                component: TraversalAnimationElement,
+            }];
+        };
+        animationStepGeneratorRef.current = (algorithmRes, elements) => {
+            console.log(d3StructureRef.current);
+        }
         console.log(tree)
         let newTree = new BinarySearchTree(null, tree)
-        console.log(newTree)
+        console.log(algorithmStepsRef.current);
         setTree(newTree);
-        return moves;
+        handleTreeUpdate();
     }
 
     /**
@@ -48,9 +68,15 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleInsert = (value) => {
         value = parseInt(value);
-        let moves = tree.insertNode(value);
+        algorithmStepsRef.current = tree.insertNode(value);
+        // animationElementGeneratorRef.current = (algorithmRes) => {
+
+        // };
+        // animationStepGeneratorRef.current = (algorithmRes, elements) => {
+        //     console.log(d3StructureRef.current);
+        // }
         setTree(new BinarySearchTree(null, tree));
-        return moves;
+        // handleTreeUpdate();
     }
 
     /**

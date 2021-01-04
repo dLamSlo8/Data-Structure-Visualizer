@@ -10,7 +10,7 @@ import AnimationLog from './AnimationLog';
 /**
  * @state {number} currentStep - Number that represents the step we are currently on.
  */
-function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef }) {
+function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, updateStepsRef } = useContext(AnimationContext);
     const [currentStep, setCurrentStep] = useState(0);
     const [isAnimating, setAnimating] = useState(false);
@@ -230,7 +230,7 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
                 ReactDOM.createPortal(
                     <>
                     {
-                        animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }, idx) => {
+                        animationElements.map(({ id, component: AnimationComponent, componentProps }, idx) => {
                                 return <AnimationComponent
                                 key={id}
                                 {...springs[idx]}
@@ -245,4 +245,4 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
     )
 }
 
-export default AnimationManagerInnerTest;
+export default AnimationRenderer;

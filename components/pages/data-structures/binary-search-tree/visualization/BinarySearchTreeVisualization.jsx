@@ -15,6 +15,7 @@ import AnimationManager from '@components/animations/AnimationManager';
  */
 function BinarySearchTreeVisualization({tree, width, height}) {
     const { d3StructureRef } = useContext(D3Context);
+    const { isAnimatingMode } = useContext(AnimationContext); 
     const svgTreeRef = useRef(null);
     const gRef = useRef(null);
     /**
@@ -24,10 +25,11 @@ function BinarySearchTreeVisualization({tree, width, height}) {
      */
     useEffect(() => {
         if (tree) {
-        
             d3StructureRef.current = generateD3Tree(tree.root, width, height);
             // Draw tree
-            drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
+            if (!isAnimatingMode) {
+                drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
+            }
 
             /*
             //Apply click handlers for active node change
@@ -98,7 +100,7 @@ function BinarySearchTreeVisualization({tree, width, height}) {
             }
             */
         }
-    }, [tree]);
+    }, [tree, isAnimatingMode]);
 
     return (
         tree ? (
