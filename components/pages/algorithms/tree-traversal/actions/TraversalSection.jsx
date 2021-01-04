@@ -78,6 +78,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                         if (!activeTextElements[id]) {
                             activeTextElements[id] = positionsIdx;
                         }
+                        steps[positionsIdx].log = `Mark ${type === 'visit' ? 'root' : type}.`
                     }
 
                     currentUuid = uuid;
@@ -111,7 +112,6 @@ function TraversalSection({ tree, sectionCollapsed }) {
                 }
             }
 
-            // console.log(steps);
             return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {

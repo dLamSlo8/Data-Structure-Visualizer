@@ -48,14 +48,14 @@ function AnimationLog({ log, currentStep }) {
                             <ul className="max-h-animation-log p-3 space-y-3 overflow-y-auto">
                                 {
                                     log.map((step, idx) => (
-                                        <li className={`group flex justify-between items-between p-2 rounded-lg border hover:border-primary focus:border-primary
+                                        <li className={`group relative flex justify-between items-between px-2 py-3 rounded-lg border hover:border-primary focus:border-primary text-sm
                                         ${idx === currentStep - 1 ? 'border-primary' : 'border-gray-300'}`}> 
                                             {step}
                                             {
                                                 idx !== currentStep - 1 && (
                                                     <Button 
                                                     btnStyle="secondary"
-                                                    rootClass="hidden group-hover:block">
+                                                    rootClass="absolute right-2 top-1/2 transform -translate-y-1/2 hidden group-hover:block px-2 py-1 rounded-md">
                                                         Go to step
                                                     </Button>
                                                 )
@@ -81,7 +81,8 @@ function AnimationLog({ log, currentStep }) {
 }
 
 AnimationLog.propTypes = {
-
+    log: PropTypes.arrayOf(PropTypes.string),
+    currentStep: PropTypes.number.isRequired
 };
 
 export default AnimationLog;
