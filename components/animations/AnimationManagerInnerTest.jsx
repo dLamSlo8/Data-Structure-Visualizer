@@ -5,6 +5,7 @@ import { useSprings } from '@react-spring/web';
 
 
 import AnimationContext from '@contexts/AnimationContext';
+import AnimationLog from './AnimationLog';
 
 /**
  * @state {number} currentStep - Number that represents the step we are currently on.
@@ -13,6 +14,7 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, updateStepsRef } = useContext(AnimationContext);
     const [currentStep, setCurrentStep] = useState(0);
     const [isAnimating, setAnimating] = useState(false);
+    const [animationLog, setAnimationLog] = useState([]);
     const [springs, setAnimation, stopAnimation] = useSprings(animationElements.length, index => {
         let elementObj = animationElements[index];
 
@@ -166,7 +168,7 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
     useEffect(() => {
         let stepFunc = async () => {
             if (animationState === 'running') {
-                if (currentStep < steps.length - 1) { // Current step > 0 (b/c we already initialize with step 0)
+                if (currentStep < steps.length - 1) { 
                     setAnimating(true);
                     let animationRes = await setAnimation((idx) => {
                         let stepProperties = getStep(idx, currentStep + 1);
@@ -187,6 +189,9 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
                     });
     
                     if (animationRes.finished) { // If step goes through and finishes, we can move on to the next one.
+                        setAnimationLog((animationLog) => { // Write step into log as step is occurring.
+                            return [...animationLog, 'test']     
+                        });
                         setAnimating(false);
                         setCurrentStep((currentStep) => currentStep + 1);
                     }
@@ -216,23 +221,26 @@ function AnimationManagerInnerTest({ steps, animationElements, attachElementsRef
         }
     }, []);
 
-
-
     animationMethodsRef.current = { handleRun, handlePause, handleReset, handleStepBack, handleStepForward, handleSkipToEnd };
 
     return (
-            ReactDOM.createPortal(
-                <>
-                {
-                    animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }, idx) => {
-                            return <AnimationComponent
-                            key={id}
-                            {...springs[idx]}
-                            {...componentProps} /> 
-                    })
-                }
-                </>
-            , attachElementsRef)
+        <>
+            {
+                ReactDOM.createPortal(
+                    <>
+                    {
+                        animationElements.map(({ id, component: AnimationComponent, componentProps, animationProp }, idx) => {
+                                return <AnimationComponent
+                                key={id}
+                                {...springs[idx]}
+                                {...componentProps} /> 
+                        })
+                    }
+                    </>
+                , attachElementsRef)
+            }
+            <AnimationLog log={animationLog} currentStep={currentStep} />
+        </>
     )
 }
 

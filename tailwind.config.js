@@ -15,11 +15,15 @@ module.exports = {
             serif: ['Inter', 'serif'],
             sans: ['Open Sans', 'sans-serif']
         },
+        minWidth: {
+            mobile: '350px'
+        },
         maxWidth: {
             container: '1600px'
         },
         maxHeight: {
-            'data-structure-layout': 'calc(100vh - 89px)'
+            'data-structure-layout': 'calc(100vh - 89px)',
+            'animation-log': '300px'
         },
         height: {
             'px': '1px',

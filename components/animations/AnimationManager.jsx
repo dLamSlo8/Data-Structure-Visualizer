@@ -1,8 +1,7 @@
-import { useState, useEffect, useContext, useMemo } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import AnimationContext from '@contexts/AnimationContext';
 
-import AnimationManagerInner from './AnimationManagerInner';
 import AnimationManagerInnerTest from './AnimationManagerInnerTest';
 
 // TODO: Consider having multiple props associated with a component in case they want that behavior. Maybe append prop name to component id? Could be easy implementation if using useSprings.
@@ -93,7 +92,6 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
     return (
         isAnimatingMode && steps && animationElements && !updateStepsRef.current && (
             <AnimationManagerInnerTest steps={steps} animationElements={animationElements} attachElementsRef={attachElementsRef} />
-            // <AnimationManagerInner steps={steps} animationElements={animationElements} initialAnimationProps={initialAnimationProps} attachElementsRef={attachElementsRef} />
         )
     )
 }                

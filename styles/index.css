@@ -698,6 +698,11 @@ button {
   background-color: rgba(255, 255, 255, var(--tw-bg-opacity));
 }
 
+.bg-gray-300{
+  --tw-bg-opacity: 1;
+  background-color: rgba(209, 213, 219, var(--tw-bg-opacity));
+}
+
 .bg-gray-400{
   --tw-bg-opacity: 1;
   background-color: rgba(156, 163, 175, var(--tw-bg-opacity));
@@ -716,6 +721,11 @@ button {
 .bg-primary-light{
   --tw-bg-opacity: 1;
   background-color: rgba(219, 233, 255, var(--tw-bg-opacity));
+}
+
+.hover\:bg-gray-300:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgba(209, 213, 219, var(--tw-bg-opacity));
 }
 
 .hover\:bg-primary:hover{
@@ -1037,6 +1047,10 @@ button {
   max-height: calc(100vh - 89px);
 }
 
+.max-h-animation-log{
+  max-height: 300px;
+}
+
 .max-w-5xl{
   max-width: 64rem;
 }
@@ -1051,6 +1065,10 @@ button {
 
 .min-w-0{
   min-width: 0px;
+}
+
+.min-w-mobile{
+  min-width: 350px;
 }
 
 .focus\:outline-none:focus{
@@ -1145,6 +1163,10 @@ button {
   padding-right: 5rem;
 }
 
+.pr-0{
+  padding-right: 0px;
+}
+
 .pb-0{
   padding-bottom: 0px;
 }
@@ -1159,6 +1181,10 @@ button {
 
 .pointer-events-none{
   pointer-events: none;
+}
+
+.fixed{
+  position: fixed;
 }
 
 .absolute{
@@ -1199,6 +1225,14 @@ button {
 
 .right-2{
   right: 0.5rem;
+}
+
+.bottom-8{
+  bottom: 2rem;
+}
+
+.right-10{
+  right: 2.5rem;
 }
 
 .-top-1{
@@ -1377,6 +1411,10 @@ button {
 
 .z-40{
   z-index: 40;
+}
+
+.z-50{
+  z-index: 50;
 }
 
 .z-negative{
