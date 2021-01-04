@@ -143,6 +143,10 @@ export const generateD3Tree = (rootNode, width) => {
  */
 export const drawD3Tree = (svgRef, d3TreeRef, width, height) => {
 
+    if (d3TreeRef === null) {
+        return;
+    }
+    
     let canvas = d3.select(svgRef);
 
     canvas.selectAll('g > *').remove(); // Remove previous nodes and links if any

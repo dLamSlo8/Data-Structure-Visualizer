@@ -7,17 +7,16 @@ import D3Context from '@contexts/D3Context';
 import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeClickHandlers } from '@d3/tree';
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
-
+import AnimationManager from '@components/animations/AnimationManager';
 /**
  * @param {BinarySearchTree} tree - Binary Search Tree
  * @param {number} width - width of tree
  * @param {number} height- height of tree
  */
 function BinarySearchTreeVisualization({tree, width, height}) {
-    const animationElementRef = useRef(null);
     const { d3StructureRef } = useContext(D3Context);
-    const attachTreeRef = useRef(null);
-
+    const svgTreeRef = useRef(null);
+    const gRef = useRef(null);
     /**
      * Effect 
      * Draws the tree with d3 and applies appropriate click handlers, 
@@ -28,7 +27,7 @@ function BinarySearchTreeVisualization({tree, width, height}) {
         
             d3StructureRef.current = generateD3Tree(tree.root, width, height);
             // Draw tree
-            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+            drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
 
             /*
             //Apply click handlers for active node change
@@ -104,9 +103,14 @@ function BinarySearchTreeVisualization({tree, width, height}) {
     return (
         tree ? (
             <VisualizationLayout>
-                <div id="tree" ref={attachTreeRef}> 
+                <div id="tree"> 
+                    <svg cursor="grab" width={width} height={height} ref={svgTreeRef}>
+                        <g transform="translate(0, 60)" ref={gRef}>
 
+                        </g>
+                    </svg>
                 </div>
+                <AnimationManager attachElementsRef={gRef.current} />
             </VisualizationLayout>
         ) : (
             <div className="h-full flex flex-col justify-center items-center px-20">
