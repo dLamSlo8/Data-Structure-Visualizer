@@ -50,7 +50,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     break;
             }
 
-            console.log(traversalRes);
+            // console.log(traversalRes);
 
             return traversalRes;
         };
@@ -111,7 +111,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                 }
             }
 
-            console.log(steps);
+            // console.log(steps);
             return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {

@@ -56,6 +56,8 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
     useEffect(() => {
         if (isAnimatingMode !== null && !isAnimatingMode) { // Reset animation state if turned off.
             setAnimationState(null);
+            setAnimationElements(null);
+            setSteps(null);
         }
         else if (updateStepsRef.current && isAnimatingMode) { 
             /**
