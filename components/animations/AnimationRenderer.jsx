@@ -13,8 +13,9 @@ import AnimationLog from './AnimationLog';
 function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, updateStepsRef } = useContext(AnimationContext);
     const [currentStep, setCurrentStep] = useState(0);
+    const [toStep, setToStep] = useState(0);
     const [isAnimating, setAnimating] = useState(false);
-    const [animationLog, setAnimationLog] = useState([]);
+    const [animationLog, setAnimationLog] = useState(steps[0].log ? [steps[0].log] : []);
     const [springs, setAnimation, stopAnimation] = useSprings(animationElements.length, index => {
         let elementObj = animationElements[index];
 
@@ -169,23 +170,19 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
         let stepFunc = async () => {
             if (animationState === 'running') {
                 if (currentStep < steps.length - 1) { 
-
                     let animationRes = await setAnimation((idx) => {
                         let stepProperties = getStep(idx, currentStep + 1);
     
                         if (stepProperties) {
                             return {
                                 ...stepProperties, 
-                                ...(config.animationsOff && { immediate: true }),
+                                ...(config.motionOff && { immediate: true }),
                                 delay: config.animationSpeed - 250,
                                 ...(stepProperties.config ? 
                                     (stepProperties.config.duration !== undefined ? false : { config: { duration: undefined, ...stepProperties.config } }) : 
                                     { config: { duration: undefined }}),
                                 onDelayEnd: (_) => {
                                     setAnimating(true);
-                                    setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
-                                        return [...animationLog, steps[currentStep + 1].log]     
-                                    });
                                 }
                             };
                         }
@@ -208,6 +205,16 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
 
         stepFunc();
     }, [currentStep, animationState]);
+
+    useEffect(() => {
+        if (isAnimating) {
+            console.log(toStep);
+            // setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
+            //     return [...animationLog, steps[toStep + 1].log]     
+            // });
+            // setToStep((toStep) => toStep + 1);
+        }
+    }, [isAnimating]);
 
 
     /**
@@ -243,7 +250,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                     </>
                 , attachElementsRef)
             }
-            <AnimationLog log={animationLog} currentStep={currentStep} />
+            <AnimationLog log={animationLog} currentStep={toStep} />
         </>
     )
 }

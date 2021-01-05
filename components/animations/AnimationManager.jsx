@@ -4,9 +4,6 @@ import AnimationContext from '@contexts/AnimationContext';
 
 import AnimationRenderer from './AnimationRenderer';
 
-// TODO: Consider having multiple props associated with a component in case they want that behavior. Maybe append prop name to component id? Could be easy implementation if using useSprings.
-// TODO: Decide on whether to use useSprings or not (having separate configuration, esp timing.)
-
 /**
  * 
  * @param initialProps - Initial properties for the spring 
@@ -17,32 +14,13 @@ import AnimationRenderer from './AnimationRenderer';
  * @param initConfig - Initial config for animation sequence. May either extend default configs or assign completely new ones.
  *                      Extend syntax: initConfig: { extends: { ... } }
  *                      Assign syntax: initConfig: { ... }
- *                      TO-DO: Extend functionality of initConfig to match these requirements!
+ *                      TODO: Extend functionality of initConfig to match these requirements!
  */
 export default function AnimationManager({ attachElementsRef, initConfig }) {
     const { isAnimatingMode, setAnimationState, algorithmStepsRef, stepGeneratorRef, animationStepGeneratorRef, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const [steps, setSteps] = useState(null);
     const [animationElements, setAnimationElements] = useState(null);
-
-    // /**
-    //  * Object that represents initial animation props (essentially based on
-    //  * the first step.) If no initial animation prop is given, will rely on the 
-    //  * default animation prop supplied by 'defaultAnimationProp'. 
-    //  */
-    // const initialAnimationProps = useMemo(() => {
-    //     let resObj = {};
-
-    //     if (animationElements) {
-    //         for (let { id, initialAnimationProps, defaultAnimationProps } of animationElements) {
-    //             if (!initialAnimationProps && !defaultAnimationProps) { // Catch dev error (must provide props)
-    //                 throw new Error(`Animation element with id ${id} does not have an initialAnimationProp or defaultAnimationProp.`);
-    //             }
-    //             resObj[id] = initialAnimationProps ?? defaultAnimationProps;
-    //         }
-    //     }
-    //     return resObj;
-    // }, [animationElements]);
 
     /**
      * Effect

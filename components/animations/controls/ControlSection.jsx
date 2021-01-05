@@ -15,7 +15,7 @@ import RangeSlider from './RangeSlider';
 import Tooltip from '@components/Tooltip';
 import DropdownSelect from '@components/dropdown/DropdownSelect';
 
-function ControlSection({ extraSettings, rootClass }) {
+function ControlSection({ extraSettings, triggersAnimatingMode, rootClass }) {
     const { isAnimatingMode, setAnimatingMode, animationMethodsRef, animationState, config, setConfig } = useContext(AnimationContext);
 
     const running = animationState === 'running';
@@ -38,7 +38,9 @@ function ControlSection({ extraSettings, rootClass }) {
     }
 
     const handlePlayPauseClick = () => {
-        setAnimatingMode(true);
+        if (triggersAnimatingMode) {
+            setAnimatingMode(true);
+        }
 
         if (running) {
             animationMethodsRef.current?.handlePause();
@@ -120,12 +122,12 @@ function ControlSection({ extraSettings, rootClass }) {
                     <div className="flex flex-col md:flex-row space-y-3 md:space-y-0">
                         <div className="w-full flex items-start space-x-3">
                             <input 
-                            name="animationsOff" 
-                            id="animationOffCheckbox" 
+                            name="motionOff" 
+                            id="motionOffCheckbox" 
                             type="checkbox" 
-                            checked={config.animationsOff} 
+                            checked={config.motionOff} 
                             onChange={updateConfig} />
-                            <label htmlFor="animationOffCheckbox" className="relative bottom-1 text-sm">Turn animations off<br /><span className="text-gray-500">(For reduced-motion users)</span></label>
+                            <label htmlFor="motionOffCheckbox" className="relative bottom-1 text-sm">Turn motion off<br /><span className="text-gray-500">(For reduced-motion users)</span></label>
                         </div>
                         <div className="w-full flex items-start space-x-3">
                             <input 

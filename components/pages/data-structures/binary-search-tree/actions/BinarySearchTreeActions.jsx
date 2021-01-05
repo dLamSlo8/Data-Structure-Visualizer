@@ -20,7 +20,7 @@ import { mapTraversalToPosition } from '@d3/binary-search-tree';
  */
 function BinarySearchTreeActions({tree, setTree}){
     const { d3StructureRef } = useContext(D3Context);
-    const { setAnimatingMode, updateStepsRef, algorithmStepsRef, animationStepGeneratorRef, animationElementGeneratorRef } = useContext(AnimationContext);
+    const { isAnimatingMode, setAnimatingMode, updateStepsRef, algorithmStepsRef, animationStepGeneratorRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const handleTreeUpdate = () => {
         updateStepsRef.current = true;
@@ -41,44 +41,51 @@ function BinarySearchTreeActions({tree, setTree}){
      * copy of tree and sets tree to new copy.
      * @param {int} value - The value of the TreeNode to delete 
      */
-    const handleDelete = (value) => {
+    const handleDelete = (value, animationsOff) => {
         value = parseInt(value);
 
-        algorithmStepsRef.current = tree.deleteNode(value);
-        animationElementGeneratorRef.current = (algorithmRes) => {
-            let resArr = [{
-                id: 'traversal-ring',
-                component: TraversalAnimationElement,
-            }];
+        const moves = tree.deleteNode(value);
 
-            return resArr;
-        };
-        animationStepGeneratorRef.current = ({ type, moves }, elements) => {
-            let steps = mapTraversalToPosition(moves[0], d3StructureRef.current, 'traversal-ring');
-            let filteredMoves = moves[0].filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
-            console.log(filteredMoves);
-            steps[0].log = `Looking for node ${value}.`;
-
-            for (let idx = 1; idx < filteredMoves.length; idx++) {
-                let move = filteredMoves[idx];
-
-                steps[idx].log = `Moving ${move.type} to node.`;
-            }
-            return steps;
-        }
         let newTree = new BinarySearchTree(null, tree)
         console.log(algorithmStepsRef.current);
         setTree(newTree);
-        handleTreeUpdate();
+        if (!animationsOff) {
+            algorithmStepsRef.current = moves; 
+            animationElementGeneratorRef.current = (algorithmRes) => {
+                let resArr = [{
+                    id: 'traversal-ring',
+                    component: TraversalAnimationElement,
+                }];
+    
+                return resArr;
+            };
+            animationStepGeneratorRef.current = ({ type, moves }, elements) => {
+                let steps = mapTraversalToPosition(moves[0], d3StructureRef.current, 'traversal-ring');
+                let filteredMoves = moves[0].filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
+                console.log(filteredMoves);
+                steps[0].log = `Looking for node ${value}.`;
+    
+                for (let idx = 1; idx < filteredMoves.length; idx++) {
+                    let move = filteredMoves[idx];
+    
+                    steps[idx].log = `Moving ${move.type} to node.`;
+                }
+                steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
+                console.log(steps);
+                return steps;
+            }
+            handleTreeUpdate();
+        }
     }
 
     /**
      * Inserts a new node into the tree. Makes copy of tree and sets tree to 
      * new copy.
      * @param {int} value - The value of the TreeNode to delete 
+     * @param {boolean} animationsOff - Whether or not we should run animations
      * @return {Array} - an Array of uuid of nodes taken to get to specified TreeNode
      */
-    const handleInsert = (value) => {
+    const handleInsert = (value, animationsOff) => {
         value = parseInt(value);
         algorithmStepsRef.current = tree.insertNode(value);
         // animationElementGeneratorRef.current = (algorithmRes) => {
@@ -88,12 +95,15 @@ function BinarySearchTreeActions({tree, setTree}){
         //     console.log(d3StructureRef.current);
         // }
         setTree(new BinarySearchTree(null, tree));
-        // handleTreeUpdate();
+        if (!animationsOff) {
+            // handleTreeUpdate();
+        }
     }
 
     /**
      * Finds the first instance of a TreeNode with a specified value
      * @param {int} value - The value of the TreeNode to find 
+     * @param {}
      * @return {Array} - an Array of uuid of nodes taken to get to specified TreeNode
      */
     const handleFind = (value) => {
@@ -117,7 +127,8 @@ function BinarySearchTreeActions({tree, setTree}){
                             tree = {tree}
                             handleInsert={handleInsert}
                             handleFind={handleFind}
-                            handleDelete={handleDelete} />
+                            handleDelete={handleDelete}
+                            isAnimatingMode={isAnimatingMode} />
                         
                     )
                 }

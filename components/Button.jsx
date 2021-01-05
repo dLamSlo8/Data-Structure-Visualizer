@@ -18,6 +18,8 @@ const getStyleClass = (style) => {
             return 'btn btn--warning';
         case 'disabled':
             return 'btn btn--disabled';
+        case 'light-primary':
+            return 'btn btn--light-primary';
         default: 
             return '';
     }

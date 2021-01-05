@@ -1,25 +1,31 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
+
+import XCircleIcon from '@icons/x-circle.svg';
+import CheckCircleIcon from '@icons/check-circle.svg';
 
 import Form from '@components/forms/Form';
 import FormInput from '@components/forms/FormInput';
 import Button from '@components/Button';
 
 import BinarySearchTree from '@classes/binary-search-tree';
+import ControlSection from '@components/animations/controls/ControlSection';
 
 
-function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
+function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatingMode }) {
+    const [insertAnimationsOff, setInsertAnimationsOff] = useState(false);
+    const [deleteAnimationsOff, setDeleteAnimationsOff] = useState(false);
 
     return (
-        <>
+        <div className="relative">
             {/* form input and button for inserting a TreeNode*/}
             <Form
             initValues={{insert: ''}}
-            handleSuccess={(formData) => formData.insert && handleInsert(formData.insert)}>
+            handleSuccess={(formData) => formData.insert && handleInsert(formData.insert, insertAnimationsOff)}>
                 {
                     ({ formData, handleChange, errorMapping }) => (
                         <>
-                            <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
+                            <div className="relative flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
                                 <FormInput 
                                 label="Insert a Node"
                                 error={errorMapping.insert}
@@ -30,6 +36,17 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                                     onChange: handleChange,
                                 }} 
                                 rootClass="min-w-0 w-full" />
+                                <Button
+                                btnStyle={insertAnimationsOff ? 'light-primary' : 'warning'}
+                                rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
+                                onClick={() => setInsertAnimationsOff((insertAnimationsOff) => !insertAnimationsOff)}>
+                                    <span className="inline-flex items-center space-x-2">
+                                        {
+                                            insertAnimationsOff ? <CheckCircleIcon /> : <XCircleIcon />
+                                        }
+                                        <span>Turn {insertAnimationsOff ? 'on' : 'off'} animations</span>
+                                    </span>
+                                </Button>
                                 <Button
                                 btnStyle={formData.insert ? 'primary' : 'disabled'}
                                 rootClass="w-full lg:self-end">Insert</Button>
@@ -42,11 +59,11 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
             {/* form input and button for deleting a TreeNode*/}
             <Form
             initValues={{delete: ''}}
-            handleSuccess={(formData) => formData.delete && handleDelete(formData.delete)}>
+            handleSuccess={(formData) => formData.delete && handleDelete(formData.delete, deleteAnimationsOff)}
+            rootClass="mt-5">
                 {
                     ({ formData, handleChange, errorMapping }) => (
-                        <>
-                            <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
+                            <div className="relative flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
                                 <FormInput 
                                 label="Delete a Node"
                                 error={errorMapping.delete}
@@ -58,10 +75,20 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                                 }} 
                                 rootClass="min-w-0 w-full" />
                                 <Button
+                                btnStyle={deleteAnimationsOff ? 'light-primary' : 'warning'}
+                                rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
+                                onClick={() => setDeleteAnimationsOff((deleteAnimationsOff) => !deleteAnimationsOff)}>
+                                    <span className="inline-flex items-center space-x-2">
+                                        {
+                                            deleteAnimationsOff ? <CheckCircleIcon /> : <XCircleIcon />
+                                        }
+                                        <span>Turn {deleteAnimationsOff ? 'on' : 'off'} animations</span>
+                                    </span>
+                                </Button>
+                                <Button
                                 btnStyle={formData.delete ? 'primary' : 'disabled'}
                                 rootClass="w-full lg:self-end">Delete</Button>
                             </div>
-                        </>
                     )
                 }
             </Form>
@@ -69,7 +96,8 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
             {/* form input and button for finding a TreeNode*/}
             <Form
             initValues={{find: ''}}
-            handleSuccess={(formData) => formData.find && handleFind(formData.find)}>
+            handleSuccess={(formData) => formData.find && handleFind(formData.find, animationsOff)}
+            rootClass="my-5">
                 {
                     ({ formData, handleChange, errorMapping }) => (
                         <>
@@ -92,8 +120,14 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete}) {
                     )
                 }
             </Form>
-
-        </>
+            {
+                isAnimatingMode && (
+                    <div className="absolute top-full mt-3 w-full">
+                        <ControlSection />
+                    </div>
+                )
+            }
+        </div>
     )
 }
 

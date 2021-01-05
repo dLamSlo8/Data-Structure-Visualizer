@@ -179,7 +179,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
             setValue={setTraversalType}
             dropdownWrapperClass="mt-1 w-full"
             closeTrigger={sectionCollapsed} />
-            <ControlSection rootClass="mt-3" />
+            <ControlSection rootClass="mt-3" triggersAnimatingMode />
         </>
     )
 }
