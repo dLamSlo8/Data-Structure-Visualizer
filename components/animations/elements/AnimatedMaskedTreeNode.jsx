@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { animated } from '@react-spring/web';
 
-function AnimatedTreeNode({ animatedPosition, value, initPosition }) {
+function AnimatedMaskedTreeNode({ animatedPosition, value, initPosition }) {
     return (
         ReactDOM.createPortal(
             <>
@@ -17,4 +17,4 @@ function AnimatedTreeNode({ animatedPosition, value, initPosition }) {
     )
 }
 
-export default AnimatedTreeNode;
+export default AnimatedMaskedTreeNode;

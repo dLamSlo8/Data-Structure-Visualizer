@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import BinaryTree from '@classes/binary-tree';
 import TreeNode from '@classes/tree-node';
-
 import InitSection from './InitSection';
 import ManageSection from './ManageSection';
 import TraversalSection from './TraversalSection';

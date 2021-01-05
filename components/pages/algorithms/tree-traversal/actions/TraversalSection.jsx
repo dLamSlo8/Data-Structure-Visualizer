@@ -29,8 +29,9 @@ function TraversalSection({ tree, sectionCollapsed }) {
      * returned from the algorithm we are working on. 
      */
     useEffect(() => { 
-
+        
         stepGeneratorRef.current = () => {
+            console.log('generating traversal steps!');
             let traversalRes = null;
 
             switch (traversalType) {

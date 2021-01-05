@@ -12,6 +12,7 @@ import TraversalAnimationElement from '@components/animations/elements/Traversal
 import BinarySearchTree from '@classes/binary-search-tree';
 import TreeNode from '@classes/tree-node';
 import D3Context from '@contexts/D3Context';
+import { mapTraversalToPosition } from '@d3/binary-search-tree';
 
 /**
  * @param {BinarySearchTree} - Binary Search Tree
@@ -49,11 +50,22 @@ function BinarySearchTreeActions({tree, setTree}){
                 id: 'traversal-ring',
                 component: TraversalAnimationElement,
             }];
+
+            return resArr;
         };
-        animationStepGeneratorRef.current = (algorithmRes, elements) => {
-            console.log(d3StructureRef.current);
+        animationStepGeneratorRef.current = ({ type, moves }, elements) => {
+            let steps = mapTraversalToPosition(moves[0], d3StructureRef.current, 'traversal-ring');
+            let filteredMoves = moves[0].filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
+            console.log(filteredMoves);
+            steps[0].log = `Looking for node ${value}.`;
+
+            for (let idx = 1; idx < filteredMoves.length; idx++) {
+                let move = filteredMoves[idx];
+
+                steps[idx].log = `Moving ${move.type} to node.`;
+            }
+            return steps;
         }
-        console.log(tree)
         let newTree = new BinarySearchTree(null, tree)
         console.log(algorithmStepsRef.current);
         setTree(newTree);

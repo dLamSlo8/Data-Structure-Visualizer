@@ -6,7 +6,7 @@ export const mapTraversalToPosition = (traversalArray, d3TreeRef, animationEleme
         let node;
 
         if (foundNodes[uuid]) {
-            node = foundNodes[uuid];
+            return null;
         }
         else {
             node = nodes.find((node) => node.data.uuid === uuid);
@@ -20,5 +20,5 @@ export const mapTraversalToPosition = (traversalArray, d3TreeRef, animationEleme
                 }
             }
         }
-    });
+    }).filter((val) => val !== null);
 }

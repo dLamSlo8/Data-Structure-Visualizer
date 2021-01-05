@@ -23,7 +23,7 @@ export const mapTraversalToPosition = (traversalArray, d3TreeRef, type) => {
             return { 
                 'traversal-ring': {
                     state: {
-                        xy: [node?.x, node?.y] 
+                        xy: [node.x, node.y] 
                     }
                 }
             }

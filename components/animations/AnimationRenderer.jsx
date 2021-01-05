@@ -169,7 +169,6 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
         let stepFunc = async () => {
             if (animationState === 'running') {
                 if (currentStep < steps.length - 1) { 
-                    setAnimating(true);
 
                     let animationRes = await setAnimation((idx) => {
                         let stepProperties = getStep(idx, currentStep + 1);
@@ -181,7 +180,13 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                                 delay: config.animationSpeed - 250,
                                 ...(stepProperties.config ? 
                                     (stepProperties.config.duration !== undefined ? false : { config: { duration: undefined, ...stepProperties.config } }) : 
-                                    { config: { duration: undefined }})
+                                    { config: { duration: undefined }}),
+                                onDelayEnd: (_) => {
+                                    setAnimating(true);
+                                    setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
+                                        return [...animationLog, steps[currentStep + 1].log]     
+                                    });
+                                }
                             };
                         }
                         else {
@@ -190,9 +195,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                     });
     
                     if (animationRes.finished) { // If step goes through and finishes, we can move on to the next one.
-                        setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
-                            return [...animationLog, steps[currentStep + 1].log]     
-                        });
+
                         setAnimating(false);
                         setCurrentStep((currentStep) => currentStep + 1);
                     }

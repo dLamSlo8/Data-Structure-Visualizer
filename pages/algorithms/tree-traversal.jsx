@@ -1,5 +1,8 @@
 import { useState } from 'react';
 
+import { D3ContextProvider } from '@contexts/D3Context';
+import { AnimationContextProvider } from '@contexts/AnimationContext';
+
 import DSAPageLayout from '@components/layouts/DSAPageLayout';
 import TreeTraversalActions from '@components/pages/algorithms/tree-traversal/actions/TreeTraversalActions'
 import TreeTraversalVisualization from '@components/pages/algorithms/tree-traversal/visualization/TreeTraversalVisualization';
@@ -11,22 +14,26 @@ export default function TreeTraversal() {
     const [activeNode, setActiveNode] = useState(null);
 
     return (
-        <DSAPageLayout
-        actions={
-            <TreeTraversalActions 
-            tree={tree} 
-            activeNode={activeNode} 
-            setTree={setTree} 
-            setActiveNode={setActiveNode} />
-        }
-        visualization={({ width, height }) => (
-            <TreeTraversalVisualization 
-            tree={tree} 
-            activeUuid={activeNode?.uuid} 
-            width={width} 
-            height={height} 
-            setActiveNode={setActiveNode} />)}
-        visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
-        The selected node is highlighted blue." />
+        <D3ContextProvider>
+            <AnimationContextProvider>
+                <DSAPageLayout
+                actions={
+                    <TreeTraversalActions 
+                    tree={tree} 
+                    activeNode={activeNode} 
+                    setTree={setTree} 
+                    setActiveNode={setActiveNode} />
+                }
+                visualization={({ width, height }) => (
+                    <TreeTraversalVisualization 
+                    tree={tree} 
+                    activeUuid={activeNode?.uuid} 
+                    width={width} 
+                    height={height} 
+                    setActiveNode={setActiveNode} />)}
+                visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
+                The selected node is highlighted blue." />
+            </AnimationContextProvider>
+        </D3ContextProvider>
     )
 }
