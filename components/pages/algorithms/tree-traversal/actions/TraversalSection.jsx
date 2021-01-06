@@ -117,7 +117,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
                     }
                 }
             }
-
+            steps[0].log = 'Beginning traversal';
             return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {
