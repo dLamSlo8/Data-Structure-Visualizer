@@ -55,7 +55,7 @@ function DSAPageLayout({ actions, visualization, visualizationDescription }) {
                     }
                 <div className="relative flex-grow" ref={visualizationRef}>
                     {
-                        mounted ? visualization({ width: visualizationRef.current.offsetWidth, height: visualizationRef.current.offsetHeight }) : null
+                        mounted ? visualization : null
                     }
                 </div>
             </section>
@@ -65,7 +65,7 @@ function DSAPageLayout({ actions, visualization, visualizationDescription }) {
 
 DSAPageLayout.propTypes = {
     actions: PropTypes.node.isRequired, // Action child(s)
-    visualization: PropTypes.func.isRequired, // Visualization child(s)
+    visualization: PropTypes.node.isRequired, // Visualization child(s)
     visualizationDescription: PropTypes.string // Description of visualization to be rendered underneath Visualization header
 };
 

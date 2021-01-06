@@ -26,13 +26,11 @@ export default function TreeTraversal() {
                     setTree={setTree} 
                     setActiveNode={setActiveNode} />
                 }
-                visualization={({ width, height }) => (
+                visualization={
                     <TreeTraversalVisualization 
                     tree={tree} 
                     activeUuid={activeNode?.uuid} 
-                    width={width} 
-                    height={height} 
-                    setActiveNode={setActiveNode} />)}
+                    setActiveNode={setActiveNode} />}
                 visualizationDescription="Select a node to edit its current, left, and right values on the “Actions” tab. 
                 The selected node is highlighted blue." />
             </AnimationContextProvider>

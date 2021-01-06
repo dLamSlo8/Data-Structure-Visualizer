@@ -22,12 +22,10 @@ export default function BinarySearchTree() {
                         tree={tree}
                         setTree={setTree}/>
                     }
-                    visualization={({ width, height }) => (
+                    visualization={
                         <BinarySearchTreeVisualization 
-                        tree={tree} 
-                        width={width} 
-                        height={height} />
-                    )}
+                        tree={tree} />
+                    }
                     visualizationDescription="Initialize a tree in the “Actions” tab and then perform operations
                     such as insert, find, delete."
                 />
