@@ -16,7 +16,7 @@ import AnimationManager from '@components/animations/AnimationManager';
  */ 
 function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext); // ANIMATION
-    const { d3StructureRef } = useContext(D3Context);
+    const { d3StructureRef, visualizationRef, updateD3Structure } = useContext(D3Context);
     const svgTreeRef = useRef(null);
     const gRef = useRef(null);
 
@@ -35,9 +35,9 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
      */
     useEffect(() => {
         if (tree) {
+            updateD3Structure(tree.root);
             // Draw tree
-            d3StructureRef.current = generateD3Tree(tree.root, width, height);
-            drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
+            drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight);
 
             // Apply click handlers for active node change
             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
@@ -92,7 +92,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
         tree ? (
             <VisualizationLayout>
                 <div id="tree"> 
-                    <svg cursor="grab" width={width} height={height} ref={svgTreeRef}>
+                    <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
 
                         </g>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import NavDropdown from './NavDropdown'; // Components
 
-import HelpIcon from '../../public/icons/help-circle.svg'; // Assets
+import HelpIcon from '@icons/help-circle.svg'; // Assets
 
 const INDEX_OF_PAGE_TYPE = 1;
 const INDEX_OF_PAGE_NAME = 2;

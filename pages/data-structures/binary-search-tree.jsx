@@ -8,12 +8,13 @@ import BinarySearchTreeActions from '@components/pages/data-structures/binary-se
 import BinarySearchTreeVisualization from '@components/pages/data-structures/binary-search-tree/visualization/BinarySearchTreeVisualization';
 
 import BST from '@classes/binary-search-tree';
+import { generateD3Tree } from "@d3/tree";
 
 export default function BinarySearchTree() {
     const [tree, setTree] = useState(new BST());
 
     return (
-        <D3ContextProvider>
+        <D3ContextProvider structureUpdater={generateD3Tree}>
             <AnimationContextProvider>
                 <DSAPageLayout
                     actions={

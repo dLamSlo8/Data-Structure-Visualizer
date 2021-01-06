@@ -19,7 +19,7 @@ import { mapTraversalToPosition } from '@d3/binary-search-tree';
  * @param {function} - function to set state of tree
  */
 function BinarySearchTreeActions({tree, setTree}){
-    const { d3StructureRef } = useContext(D3Context);
+    const { d3StructureRef, updateD3Structure } = useContext(D3Context);
     const { isAnimatingMode, setAnimatingMode, updateStepsRef, algorithmStepsRef, animationStepGeneratorRef, animationElementGeneratorRef } = useContext(AnimationContext);
 
     const handleTreeUpdate = () => {
@@ -88,12 +88,14 @@ function BinarySearchTreeActions({tree, setTree}){
     const handleInsert = (value, animationsOff) => {
         value = parseInt(value);
         algorithmStepsRef.current = tree.insertNode(value);
+        updateD3Structure(tree.root);
+        console.log(d3StructureRef.current);
         // animationElementGeneratorRef.current = (algorithmRes) => {
 
         // };
-        // animationStepGeneratorRef.current = (algorithmRes, elements) => {
-        //     console.log(d3StructureRef.current);
-        // }
+        animationStepGeneratorRef.current = (algorithmRes, elements) => {
+            console.log(d3StructureRef.current);
+        }
         setTree(new BinarySearchTree(null, tree));
         if (!animationsOff) {
             // handleTreeUpdate();

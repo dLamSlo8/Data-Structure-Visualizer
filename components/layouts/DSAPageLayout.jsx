@@ -2,16 +2,17 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
-import AnimationContext from '../../contexts/AnimationContext';
+import AnimationContext from '@contexts/AnimationContext';
+import D3Context from '@contexts/D3Context';
 
-import CloseIcon from '../../public/icons/x-circle.svg';
-import Button from '../Button';
+import CloseIcon from '@icons/x-circle.svg';
+import Button from '@components/Button';
 
 // Responsibility: Render layout for every DSA page.
 function DSAPageLayout({ actions, visualization, visualizationDescription }) {
     const [mounted, setMounted] = useState(false); 
     const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
-    const visualizationRef = useRef(null); // Ref to get width and height of visualization section
+    const { visualizationRef } = useContext(D3Context);
     const actionsRef = useRef(null); // Ref to get height of action section
 
     /**
