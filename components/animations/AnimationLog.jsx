@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 
@@ -36,6 +36,10 @@ function AnimationLog({ log, currentStep }) {
         }
     }
 
+    useEffect(() => {
+        logRef.current.scrollTop = logRef.current.scrollHeight - logRef.current.offsetHeight;
+    }, [log]);
+
     return (
         <>
             {
@@ -52,7 +56,7 @@ function AnimationLog({ log, currentStep }) {
                                     <DragIcon />
                                 </div>
                             </header>
-                            <ul className="h-72 p-3 pb-0 overflow-y-auto">
+                            <ul className="h-72 p-3 pb-0 overflow-y-auto" ref={logRef}>
                                 {
                                     log.map((step, idx) => (
                                         step ? (<li key={idx} className={`group relative flex justify-between items-between px-2 py-3 rounded-lg border hover:border-primary focus:border-primary text-sm mb-3
