@@ -21,9 +21,11 @@ module.exports = {
         maxWidth: {
             container: '1600px'
         },
+        height: { 
+            'animation-log': '300px'
+        },
         maxHeight: {
             'data-structure-layout': 'calc(100vh - 89px)',
-            'animation-log': '300px'
         },
         height: {
             'px': '1px',
@@ -53,7 +55,7 @@ module.exports = {
         backgroundColor: ['group-focus'],
         borderWidth: ['not:first', 'hover'],
         borderColor: ['not:first', 'hover'],
-        margin: ['not:first', 'first'],
+        margin: ['not:first', 'first', 'last'],
         display: ['group-hover', 'group-focus'],
         padding: ['not:first']
     },

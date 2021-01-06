@@ -954,6 +954,10 @@ button {
   height: 1.5rem;
 }
 
+.h-72{
+  height: 18rem;
+}
+
 .h-px{
   height: 1px;
 }
@@ -1080,10 +1084,6 @@ button {
 
 .max-h-data-structure-layout{
   max-height: calc(100vh - 89px);
-}
-
-.max-h-animation-log{
-  max-height: 300px;
 }
 
 .max-w-5xl{

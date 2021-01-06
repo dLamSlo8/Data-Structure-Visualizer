@@ -7,9 +7,16 @@ import DragIcon from '@icons/drag.svg';
 
 import Button from '@components/Button';
 
+// Responsibility: Render the animation log with the currentStep as the active step.
+/**
+ * @state {boolean} dragging - Whether or not we're dragging the log
+ * @state {ref} dragHandleRef - Ref containing drag handle element. Used to persistently style drag handle while dragging
+ * @state {ref} logRef - Ref containing the log list. Used to scroll to the bottom after every update (we want to see the most recent steps!)
+ */
 function AnimationLog({ log, currentStep }) {
     const [dragging, setDragging] = useState(false);
     const dragHandleRef = useRef(null);
+    const logRef = useRef(null);
 
     const handleStartDrag = () => {
         setDragging(true);
@@ -45,10 +52,10 @@ function AnimationLog({ log, currentStep }) {
                                     <DragIcon />
                                 </div>
                             </header>
-                            <ul className="max-h-animation-log p-3 space-y-3 overflow-y-auto">
+                            <ul className="h-72 p-3 pb-0 overflow-y-auto">
                                 {
                                     log.map((step, idx) => (
-                                        step ? (<li key={idx} className={`group relative flex justify-between items-between px-2 py-3 rounded-lg border hover:border-primary focus:border-primary text-sm
+                                        step ? (<li key={idx} className={`group relative flex justify-between items-between px-2 py-3 rounded-lg border hover:border-primary focus:border-primary text-sm mb-3
                                         ${idx === currentStep ? 'border-primary' : 'border-gray-300'}`}> 
                                             {step}
                                             {

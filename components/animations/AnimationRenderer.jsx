@@ -66,6 +66,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 await resetAnimation();
                 setCurrentStep(0);
+                setToStep(0);
             }
             setAnimationState('running');
         }
