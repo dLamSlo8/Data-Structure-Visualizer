@@ -13,7 +13,7 @@ import Button from '@components/Button';
  * @state {ref} dragHandleRef - Ref containing drag handle element. Used to persistently style drag handle while dragging
  * @state {ref} logRef - Ref containing the log list. Used to scroll to the bottom after every update (we want to see the most recent steps!)
  */
-function AnimationLog({ log, currentStep }) {
+function AnimationLog({ log, currentStep, handleGoToStep }) {
     const [dragging, setDragging] = useState(false);
     const dragHandleRef = useRef(null);
     const logRef = useRef(null);
@@ -66,7 +66,8 @@ function AnimationLog({ log, currentStep }) {
                                                 idx !== currentStep && (
                                                     <Button 
                                                     btnStyle="secondary"
-                                                    rootClass="absolute right-2 top-1/2 transform -translate-y-1/2 hidden group-hover:block px-2 py-1 rounded-md">
+                                                    rootClass="absolute right-2 top-1/2 transform -translate-y-1/2 hidden group-hover:block px-2 py-1 rounded-md"
+                                                    onClick={() => handleGoToStep(idx)}>
                                                         Go to step
                                                     </Button>
                                                 )

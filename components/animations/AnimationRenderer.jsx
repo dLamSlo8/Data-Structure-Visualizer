@@ -186,6 +186,23 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
     }
 
     /**
+     * Manually jump to specific step. Will then pause animation.
+     */
+    const handleGoToStep = async (step) => {
+        let animationRes = await setAnimation((idx) => ({
+            ...getStep(idx, step),
+            config: { duration: 0 }
+        }));
+
+        if (animationRes.finished) {
+            setAnimating(false);
+            setAnimationState('paused');
+            setCurrentStep(step);
+            setToStep(step);
+        }
+    }
+
+    /**
      * Effect
      * Runs the current step. Should only work when animation
      * is running.
@@ -281,7 +298,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                     </>
                 , attachElementsRef)
             }
-            <AnimationLog log={animationLog} currentStep={toStep} />
+            <AnimationLog log={animationLog} currentStep={toStep} handleGoToStep={handleGoToStep} />
         </>
     )
 }
