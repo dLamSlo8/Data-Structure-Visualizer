@@ -26,9 +26,7 @@ describe ("Test insertNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "left", "uuid": "2"},
-            {"type": "visit", "uuid": "2"},
             {"type": "left", "uuid": "4"},
-            {"type": "visit", "uuid": "4"},
         ];
 
         expected = new TreeNode(5, "1");
@@ -37,7 +35,7 @@ describe ("Test insertNode method", () => {
         expected.setRight(new TreeNode(7, "3"));
 
         result = input.insertNode(5, "4");
-
+        console.log(result)
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
 
@@ -51,9 +49,7 @@ describe ("Test insertNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "left", "uuid": "2"},
-            {"type": "visit", "uuid": "2"},
             {"type": "right", "uuid": "4"},
-            {"type": "visit", "uuid": "4"},
         ];
 
         expected = new TreeNode(5, "1");
@@ -76,9 +72,7 @@ describe ("Test insertNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "right", "uuid": "3"},
-            {"type": "visit", "uuid": "3"},
             {"type": "left", "uuid": "4"},
-            {"type": "visit", "uuid": "4"},
         ];
 
         expected = new TreeNode(5, "1");
@@ -102,7 +96,7 @@ describe ("Test insertNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "left", "uuid": "2"},
-            {"type": "visit", "uuid": "2"},
+
         ];
 
         result = input.insertNode(3, "2");
@@ -117,7 +111,6 @@ describe ("Test insertNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "right", "uuid": "3"},
-            {"type": "visit", "uuid": "3"},
         ];
 
         result = input.insertNode(7, "3");
@@ -628,9 +621,7 @@ describe ("Test findNode method", () => {
         let expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "left", "uuid": "2"},
-            {"type": "visit", "uuid": "2"},
             {"type": "right", "uuid": "4"},
-            {"type": "visit", "uuid": "4"},
         ];
 
         let result = input.findNode(4);
@@ -651,9 +642,7 @@ describe ("Test findNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "right", "uuid": "3"},
-            {"type": "visit", "uuid": "3"},
             {"type": "left", "uuid": "6"},
-            {"type": "visit", "uuid": "6"},
         ];
         
         result = input.findNode(6);
@@ -673,7 +662,6 @@ describe ("Test findNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "left", "uuid": "2"},
-            {"type": "visit", "uuid": "2"},
         ];
         result = input.findNode(3);
 
@@ -691,7 +679,6 @@ describe ("Test findNode method", () => {
         expectedMoves = [
             {"type": "visit", "uuid": "1"},
             {"type": "right", "uuid": "3"},
-            {"type": "visit", "uuid": "3"},
         ];
 
         result = input.findNode(7);
