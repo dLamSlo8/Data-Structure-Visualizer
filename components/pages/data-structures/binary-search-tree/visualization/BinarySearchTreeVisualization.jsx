@@ -127,8 +127,6 @@ function BinarySearchTreeVisualization({ tree }) {
 
 BinarySearchTreeVisualization.propTypes = {
     tree: PropTypes.instanceOf(BinarySearchTree),
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
 }
 
 export default BinarySearchTreeVisualization;

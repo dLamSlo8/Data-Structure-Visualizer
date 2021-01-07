@@ -214,6 +214,24 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
      */
     useEffect(() => {
         let stepFunc = async () => {
+            /**
+             * Get configuration including duration (if current step doesn't already have duration set)
+             * @param {*} stepProperties 
+             */
+            const getConfig = (stepProperties) => {
+                if (stepProperties.config) {
+                    if (stepProperties.config.duration) {
+                        return {};
+                    }
+                    else {
+                        return { config: { duration: config.motionOff ? 0 : undefined, ...stepProperties.config }};
+                    }
+                }
+                else {
+                    return { config: { duration: config.motionOff ? 0 : undefined }};
+                }
+            };
+
             if (animationState === 'running') {
                 if (currentStep < steps.length - 1) { 
                     let animationRes = await setAnimation((idx) => {
@@ -222,11 +240,8 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                         if (stepProperties) {
                             return {
                                 ...stepProperties, 
-                                ...(config.motionOff && { immediate: true }),
                                 delay: config.animationSpeed - 250,
-                                ...(stepProperties.config ? 
-                                    (stepProperties.config.duration !== undefined ? false : { config: { duration: undefined, ...stepProperties.config } }) : 
-                                    { config: { duration: undefined }}),
+                                ...getConfig(stepProperties),
                                 onDelayEnd: (_) => {
                                     setAnimating(true);
                                 }

@@ -76,8 +76,6 @@ function HeapVisualization({ heap }) {
 
 HeapVisualization.propTypes = {
     heap: PropTypes.instanceOf(Heap),
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
 }
 
 export default HeapVisualization;

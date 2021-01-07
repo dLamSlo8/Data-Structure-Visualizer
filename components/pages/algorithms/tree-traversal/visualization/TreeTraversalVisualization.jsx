@@ -115,8 +115,6 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
 TreeTraversalVisualization.propTypes = {
     tree: PropTypes.instanceOf(BinaryTree),
     activeUuid: PropTypes.string,
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
     setActiveNode: PropTypes.func.isRequired
 };
 
