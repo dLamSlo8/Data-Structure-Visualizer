@@ -216,7 +216,9 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
         let stepFunc = async () => {
             /**
              * Get configuration including duration (if current step doesn't already have duration set)
-             * @param {*} stepProperties 
+             * We set duration by default to 'undefined' otherwise, whenever it gets changed to 0, it will
+             * stay 0. 
+             * @param {object} stepProperties - Current step 
              */
             const getConfig = (stepProperties) => {
                 if (stepProperties.config) {
