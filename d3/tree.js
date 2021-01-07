@@ -19,7 +19,7 @@ export const styleActiveNode = (activeUuid) => {
 
 /**
 * Generates tree given rootNode
-* @param node - root node of the tree structure
+* @param rootNsode - root node of the tree structure
 * @param width - width of canvas
 * @returns {Object} D3 tree
 */

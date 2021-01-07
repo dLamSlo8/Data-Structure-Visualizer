@@ -8,13 +8,14 @@ import HeapActions from '@components/pages/data-structures/heap/actions/HeapActi
 import HeapVisualization from '@components/pages/data-structures/heap/visualization/HeapVisualization';
 
 import BinaryHeap from '@classes/heap'
+import { generateD3Tree } from "@d3/tree";
 
 
 export default function Heap() {
     const [heap, setHeap] = useState(new BinaryHeap(null));
 
     return (
-        <D3ContextProvider>
+        <D3ContextProvider structureUpdater={generateD3Tree}>
             <AnimationContextProvider>
                 <DSAPageLayout 
                     actions={
@@ -22,12 +23,10 @@ export default function Heap() {
                         heap={heap}
                         setHeap={setHeap}/>
                     }
-                    visualization={({ width, height }) => (
+                    visualization={
                         <HeapVisualization 
-                        heap={heap} 
-                        width={width} 
-                        height={height} />
-                    )}
+                        heap={heap} />
+                    }
                     visualizationDescription="Initialize a heap in the “Actions” tab and then perform operations
                     such as insert, delete."
                 />

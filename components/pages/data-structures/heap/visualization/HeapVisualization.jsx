@@ -10,13 +10,12 @@ import VisualizationLayout from '@components/layouts/VisualizationLayout';
 
 /**
  * @param {Heap} heap - heap
- * @param {number} width - width of tree
- * @param {number} height- height of tree
  */
-function HeapVisualization({heap, width, height}) {
+function HeapVisualization({ heap }) {
     const animationElementRef = useRef(null);
-    const { d3StructureRef } = useContext(D3Context);
-    const attachTreeRef = useRef(null);
+    const { d3StructureRef, visualizationRef, updateD3Structure } = useContext(D3Context);
+    const gRef = useRef(null);
+    const svgTreeRef = useRef(null);
 
     /**
      * Effect 
@@ -27,8 +26,9 @@ function HeapVisualization({heap, width, height}) {
         if (heap) {
             // Draw tree
             let root = heap.elements.length === 0 ? null : heap.elements[0]; 
-            d3StructureRef.current = generateD3Tree(root, width, height);
-            drawD3Tree(attachTreeRef.current, d3StructureRef.current, width, height, animationElementRef);
+
+            updateD3Structure(root);
+            drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight, animationElementRef);
 
             /*
             //Apply click handlers for active node change
@@ -55,8 +55,12 @@ function HeapVisualization({heap, width, height}) {
     return (
         heap ? (
             <VisualizationLayout>
-                <div id="tree" ref={attachTreeRef}> 
+                <div id="tree"> 
+                    <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
+                        <g transform="translate(0, 60)" ref={gRef}>
 
+                        </g>
+                    </svg>
                 </div>
             </VisualizationLayout>
         ) : (
@@ -72,8 +76,6 @@ function HeapVisualization({heap, width, height}) {
 
 HeapVisualization.propTypes = {
     heap: PropTypes.instanceOf(Heap),
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
 }
 
 export default HeapVisualization;

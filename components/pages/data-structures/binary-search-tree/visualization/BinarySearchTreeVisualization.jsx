@@ -13,8 +13,8 @@ import AnimationManager from '@components/animations/AnimationManager';
  * @param {number} width - width of tree
  * @param {number} height- height of tree
  */
-function BinarySearchTreeVisualization({tree, width, height}) {
-    const { d3StructureRef } = useContext(D3Context);
+function BinarySearchTreeVisualization({ tree }) {
+    const { d3StructureRef, visualizationRef, updateD3Structure } = useContext(D3Context);
     const { isAnimatingMode } = useContext(AnimationContext); 
     const svgTreeRef = useRef(null);
     const gRef = useRef(null);
@@ -25,10 +25,10 @@ function BinarySearchTreeVisualization({tree, width, height}) {
      */
     useEffect(() => {
         if (tree) {
-            d3StructureRef.current = generateD3Tree(tree.root, width, height);
+            updateD3Structure(tree.root);
             // Draw tree
             if (!isAnimatingMode) {
-                drawD3Tree(svgTreeRef.current, d3StructureRef.current, width, height);
+                drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight);
             }
 
             /*
@@ -106,7 +106,7 @@ function BinarySearchTreeVisualization({tree, width, height}) {
         tree ? (
             <VisualizationLayout>
                 <div id="tree"> 
-                    <svg cursor="grab" width={width} height={height} ref={svgTreeRef}>
+                    <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
 
                         </g>
@@ -127,8 +127,6 @@ function BinarySearchTreeVisualization({tree, width, height}) {
 
 BinarySearchTreeVisualization.propTypes = {
     tree: PropTypes.instanceOf(BinarySearchTree),
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
 }
 
 export default BinarySearchTreeVisualization;

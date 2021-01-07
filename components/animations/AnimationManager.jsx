@@ -53,6 +53,7 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
                 }
             })
 
+            console.log(animationSteps);
             setAnimationElements(animationElements);
             setSteps(animationSteps);
             

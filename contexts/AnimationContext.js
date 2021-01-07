@@ -33,7 +33,7 @@ export function AnimationContextProvider({ children }) {
     useEffect(() => { // Need to wait for component to be mounted to check window, otherwise window is undefined!
         if (isMounted) {
             setConfig({
-                animationsOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
+                motionOff: !window.matchMedia('(prefers-reduced-motion: no-preference)').matches,
                 autoPlay: true, 
                 animationSpeed: 1000
             });

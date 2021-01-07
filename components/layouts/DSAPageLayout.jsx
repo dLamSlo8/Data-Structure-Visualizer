@@ -2,16 +2,17 @@ import React, { useRef, useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { CSSTransition } from 'react-transition-group';
 
-import AnimationContext from '../../contexts/AnimationContext';
+import AnimationContext from '@contexts/AnimationContext';
+import D3Context from '@contexts/D3Context';
 
-import CloseIcon from '../../public/icons/x-circle.svg';
-import Button from '../Button';
+import CloseIcon from '@icons/x-circle.svg';
+import Button from '@components/Button';
 
 // Responsibility: Render layout for every DSA page.
 function DSAPageLayout({ actions, visualization, visualizationDescription }) {
     const [mounted, setMounted] = useState(false); 
     const { isAnimatingMode, setAnimatingMode } = useContext(AnimationContext);
-    const visualizationRef = useRef(null); // Ref to get width and height of visualization section
+    const { visualizationRef } = useContext(D3Context);
     const actionsRef = useRef(null); // Ref to get height of action section
 
     /**
@@ -54,7 +55,7 @@ function DSAPageLayout({ actions, visualization, visualizationDescription }) {
                     }
                 <div className="relative flex-grow" ref={visualizationRef}>
                     {
-                        mounted ? visualization({ width: visualizationRef.current.offsetWidth, height: visualizationRef.current.offsetHeight }) : null
+                        mounted ? visualization : null
                     }
                 </div>
             </section>
@@ -64,7 +65,7 @@ function DSAPageLayout({ actions, visualization, visualizationDescription }) {
 
 DSAPageLayout.propTypes = {
     actions: PropTypes.node.isRequired, // Action child(s)
-    visualization: PropTypes.func.isRequired, // Visualization child(s)
+    visualization: PropTypes.node.isRequired, // Visualization child(s)
     visualizationDescription: PropTypes.string // Description of visualization to be rendered underneath Visualization header
 };
 

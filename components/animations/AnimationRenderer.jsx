@@ -13,7 +13,8 @@ import AnimationLog from './AnimationLog';
 function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, updateStepsRef } = useContext(AnimationContext);
     const [currentStep, setCurrentStep] = useState(0);
-    const [toStep, setToStep] = useState(0);
+    const [toStep, setToStep] = useState(0); // R: The reason we have toStep is b/c we can't rely on currentStep as that changes when the animation ends.
+    const [logIdx, setLogIdx] = useState(0);
     const [isAnimating, setAnimating] = useState(false);
     const [animationLog, setAnimationLog] = useState(steps[0].log ? [steps[0].log] : []);
     const [springs, setAnimation, stopAnimation] = useSprings(animationElements.length, index => {
@@ -65,6 +66,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
             if (animationState === 'finished') { // If we're at the end of an animation, make sure to reset it before running again.
                 await resetAnimation();
                 setCurrentStep(0);
+                setToStep(0);
             }
             setAnimationState('running');
         }
@@ -87,6 +89,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
         if (animationRes.finished) {
             setCurrentStep(0);
             setAnimationState('reset');
+            setToStep(0);
         }
     }
 
@@ -108,9 +111,10 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                 if (!isAnimating) {
                     setCurrentStep((currentStep) => currentStep - 1);
                 }
-                if (isAnimating) {
+                else {
                     setAnimating(false);
                 }
+                setToStep((toStep) => toStep - 1);
             }
         }
     }
@@ -133,6 +137,15 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                 if (isAnimating) {
                     setAnimating(false);
                 }
+                else {
+                    setToStep((toStep) => toStep + 1);
+                    if (toStep === logIdx) {
+                        setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
+                            return [...animationLog, steps[logIdx + 1].log]     
+                        });
+                        setLogIdx((logIdx) => logIdx + 1);
+                    }
+                }
                 setCurrentStep((currentStep) => currentStep + 1);
             }
         }
@@ -152,7 +165,40 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                 setAnimating(false);
                 setAnimationState('finished');
                 setCurrentStep(steps.length - 1);
+                setToStep(steps.length - 1);
+                setAnimationLog((animationLog) => {
+                    if (animationLog.length === steps.length) {
+                        return animationLog;
+                    }
+                    else {
+                        return [...animationLog, ...steps.slice(animationLog.length).map((step) => step.log)]
+                    }
+                })
+                setLogIdx(steps.length - 1);
+                // Check whats in the animation log and just add the rest.
+                // if (isAnimating) {
+                //     setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
+                //         return [...animationLog, steps[logIdx].log]     
+                //     });
+                // }
             }
+        }
+    }
+
+    /**
+     * Manually jump to specific step. Will then pause animation.
+     */
+    const handleGoToStep = async (step) => {
+        let animationRes = await setAnimation((idx) => ({
+            ...getStep(idx, step),
+            config: { duration: 0 }
+        }));
+
+        if (animationRes.finished) {
+            setAnimating(false);
+            setAnimationState('paused');
+            setCurrentStep(step);
+            setToStep(step);
         }
     }
 
@@ -168,6 +214,26 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
      */
     useEffect(() => {
         let stepFunc = async () => {
+            /**
+             * Get configuration including duration (if current step doesn't already have duration set)
+             * We set duration by default to 'undefined' otherwise, whenever it gets changed to 0, it will
+             * stay 0. 
+             * @param {object} stepProperties - Current step 
+             */
+            const getConfig = (stepProperties) => {
+                if (stepProperties.config) {
+                    if (stepProperties.config.duration) {
+                        return {};
+                    }
+                    else {
+                        return { config: { duration: config.motionOff ? 0 : undefined, ...stepProperties.config }};
+                    }
+                }
+                else {
+                    return { config: { duration: config.motionOff ? 0 : undefined }};
+                }
+            };
+
             if (animationState === 'running') {
                 if (currentStep < steps.length - 1) { 
                     let animationRes = await setAnimation((idx) => {
@@ -176,11 +242,8 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                         if (stepProperties) {
                             return {
                                 ...stepProperties, 
-                                ...(config.motionOff && { immediate: true }),
                                 delay: config.animationSpeed - 250,
-                                ...(stepProperties.config ? 
-                                    (stepProperties.config.duration !== undefined ? false : { config: { duration: undefined, ...stepProperties.config } }) : 
-                                    { config: { duration: undefined }}),
+                                ...getConfig(stepProperties),
                                 onDelayEnd: (_) => {
                                     setAnimating(true);
                                 }
@@ -208,11 +271,13 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
 
     useEffect(() => {
         if (isAnimating) {
-            console.log(toStep);
-            // setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
-            //     return [...animationLog, steps[toStep + 1].log]     
-            // });
-            // setToStep((toStep) => toStep + 1);
+            if (toStep === logIdx) {
+                setAnimationLog((animationLog) => { // Write step into log when step ends (may change to before step starts if that makes more sense!)
+                    return [...animationLog, steps[logIdx + 1].log]     
+                });
+                setLogIdx((logIdx) => logIdx + 1);
+            }
+            setToStep((toStep) => toStep + 1);
         }
     }, [isAnimating]);
 
@@ -250,7 +315,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                     </>
                 , attachElementsRef)
             }
-            <AnimationLog log={animationLog} currentStep={toStep} />
+            <AnimationLog log={animationLog} currentStep={toStep} handleGoToStep={handleGoToStep} />
         </>
     )
 }
