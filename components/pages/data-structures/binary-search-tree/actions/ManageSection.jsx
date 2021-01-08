@@ -38,6 +38,7 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatin
                                 }} 
                                 rootClass="min-w-0 w-full" />
                                 <Button
+                                type="button"
                                 btnStyle={insertAnimationsOff ? 'light-primary' : 'warning'}
                                 rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
                                 onClick={() => setInsertAnimationsOff((insertAnimationsOff) => !insertAnimationsOff)}>
@@ -76,6 +77,7 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatin
                                 }} 
                                 rootClass="min-w-0 w-full" />
                                 <Button
+                                type="button"
                                 btnStyle={deleteAnimationsOff ? 'light-primary' : 'warning'}
                                 rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
                                 onClick={() => setDeleteAnimationsOff((deleteAnimationsOff) => !deleteAnimationsOff)}>
@@ -114,6 +116,7 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatin
                                 }} 
                                 rootClass="min-w-0 w-full" />
                                 <Button
+                                type="button"
                                 btnStyle={findAnimationsOff ? 'light-primary' : 'warning'}
                                 rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
                                 onClick={() => setFindAnimationsOff((findAnimationsOff) => !findAnimationsOff)}>
