@@ -15,6 +15,7 @@ import ControlSection from '@components/animations/controls/ControlSection';
 function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatingMode }) {
     const [insertAnimationsOff, setInsertAnimationsOff] = useState(false);
     const [deleteAnimationsOff, setDeleteAnimationsOff] = useState(false);
+    const [findAnimationsOff, setFindAnimationsOff] = useState(false);
 
     return (
         <div className="relative">
@@ -96,12 +97,12 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatin
             {/* form input and button for finding a TreeNode*/}
             <Form
             initValues={{find: ''}}
-            handleSuccess={(formData) => formData.find && handleFind(formData.find, animationsOff)}
+            handleSuccess={(formData) => formData.find && handleFind(formData.find, findAnimationsOff)}
             rootClass="my-5">
                 {
                     ({ formData, handleChange, errorMapping }) => (
                         <>
-                            <div className="flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
+                            <div className="relative flex flex-col lg:flex-row space-y-3 lg:space-y-0 lg:space-x-3">
                                 <FormInput 
                                 label="Find a Node"
                                 error={errorMapping.find}
@@ -112,6 +113,17 @@ function ManageSection({tree, handleInsert, handleFind, handleDelete, isAnimatin
                                     onChange: handleChange,
                                 }} 
                                 rootClass="min-w-0 w-full" />
+                                <Button
+                                btnStyle={findAnimationsOff ? 'light-primary' : 'warning'}
+                                rootClass="absolute top-0 right-0 py-1 pb-0 px-2 text-sm"
+                                onClick={() => setFindAnimationsOff((findAnimationsOff) => !findAnimationsOff)}>
+                                    <span className="inline-flex items-center space-x-2">
+                                        {
+                                            findAnimationsOff ? <CheckCircleIcon /> : <XCircleIcon />
+                                        }
+                                        <span>Turn {findAnimationsOff ? 'on' : 'off'} animations</span>
+                                    </span>
+                                </Button>
                                 <Button
                                 btnStyle={formData.find ? 'primary' : 'disabled'}
                                 rootClass="w-full lg:self-end">Find</Button>

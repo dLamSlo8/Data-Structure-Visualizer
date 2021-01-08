@@ -29,6 +29,7 @@ export const generateD3Tree = (rootNode, width) => {
     }
 
     // Generate binary tree using d3.
+    console.log(rootNode)
     const hierarchyNode = d3.hierarchy(rootNode);
     const height = hierarchyNode.height * 100;
 
@@ -47,12 +48,14 @@ export const generateD3Tree = (rootNode, width) => {
  */
 export const drawD3Tree = (svgRef, d3TreeRef, width, height) => {
 
+    let canvas = d3.select(svgRef);
+
     if (d3TreeRef === null) {
+        // empties the canvas because we just deleted last node
+        canvas.selectAll('g > *').remove(); // Remove previous nodes and links if any
         return;
     }
     
-    let canvas = d3.select(svgRef);
-
     canvas.selectAll('g > *').remove(); // Remove previous nodes and links if any
     // Sets up zoom and pan. 
     canvas.call(d3.zoom()
