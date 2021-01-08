@@ -10,29 +10,7 @@
  */
 export const mapTraversalToPosition = (traversalArray, d3TreeRef, animationElementID) => {
     const nodes = d3TreeRef.descendants();
-    let foundNodes = {};
-    console.log(traversalArray);
 
-
-    // return traversalArray.map(({ uuid }) => {
-    //     let node;
-
-    //     if (foundNodes[uuid]) {
-    //         return null;
-    //     }
-    //     else {
-    //         node = nodes.find((node) => node.data.uuid === uuid);
-    //         foundNodes[uuid] = node;
-    //     }
-
-    //     return { 
-    //         [animationElementID]: {
-    //             state: {
-    //                 xy: [node?.x, node?.y] 
-    //             }
-    //         }
-    //     }
-    // }).filter((val) => val !== null);
     return traversalArray.map(({ uuid }) => {
         let node;
 

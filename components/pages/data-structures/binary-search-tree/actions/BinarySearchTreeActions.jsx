@@ -8,11 +8,13 @@ import ActionSubsection from '@components/ActionSubsection';
 import InitSection from '@components/pages/algorithms/tree-traversal/actions/InitSection';
 import ManageSection from './ManageSection';
 import TraversalAnimationElement from '@components/animations/elements/TraversalAnimationElement';
+import AnimatedTreeNode from '@components/animations/elements/AnimatedTreeNode';
+import AnimatedNodeMask from '@components/animations/elements/AnimatedNodeMask';
 
 import BinarySearchTree from '@classes/binary-search-tree';
 import TreeNode from '@classes/tree-node';
 import D3Context from '@contexts/D3Context';
-import { mapTraversalToPosition } from '@d3/binary-search-tree';
+import { mapTraversalToPosition, mapInorderSuccessorTraversalToPosition } from '@d3/binary-search-tree';
 import { axisRight } from 'd3';
 
 /**
@@ -64,36 +66,146 @@ function BinarySearchTreeActions({tree, setTree}){
             setTree(newTree);
         }
         
-
         if (!animationsOff) {
             algorithmStepsRef.current = res; 
-            animationElementGeneratorRef.current = (algorithmRes) => {
+            animationElementGeneratorRef.current = ({ type, moves }) => {
+                const nodes = d3StructureRef.current.descendants();
+
                 let resArr = [{
                     id: 'traversal-ring',
                     component: TraversalAnimationElement,
                 }];
+                const deletedNode = nodes.find((node) => node.data.uuid === moves[0][moves[0].length - 1].uuid);
+
+                resArr.push({
+                    id: 'deleted-node-mask',
+                    component: AnimatedNodeMask,
+                    componentProps: {
+                        initPosition: {
+                            x: deletedNode.x,
+                            y: deletedNode.y
+                        }
+                    }
+                })
+
+                // Add inorder successor node
+                if (type === 2) {
+                    const inOrderNode = nodes.find((node) => node.data.uuid === moves[1][moves[1].length - 1].uuid);
+
+                    resArr.push({
+                        id: 'inorder-successor-node-mask',
+                        component: AnimatedNodeMask,
+                        componentProps: {
+                            initPosition: {
+                                x: inOrderNode.x,
+                                y: inOrderNode.y
+                            }
+                        }
+                    })
+                    resArr.push({
+                        id: 'inorder-successor-node',
+                        component: AnimatedTreeNode,
+                        componentProps: {
+                            value: inOrderNode.data.name,
+                        }
+                    });
+                    resArr.push({
+                        id: 'deleted-node', 
+                        component: AnimatedTreeNode,
+                        componentProps: {
+                            value: deletedNode.data.name,
+                        }
+                    });
+                }
     
                 return resArr;
             };
 
 
             animationStepGeneratorRef.current = ({ type, moves }, elements) => {
+                let deleteTraversalMoves = moves[0];
                 // exclude last element if error because last element is error message
                 if (isError) {
-                    moves[0].pop();
+                    deleteTraversalMoves.pop();
                 }
-                let steps = mapTraversalToPosition(moves[0], d3StructureRef.current, 'traversal-ring');
-                // for some reason this makes it work, dont delete
-                let filteredMoves = moves[0].filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
+
+                // Get steps to deleted node.
+                let steps = mapTraversalToPosition(deleteTraversalMoves, d3StructureRef.current, 'traversal-ring');
+                const deletedNodePosition = steps[steps.length - 1]['traversal-ring']['state']['xy'];
+                
+                // Create map of uuid to node name/value.
+                let uuidMap = {};
+                let treeNodes = d3StructureRef.current.descendants();
+                
+                for (let idx = 0; idx < treeNodes.length; idx++) {
+                    uuidMap[treeNodes[idx].data.uuid] = treeNodes[idx].data.name;
+                }
+
+                const deletedNodeValue = uuidMap[deleteTraversalMoves[deleteTraversalMoves.length - 1].uuid];
 
                 steps[0].log = `Looking for node ${value}.`;
+                
+                // Add step logs for initial traversal to deleted element.
+                for (let idx = 1; idx < steps.length; idx++) {
+                    let move = deleteTraversalMoves[idx];
     
-                for (let idx = 1; idx < filteredMoves.length; idx++) {
-                    let move = filteredMoves[idx];
                     steps[idx].log = `Moving ${move.type} to node.`;
                 }
-                console.log(steps);
-                steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
+
+                // If type === 2, add inorder successor traversal steps and handle swap.
+                if (type === 2) {
+                    const inOrderMoves = moves[1];
+                    const inOrderNodeValue = uuidMap[inOrderMoves[inOrderMoves.length - 1].uuid];
+
+                    steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
+
+                    let inOrderSteps = mapTraversalToPosition(moves[1], d3StructureRef.current, 'traversal-ring');
+                    console.log(inOrderSteps);
+                    console.log(inOrderSteps[inOrderSteps.length - 1])
+                    const inOrderNodePosition = inOrderSteps[inOrderSteps.length - 1]['traversal-ring']['state']['xy'];
+                    console.log(inOrderNodePosition);
+                    let stepIdx = steps.length;
+
+                    steps = steps.concat(inOrderSteps); // Add inorder successor traversal steps to original traversal steps.
+                    steps[stepIdx++].log = `Moving right to node ${uuidMap[inOrderMoves[0].uuid]}.`; // Add 
+
+                    for (let idx = 1; idx < inOrderSteps.length; idx++) {
+                        steps[stepIdx].log = `Moving left to node ${uuidMap[inOrderMoves[idx].uuid]}`;
+                    }
+
+                    // Handle swapping once we reach the end of traversal
+                    for (let idx = 0; idx < steps.length; idx++) {
+                        steps[idx]['deleted-node'] = {
+                            state: {
+                                animatedPosition: deletedNodePosition
+                            }
+                        };
+
+                        steps[idx]['inorder-successor-node'] = {
+                            state: {
+                                animatedPosition: inOrderNodePosition
+                            }
+                        };
+                    }
+
+                    steps[steps.length] = { 
+                        ...steps[steps.length - 1], 
+                        'deleted-node': {
+                            state: {
+                                animatedPosition: inOrderNodePosition
+                            }
+                        },
+                        'inorder-successor-node': {
+                            state: {
+                                animatedPosition: deletedNodePosition
+                            }
+                        },
+                        log: `Found inorder successor node ${inOrderNodeValue}. Swapping node ${deletedNodeValue} with node ${inOrderNodeValue}.`
+                    };
+
+
+                }
+
                 console.log(steps);
                 return steps;
             }
@@ -110,46 +222,46 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleInsert = (value, animationsOff) => {
         value = parseInt(value);
-        algorithmStepsRef.current = tree.insertNode(value);
+        const moves = tree.insertNode(value);
         updateD3Structure(tree.root);
-        console.log(d3StructureRef.current);
-        // animationElementGeneratorRef.current = (algorithmRes) => {
-
-        // };
-        animationStepGeneratorRef.current = (algorithmRes, elements) => {
-            console.log(d3StructureRef.current);
-        }
-        setTree(new BinarySearchTree(null, tree));
 
         //animation
-        // if (!animationsOff) {
-        //     algorithmStepsRef.current = moves; 
-        //     animationElementGeneratorRef.current = (algorithmRes) => {
-        //         let resArr = [{
-        //             id: 'traversal-ring',
-        //             component: TraversalAnimationElement,
-        //         }];
+        if (!animationsOff) {
+            algorithmStepsRef.current = moves; 
+            animationElementGeneratorRef.current = (algorithmRes) => {
+                let resArr = [{
+                    id: 'traversal-ring',
+                    component: TraversalAnimationElement,
+                }];
     
-        //         return resArr;
-        //     };
-        //     animationStepGeneratorRef.current = ( moves , elements) => {
-        //         console.log(elements);
-        //         let steps = mapTraversalToPosition(moves, d3StructureRef.current, 'traversal-ring');
-        //         let filteredMoves = moves.filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
-        //         console.log(filteredMoves);
-        //         steps[0].log = `Looking for node ${value}.`;
-    
-        //         // for (let idx = 1; idx < filteredMoves.length; idx++) {
-        //         //     let move = filteredMoves[idx];
-    
-        //         //     steps[idx].log = `Moving ${move.type} to node.`;
-        //         // }
-        //         // steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
-        //         console.log(steps);
-        //         return steps;
-        //     }
-        //     handleTreeUpdate();
-        // }
+                return resArr;
+            };
+            animationStepGeneratorRef.current = (moves , elements) => {
+                let steps = mapTraversalToPosition(moves, d3StructureRef.current, 'traversal-ring');
+
+                steps[0].log = `Looking for space to insert node ${value}.`;
+                
+                let uuidMap = {};
+                let treeNodes = d3StructureRef.current.descendants();
+                
+                for (let idx = 0; idx < treeNodes.length; idx++) {
+                    uuidMap[treeNodes[idx].data.uuid] = treeNodes[idx].data.name;
+                }
+
+                for (let idx = 1; idx < moves.length; idx++) {
+                    let move = moves[idx];
+                    // get the value of the previous node
+                    let currVal = uuidMap[moves[idx - 1].uuid];
+                    // check if condition
+                    steps[idx].log = `${value} ${(move.type === "right") ? '>' : '<='} ${currVal}; Moving ${move.type}`;
+                    console.log(steps[idx].log)
+                }
+                // steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
+                console.log(steps);
+                return steps;
+            }
+            handleTreeUpdate();
+        }
     }
 
     /**
@@ -173,14 +285,16 @@ function BinarySearchTreeActions({tree, setTree}){
     
                 return resArr;
             };
-            animationStepGeneratorRef.current = ( moves , elements) => {
+            animationStepGeneratorRef.current = (moves , elements) => {
                 let steps = mapTraversalToPosition(moves, d3StructureRef.current, 'traversal-ring');
 
                 steps[0].log = `Looking for node ${value}.`;
                 
                 let uuidMap = {};
-                for (let i = 0; i < d3StructureRef.current.descendants().length; i++) {
-                    uuidMap[d3StructureRef.current.descendants()[i].data.uuid] = d3StructureRef.current.descendants()[i].data.name;
+                let treeNodes = d3StructureRef.current.descendants();
+                
+                for (let idx = 0; idx < treeNodes.length; idx++) {
+                    uuidMap[treeNodes[idx].data.uuid] = treeNodes[idx].data.name;
                 }
 
                 for (let idx = 1; idx < moves.length; idx++) {
