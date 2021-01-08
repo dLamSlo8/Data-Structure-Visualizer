@@ -339,7 +339,9 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ], 
-                ["3"]
+                [
+                    {"uuid":"3"}
+                ]
             ]
         };
 
@@ -366,7 +368,9 @@ describe ("Test deleteNode method", () => {
                     {"type": "visit", "uuid": "1"},
                     {"type": "left", "uuid": "2"},
                 ],
-                ["4"]
+                [
+                    {"uuid":"4"}
+                ]
             ]
         };
 
@@ -429,7 +433,10 @@ describe ("Test deleteNode method", () => {
                     {"type": "visit", "uuid": "1"},
                     {"type": "left", "uuid": "2"},
                 ],
-                ["4", "5"]
+                [
+                    {"uuid": "4"},
+                    {"uuid": "5"}
+                ]
             ]
         };
 
@@ -464,7 +471,9 @@ describe ("Test deleteNode method", () => {
                     {"type": "right", "uuid": "3"},
                     {"type": "left", "uuid": "7"},
                 ],
-                ["6"]
+                [
+                    {"uuid": "6"}
+                ]
             ]
         };
 
@@ -516,7 +525,9 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ], 
-                ["2"]
+                [
+                    {"uuid": "2"}
+                ]
             ]
         };
 
@@ -541,7 +552,9 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ],
-                ["3"]
+                [
+                    {"uuid": "3"}
+                ]
             ]
         };
 
@@ -617,7 +630,10 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ],
-                ["3","4"]
+                [
+                    {"uuid": "3"},
+                    {"uuid": "4"}
+                ]
             ]
         };
 
@@ -645,7 +661,9 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ],
-                ["3"]
+                [
+                    {"uuid": "3"}
+                ]
             ]
         };
 
@@ -673,7 +691,10 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ],
-                ["3", "4"]
+                [
+                    {"uuid": "3"},
+                    {"uuid": "4"}
+                ]
             ]
         };
                     
@@ -700,7 +721,9 @@ describe ("Test deleteNode method", () => {
                 [
                     {"type": "visit", "uuid": "1"},
                 ],
-                ["2"]
+                [
+                    {"uuid": "2"}
+                ]
             ]
         };
         expected = new TreeNode(20, "2");

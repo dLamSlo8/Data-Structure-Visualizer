@@ -83,16 +83,16 @@ function BinarySearchTreeActions({tree, setTree}){
                     moves[0].pop();
                 }
                 let steps = mapTraversalToPosition(moves[0], d3StructureRef.current, 'traversal-ring');
+                // for some reason this makes it work, dont delete
                 let filteredMoves = moves[0].filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
-                console.log(filteredMoves);
+
                 steps[0].log = `Looking for node ${value}.`;
     
                 for (let idx = 1; idx < filteredMoves.length; idx++) {
                     let move = filteredMoves[idx];
-                    console.log(move);
-    
                     steps[idx].log = `Moving ${move.type} to node.`;
                 }
+                console.log(steps);
                 steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
                 console.log(steps);
                 return steps;
@@ -110,13 +110,9 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleInsert = (value, animationsOff) => {
         value = parseInt(value);
-<<<<<<< HEAD
-        const moves = tree.insertNode(value);
-=======
         algorithmStepsRef.current = tree.insertNode(value);
         updateD3Structure(tree.root);
         console.log(d3StructureRef.current);
->>>>>>> c59dea14dd07d07823dfc0da2a3eb87c900accfe
         // animationElementGeneratorRef.current = (algorithmRes) => {
 
         // };

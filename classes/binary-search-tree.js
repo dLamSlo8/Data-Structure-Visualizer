@@ -188,12 +188,12 @@ export default class BinarySearchTree {
                     return NullTreeNode;
                 }
                 else if (node.children[0] === null || node.children[0].isNull()) {
-                    moves[1].push(node.children[1].uuid);
+                    moves[1].push({"uuid": node.children[1].uuid});
                     type['type'] = 1;
                     return node.children[1];
                 }
                 else if (node.children[1] === null || node.children[1].isNull()) {
-                    moves[1].push(node.children[0].uuid);
+                    moves[1].push({"uuid": node.children[0].uuid});
                     type['type'] = 1;
                     return node.children[0];
                 }
@@ -268,7 +268,7 @@ export default class BinarySearchTree {
              * @param {TreeNode} isLeftChild - Parent of node if node is a left child
              */
             function findMin(node, isRightChild, isLeftChild) {
-                moves[1].push(node.uuid);
+                moves[1].push({"uuid": node.uuid});
                 if (node.children !== null) {
                     // if this is the direct right child of node to delete, do not add
                     // moves[1].push(node.uuid);
