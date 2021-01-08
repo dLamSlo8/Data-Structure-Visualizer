@@ -311,7 +311,9 @@ describe ("Test remove method", () => {
 
         expectedNode = new TreeNode(12, "b");
         expectedMoves = [
-            ["b"],
+            [
+                {"uuid": "b"}
+            ],
             [1]
         ];
         expectedElements = [expectedNode];
@@ -341,7 +343,11 @@ describe ("Test remove method", () => {
         expectedNode.setRight(new TreeNode(15, "e"));
 
         expectedMoves = [
-            ["d", "b", "c"],
+            [
+                {"uuid": "d"},
+                {"uuid": "b"},
+                {"uuid": "c"}
+            ],
             [4, 1, 3]
         ];
         expectedElements = [
@@ -391,7 +397,12 @@ describe ("Test remove method", () => {
         result = input.remove();
 
         expectedMoves = [
-            ["h", "b", "f", "g"],
+            [
+                {"uuid": "h"},
+                {"uuid": "b"},
+                {"uuid": "f"},
+                {"uuid": "g"}
+            ],
             [10, 1, 4, 9]
         ];
         expectedElements = [
@@ -491,7 +502,9 @@ describe ("Test insert method", () => {
         updateIdx(expected);
 
         expectedMoves = [
-            ["e"],
+            [
+                {"uuid": "e"}
+            ],
             [2]
         ];
         expectedElements = [
@@ -525,7 +538,10 @@ describe ("Test insert method", () => {
         updateIdx(expected);
 
         expectedMoves = [
-            ["e", "a"],
+            [
+                {"uuid": "e"},
+                {"uuid": "a"}
+            ],
             [2, 0]
         ];
         expectedElements = [
@@ -568,7 +584,9 @@ describe ("Test insert and delete", () => {
         updateIdx(expected);
 
         expectedMoves = [
-            ["a"],
+            [
+                {"uuid": "a"}
+            ],
             [0]
         ];
         expectedElements = [
@@ -604,7 +622,10 @@ describe ("Test insert and delete", () => {
         expected.setLeft(new TreeNode(15, "c"));
 
         expectedMoves = [
-            ["c", "a"],
+            [
+                {"uuid": "c"},
+                {"uuid": "a"}
+            ],
             [2, 1]
         ];
         expectedElements = [
@@ -644,7 +665,10 @@ describe ("Test insert and delete", () => {
         expected.setRight(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["c", "a"],
+            [
+                {"uuid": "c"},
+                {"uuid": "a"}
+            ],
             [1, 0]
         ];
         expectedElements = [
@@ -688,7 +712,11 @@ describe ("Test insert and delete", () => {
         expected.setRight(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["f", "a", "c"],
+            [
+                {"uuid": "f"},
+                {"uuid": "a"},
+                {"uuid": "c"}
+            ],
             [4, 1, 3]
         ];
         expectedElements = [
@@ -713,7 +741,10 @@ describe ("Test insert and delete", () => {
         expected.setRight(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["f", "c"],
+            [
+                {"uuid": "f"},
+                {"uuid": "c"}
+            ],
             [3, 1]
         ];
         expectedElements = [
@@ -736,7 +767,10 @@ describe ("Test insert and delete", () => {
         expected.setRight(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["f", "c"],
+            [
+                {"uuid": "f"},
+                {"uuid": "c"}
+            ],
             [1, 0]
         ];
         expectedElements = [
@@ -759,7 +793,9 @@ describe ("Test insert and delete", () => {
         expected.setRight(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["c"],
+            [
+                {"uuid": "c"}
+            ],
             [1]
         ];
         expectedElements = [
@@ -783,7 +819,10 @@ describe ("Test insert and delete", () => {
         expected.children[1].setLeft(new TreeNode(20, "d"));
 
         expectedMoves = [
-            ["d", "g"],
+            [
+                {"uuid": "d"},
+                {"uuid": "g"}
+            ],
             [2, 0]
         ];
         expectedElements = [
@@ -808,7 +847,10 @@ describe ("Test insert and delete", () => {
         expected.children[1].setRight(new TreeNode(2, "g"));
 
         expectedMoves = [
-            ["g", "i"],
+            [
+                {"uuid": "g"},
+                {"uuid": "i"}
+            ],
             [2, 0]
         ];
         expectedElements = [
