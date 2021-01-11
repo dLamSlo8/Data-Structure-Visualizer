@@ -18,7 +18,17 @@ export default function TreeTestVisualization({ root }) {
      * CREATE TREE HERE
      */
     const drawTree = () => {
-        let root = new TreeNode(20, 100, 100);
+        let root = new TreeNode(1, "a");
+        root.setLeft(new TreeNode(2, "b"));
+        root.setRight(new TreeNode(3, "c"));
+        root.children[0].setRight(new TreeNode(3, "d"))
+        root.children[1].setLeft(new TreeNode(4, "e"));
+        root.children[1].children[0].setLeft(new TreeNode(5, "f"));
+        root.children[1].children[0].children[0].setLeft(new TreeNode(5, "g"));
+        root.children[1].children[0].children[0].children[0].setLeft(new TreeNode(5, "h"));
+        root.children[1].children[0].children[0].children[0].setRight(new TreeNode(5, "i"));
+
+        root.generateBinaryTreePositions(350, 0, 0, 0, 0);
 
         setRootNode(root);
     }   

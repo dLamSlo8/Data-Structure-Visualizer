@@ -171,14 +171,14 @@ export default class BinarySearchTree {
          * @param {Array} moves - array to store moves we took
          */
         function helper(node, value, moves) {
-            if (node.isNull()) {
+            if (node === null || node.isNull() || value === null || value === undefined) {
                 // treat as error if it doesn't exist for now, might change need to discuss
                 moves[0].push({"error": "A node with this value does not exist in the tree"});
                 return NullTreeNode;
             }
             
             if (moves[0].length === 0) {
-                moves[0].push({"type": "visit", uuid: node.uuid});
+                moves[0].push({"type": "visit", "uuid": node.uuid});
             }
             
 
@@ -188,12 +188,12 @@ export default class BinarySearchTree {
                     return NullTreeNode;
                 }
                 else if (node.children[0] === null || node.children[0].isNull()) {
-                    moves[1].push(node.children[1].uuid);
+                    moves[1].push({"uuid": node.children[1].uuid});
                     type['type'] = 1;
                     return node.children[1];
                 }
                 else if (node.children[1] === null || node.children[1].isNull()) {
-                    moves[1].push(node.children[0].uuid);
+                    moves[1].push({"uuid": node.children[0].uuid});
                     type['type'] = 1;
                     return node.children[0];
                 }
@@ -210,7 +210,11 @@ export default class BinarySearchTree {
             }
             else if (value < node.name) {
                 if (node.children !== null) {
-                    moves[0].push({"type": "left", uuid: node.children[0].uuid});
+                    // when deleting a value that doesn't exist and this node has valid child, add it to moves
+                    if (node.children[0].uuid !== null) {
+                        moves[0].push({"type": "left", "uuid": node.children[0].uuid});
+                    }
+                    
                     let newNode = helper(node.children[0], value, moves);
                     
                     // checks if delete this node should result in children being null or NullTreeNode
@@ -227,7 +231,11 @@ export default class BinarySearchTree {
             }
             else {
                 if (node.children !== null) {
-                    moves[0].push({"type": "right", uuid: node.children[1].uuid});
+                    // when deleting a value that doesn't exist and this node has valid child, add it to moves
+                    if (node.children[1].uuid !== null) {
+                        moves[0].push({"type": "right", "uuid": node.children[1].uuid});
+                    }
+                    
                     let newNode = helper(node.children[1], value, moves);
                     
                     // checks if delete this node should result in children being null or NullTreeNode
@@ -260,7 +268,7 @@ export default class BinarySearchTree {
              * @param {TreeNode} isLeftChild - Parent of node if node is a left child
              */
             function findMin(node, isRightChild, isLeftChild) {
-                moves[1].push(node.uuid);
+                moves[1].push({"uuid": node.uuid});
                 if (node.children !== null) {
                     // if this is the direct right child of node to delete, do not add
                     // moves[1].push(node.uuid);

@@ -90,7 +90,7 @@ function BinarySearchTreeActions({tree, setTree}){
 
                 // Add inorder successor node
                 if (type === 2) {
-                    const inOrderNode = nodes.find((node) => node.data.uuid === moves[1][moves[1].length - 1]);
+                    const inOrderNode = nodes.find((node) => node.data.uuid === moves[1][moves[1].length - 1].uuid);
 
                     resArr.push({
                         id: 'inorder-successor-node-mask',
@@ -155,20 +155,22 @@ function BinarySearchTreeActions({tree, setTree}){
                 // If type === 2, add inorder successor traversal steps and handle swap.
                 if (type === 2) {
                     const inOrderMoves = moves[1];
-                    const inOrderNodeValue = uuidMap[inOrderMoves[inOrderMoves.length - 1]];
+                    const inOrderNodeValue = uuidMap[inOrderMoves[inOrderMoves.length - 1].uuid];
 
                     steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
 
-                    let inOrderSteps = mapInorderSuccessorTraversalToPosition(moves[1], d3StructureRef.current);
+                    let inOrderSteps = mapTraversalToPosition(moves[1], d3StructureRef.current, 'traversal-ring');
+                    console.log(inOrderSteps);
+                    console.log(inOrderSteps[inOrderSteps.length - 1])
                     const inOrderNodePosition = inOrderSteps[inOrderSteps.length - 1]['traversal-ring']['state']['xy'];
                     console.log(inOrderNodePosition);
                     let stepIdx = steps.length;
 
                     steps = steps.concat(inOrderSteps); // Add inorder successor traversal steps to original traversal steps.
-                    steps[stepIdx++].log = `Moving right to node ${uuidMap[inOrderMoves[0]]}.`; // Add 
+                    steps[stepIdx++].log = `Moving right to node ${uuidMap[inOrderMoves[0].uuid]}.`; // Add 
 
                     for (let idx = 1; idx < inOrderSteps.length; idx++) {
-                        steps[stepIdx].log = `Moving left to node ${uuidMap[inOrderMoves[idx]]}`;
+                        steps[stepIdx].log = `Moving left to node ${uuidMap[inOrderMoves[idx].uuid]}`;
                     }
 
                     // Handle swapping once we reach the end of traversal
@@ -203,6 +205,7 @@ function BinarySearchTreeActions({tree, setTree}){
 
 
                 }
+
                 console.log(steps);
                 return steps;
             }
@@ -219,45 +222,46 @@ function BinarySearchTreeActions({tree, setTree}){
      */
     const handleInsert = (value, animationsOff) => {
         value = parseInt(value);
-        algorithmStepsRef.current = tree.insertNode(value);
+        const moves = tree.insertNode(value);
         updateD3Structure(tree.root);
-        // animationElementGeneratorRef.current = (algorithmRes) => {
-
-        // };
-        animationStepGeneratorRef.current = (algorithmRes, elements) => {
-            console.log(d3StructureRef.current);
-        }
-        setTree(new BinarySearchTree(null, tree));
 
         //animation
-        // if (!animationsOff) {
-        //     algorithmStepsRef.current = moves; 
-        //     animationElementGeneratorRef.current = (algorithmRes) => {
-        //         let resArr = [{
-        //             id: 'traversal-ring',
-        //             component: TraversalAnimationElement,
-        //         }];
+        if (!animationsOff) {
+            algorithmStepsRef.current = moves; 
+            animationElementGeneratorRef.current = (algorithmRes) => {
+                let resArr = [{
+                    id: 'traversal-ring',
+                    component: TraversalAnimationElement,
+                }];
     
-        //         return resArr;
-        //     };
-        //     animationStepGeneratorRef.current = ( moves , elements) => {
-        //         console.log(elements);
-        //         let steps = mapTraversalToPosition(moves, d3StructureRef.current, 'traversal-ring');
-        //         let filteredMoves = moves.filter(({ uuid }, idx, arr) => idx === 0 ||  uuid !== arr[idx - 1].uuid);
-        //         console.log(filteredMoves);
-        //         steps[0].log = `Looking for node ${value}.`;
-    
-        //         // for (let idx = 1; idx < filteredMoves.length; idx++) {
-        //         //     let move = filteredMoves[idx];
-    
-        //         //     steps[idx].log = `Moving ${move.type} to node.`;
-        //         // }
-        //         // steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
-        //         console.log(steps);
-        //         return steps;
-        //     }
-        //     handleTreeUpdate();
-        // }
+                return resArr;
+            };
+            animationStepGeneratorRef.current = (moves , elements) => {
+                let steps = mapTraversalToPosition(moves, d3StructureRef.current, 'traversal-ring');
+
+                steps[0].log = `Looking for space to insert node ${value}.`;
+                
+                let uuidMap = {};
+                let treeNodes = d3StructureRef.current.descendants();
+                
+                for (let idx = 0; idx < treeNodes.length; idx++) {
+                    uuidMap[treeNodes[idx].data.uuid] = treeNodes[idx].data.name;
+                }
+
+                for (let idx = 1; idx < moves.length; idx++) {
+                    let move = moves[idx];
+                    // get the value of the previous node
+                    let currVal = uuidMap[moves[idx - 1].uuid];
+                    // check if condition
+                    steps[idx].log = `${value} ${(move.type === "right") ? '>' : '<='} ${currVal}; Moving ${move.type}`;
+                    console.log(steps[idx].log)
+                }
+                // steps[steps.length] = { ...steps[steps.length - 1], log: `Finding inorder successor for node ${value}.` };
+                console.log(steps);
+                return steps;
+            }
+            handleTreeUpdate();
+        }
     }
 
     /**
