@@ -109,7 +109,10 @@ export default class Heap {
         // is now root node
         this.clearParentChildren(parent, lastElement);
 
-        let moves = [[lastElement.uuid], [this.elements.length]];
+        let moves = [
+            [{"uuid": lastElement.uuid}],
+            [this.elements.length]
+        ];
         this.bubbleDown(0, moves);
 
         // empty out children
@@ -145,7 +148,7 @@ export default class Heap {
             // if higher child has greater priority, then swap
             if (this.comparator(this.elements[greaterIdx], this.elements[index])) {
                 this.swap(index, greaterIdx, moves);
-                moves[0].push(this.elements[index].uuid);
+                moves[0].push({"uuid": this.elements[index].uuid});
                 moves[1].push(greaterIdx);
                 this.bubbleDown(greaterIdx, moves);
             } else {
@@ -196,7 +199,7 @@ export default class Heap {
         // if this node has more priority than its parent, bubble up
         if (this.comparator(this.elements[index], this.elements[parentIdx])) {
             // update moves
-            moves[0].push(this.elements[parentIdx].uuid);
+            moves[0].push({"uuid": this.elements[parentIdx].uuid});
             moves[1].push(this.elements[parentIdx].idx);
             // swap then see if we can bubble up still
             this.swap(parentIdx, index);
