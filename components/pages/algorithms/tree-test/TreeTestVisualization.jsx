@@ -18,7 +18,7 @@ export default function TreeTestVisualization({ root }) {
      * CREATE TREE HERE
      */
     const drawTree = () => {
-        let root;
+        let root = new TreeNode(20, 100, 100);
 
         setRootNode(root);
     }   
@@ -27,7 +27,7 @@ export default function TreeTestVisualization({ root }) {
         <>
             <Button btnStyle="primary" onClick={() => drawTree()} rootClass="mt-2 ml-2">Draw Tree</Button>
             <VisualizationLayout>
-                <div id="tree"> 
+                <div id="tree" className="border  border-red-600"> 
                     <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight}>
                         <g transform="translate(0, 60)">
                             <TestTreeNode node={rootNode} />
