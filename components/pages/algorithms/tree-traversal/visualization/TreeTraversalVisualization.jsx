@@ -8,6 +8,7 @@ import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeCl
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import AnimationManager from '@components/animations/AnimationManager';
+import Tree from '@components/data-structures/tree/Tree';
 
 /**
  * Visualization section of tree traversal page
@@ -35,27 +36,27 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
      */
     useEffect(() => {
         if (tree) {
-            updateD3Structure(tree.root);
+            // updateD3Structure(tree.root);
             // Draw tree
-            drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight);
+            // drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight);
 
             // Apply click handlers for active node change
-            setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+            // setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
             // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
-            if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {
-                setActiveNode({
-                    uuid: tree.root.uuid,
-                    current: tree.root.name,
-                    left: null,
-                    right: null
-                });
-            }
+            // if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {
+            //     setActiveNode({
+            //         uuid: tree.root.uuid,
+            //         current: tree.root.name,
+            //         left: null,
+            //         right: null
+            //     });
+            // }
 
             // ANIMATION - Indicates that steps need to be updated when isAnimatingMode is toggled
-            if (!updateStepsRef.current) {
-                updateStepsRef.current = true;
-            }
+            // if (!updateStepsRef.current) {
+            //     updateStepsRef.current = true;
+            // }
         }
     }, [tree]);
 
@@ -89,12 +90,12 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
     }, [isAnimatingMode]);
 
     return (
-        tree ? (
+        !tree ? (
             <VisualizationLayout>
                 <div id="tree"> 
                     <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
-
+                            <Tree nodes={[{ x: 100, y: 24, name: 32 }]} />
                         </g>
                     </svg>
                 </div>
