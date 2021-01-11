@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef } from 'react';
+import { useEffect, useContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import BinaryTree from '@classes/binary-tree';
@@ -15,9 +15,11 @@ import Tree from '@components/data-structures/tree/Tree';
  * Responsibility: Render any visuals (i.e. tree and animation element) and animations
  * @ref attachTreeRef - Ref passed to d3 to know where to attach tree visualization
  */ 
-function TreeTraversalVisualization({ tree, activeUuid, width, height, setActiveNode }) {
+function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
     const { isAnimatingMode, animationState, updateStepsRef, animationElementGeneratorRef } = useContext(AnimationContext); // ANIMATION
     const { d3StructureRef, visualizationRef, updateD3Structure } = useContext(D3Context);
+    const [nodes, setNodes] = useState(null);
+
     const svgTreeRef = useRef(null);
     const gRef = useRef(null);
 
@@ -36,14 +38,17 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
      */
     useEffect(() => {
         if (tree) {
+            tree.root.generateBinaryTreePositions(visualizationRef.current.offsetWidth / 2, 0);
+            console.log(tree.getNodeMapping());
+            setNodes(Object.values(tree.getNodeMapping()));
             // updateD3Structure(tree.root);
-            // Draw tree
+            // // Draw tree
             // drawD3Tree(svgTreeRef.current, d3StructureRef.current, visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight);
 
-            // Apply click handlers for active node change
+            // // Apply click handlers for active node change
             // setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
 
-            // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
+            // // Initial node case. When there is only the rootNode, it is set to active for ease-of-use
             // if (tree.root.children && tree.root.children[0].name === null && tree.root.children[1].name === null) {
             //     setActiveNode({
             //         uuid: tree.root.uuid,
@@ -53,7 +58,7 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
             //     });
             // }
 
-            // ANIMATION - Indicates that steps need to be updated when isAnimatingMode is toggled
+            // // ANIMATION - Indicates that steps need to be updated when isAnimatingMode is toggled
             // if (!updateStepsRef.current) {
             //     updateStepsRef.current = true;
             // }
@@ -90,12 +95,12 @@ function TreeTraversalVisualization({ tree, activeUuid, width, height, setActive
     }, [isAnimatingMode]);
 
     return (
-        !tree ? (
+        tree ? (
             <VisualizationLayout>
                 <div id="tree"> 
                     <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
-                            <Tree nodes={[{ x: 100, y: 24, name: 32 }]} />
+                            { nodes && <Tree nodes={nodes} /> }
                         </g>
                     </svg>
                 </div>

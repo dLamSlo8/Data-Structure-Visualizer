@@ -1,27 +1,49 @@
 import ReactDOM from 'react-dom';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useSprings } from '@react-spring/web';
 
-
 import AnimationContext from '@contexts/AnimationContext';
+
 import AnimationLog from './AnimationLog';
+
+/**
+ * Gets spring props for all data structure animation elements
+ * @param {Array} springs - Array of springs specifically for data structure elements (i.e. if no nonDataStructure, will start from beginning)
+ * @param {Array} dataStructureElements - Array of data structure animation elements
+ */
+const getDataStructureAnimationProps = (springs, dataStructureElements) => {
+    let res = {};
+
+    dataStructureElements.forEach((element, idx) => {
+        res[element.id] = springs[idx];
+    })
+
+    return res;
+}
 
 /**
  * @state {number} currentStep - Number that represents the step we are currently on.
  */
-function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
+function AnimationRenderer({ steps, animationElements, attachElementsRef, dataStructureComponent: DataStructureComponent, dataStructureComponentProps }) {
     const { isAnimatingMode, animationState, setAnimationState, config, animationMethodsRef, updateStepsRef } = useContext(AnimationContext);
     const [currentStep, setCurrentStep] = useState(0);
     const [toStep, setToStep] = useState(0); // R: The reason we have toStep is b/c we can't rely on currentStep as that changes when the animation ends.
     const [logIdx, setLogIdx] = useState(0);
     const [isAnimating, setAnimating] = useState(false);
     const [animationLog, setAnimationLog] = useState(steps[0].log ? [steps[0].log] : []);
-    const [springs, setAnimation, stopAnimation] = useSprings(animationElements.length, index => {
-        let elementObj = animationElements[index];
+
+    const allAnimationElements = useMemo(() => {
+        console.log('getting all animation elements');
+        let { nonDataStructure, dataStructure } = animationElements;
+        return nonDataStructure ? (dataStructure ? nonDataStructure.concat(dataStructure) : nonDataStructure) : (dataStructure ?? null)
+    }, [animationElements]);
+
+    const [springs, setAnimation, stopAnimation] = useSprings(allAnimationElements.length, index => {
+        let elementObj = allAnimationElements[index];
 
         return { 
-            from: { ...(elementObj.initialAnimationProps ?? elementObj.defaultAnimationProps) },
+            from: elementObj.initialAnimationProps,
         };
     });
 
@@ -31,7 +53,7 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
      * @param {number} stepIdx - Index of current step in step array
      */
     const getStep = (elementIdx, stepIdx) => {
-        let elementObj = animationElements[elementIdx];
+        let elementObj = allAnimationElements[elementIdx];
         let step = steps[stepIdx][elementObj.id];
 
         if (step) {
@@ -305,12 +327,19 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
                 ReactDOM.createPortal(
                     <>
                     {
-                        animationElements.map(({ id, component: AnimationComponent, componentProps }, idx) => {
+                        animationElements.nonDataStructure && animationElements.nonDataStructure.map(({ id, component: AnimationComponent, componentProps }, idx) => {
                                 return <AnimationComponent
                                 key={id}
                                 {...springs[idx]}
                                 {...componentProps} /> 
                         })
+                    }
+                    {
+                        DataStructureComponent && (
+                            <DataStructureComponent 
+                            animationProps={getDataStructureAnimationProps(animationElements.nonDataStructure ? springs.slice(animationElements.nonDataStructure.length) : springs, animationElements.dataStructure)} 
+                            {...dataStructureComponentProps} /> 
+                        )
                     }
                     </>
                 , attachElementsRef)
@@ -319,5 +348,24 @@ function AnimationRenderer({ steps, animationElements, attachElementsRef }) {
         </>
     )
 }
+
+AnimationRenderer.propTypes = {
+    steps: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.exact({
+        state: PropTypes.object.isRequired,
+        config: PropTypes.object
+    }))),
+    animationElements: PropTypes.exact({
+        'nonDataStructure': PropTypes.arrayOf(PropTypes.exact({
+            id: PropTypes.string.isRequired,
+            component: PropTypes.element,
+            componentProps: PropTypes.object,
+            initialAnimationProps: PropTypes.object.isRequired
+        })),
+        'dataStructure': PropTypes.arrayOf(PropTypes.exact({
+            id: PropTypes.string.isrequired,
+            initialAnimationProps: PropTypes.object.isRequired
+        }))
+    }).isRequired
+};
 
 export default AnimationRenderer;

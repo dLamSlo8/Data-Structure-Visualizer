@@ -47,11 +47,22 @@ export default function AnimationManager({ attachElementsRef, initConfig }) {
             /**
              * Add initial props based on the first animation step.
              */ 
-            animationElements.forEach((elementObj) => {
-                if (animationSteps[0][elementObj.id]) {
-                    elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
-                }
-            })
+            if (animationElements.nonDataStructure) {
+                animationElements.nonDataStructure.forEach((elementObj) => {
+                    if (animationSteps[0][elementObj.id]) {
+                        elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
+                    }
+                })
+            }
+
+            if (animationElements.dataStructure) {
+                animationElements.dataStructure.forEach((elementObj) => {
+                    if (animationSteps[0][elementObj.id]) {
+                        elementObj.initialAnimationProps = animationSteps[0][elementObj.id].state;
+                    }
+                })
+            }
+
 
             console.log(animationSteps);
             setAnimationElements(animationElements);

@@ -19,6 +19,28 @@ export default class BinaryTree {
         }
     }
 
+    /**
+     * TEMPORARY function for getting node mapping (i.e. uuid -> node).
+     * Will use this while waiting for the node mapping member variable to be developed.
+     */
+    getNodeMapping = () => {
+        function helper(node, res) {
+            if (!node || node.isNull()) {
+                return ;
+            } 
+
+            res[node.uuid] = node;
+            if (node.children) {
+                helper(node.children[0], res);
+                helper(node.children[1], res);
+            }
+        }
+
+        let res = {};
+
+        helper(this.root, res);
+        return res;
+    }
 
     /**
      * @return {Array} array of inorder traversal, 0 index includes array of 

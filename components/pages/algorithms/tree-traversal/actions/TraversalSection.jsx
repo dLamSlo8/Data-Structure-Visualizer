@@ -65,7 +65,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
     useEffect(() => {
         animationStepGeneratorRef.current = (algorithmRes, animationElements) => { 
             let steps = mapTraversalToPosition(algorithmRes[1], d3StructureRef.current, traversalType);
-            let textAnimationElements = animationElements.slice(1);
+            let textAnimationElements = animationElements.nonDataStructure.slice(1);
 
             if (traversalType !== 'Level-order') { // If level order, we don't need to add text element steps.
                 let traversalArray = algorithmRes[1];
@@ -121,7 +121,7 @@ function TraversalSection({ tree, sectionCollapsed }) {
             return steps;
         };
         animationElementGeneratorRef.current = (algorithmRes) => {
-            let resArr = [{
+            let nonDataStructureArr = [{
                 id: 'traversal-ring',
                 component: TraversalAnimationElement,
             }];
@@ -154,11 +154,13 @@ function TraversalSection({ tree, sectionCollapsed }) {
                         }
                     });
     
-                    resArr = resArr.concat(textContent.map((val, idx) => toTextNode(val, idx)));
+                    nonDataStructureArr = nonDataStructureArr.concat(textContent.map((val, idx) => toTextNode(val, idx)));
                 });
             }
             
-            return resArr;
+            return {
+                nonDataStructure: nonDataStructureArr
+            };
         };
     }, [traversalType]);
 
