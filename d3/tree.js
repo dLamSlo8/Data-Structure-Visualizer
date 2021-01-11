@@ -34,6 +34,7 @@ export const generateD3Tree = (rootNode, width) => {
     const height = hierarchyNode.height * 100;
 
     const tree = d3.tree().size([width, height])(hierarchyNode);
+    //tree.descendants() to get all children 
     return tree;
 }
 

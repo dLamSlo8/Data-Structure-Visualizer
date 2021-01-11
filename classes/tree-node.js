@@ -87,6 +87,80 @@ export default class TreeNode {
         }
         return false;
     }
+
+    /**
+     * Generates grid representation of node positions
+     */
+    generateGridPosition() {
+        /**
+         * Sets x grid position of node positions
+         * @param {TreeNode} node - root node of tree structure
+         * @param {lastX} lastX - last X coordinate, meaning that the xcoordinate
+         * that has the furthest expanded left subtree
+         */
+        function helper(node, lastX) {
+            // if you don't have left children, set your x coordinate
+            // bc you can't expand anymore
+            if (node.children === null || node.children[0].isNull()) {
+                node.x = lastX + 1;
+            }
+            else {
+                node.x = helper(node.children[0], lastX) + 1;
+            }
+            
+            //checks to see if there are any right children (need to assign thosse position first)
+            if (node.children === null || node.children[1].isNull()) {
+                return node.x;
+            }
+            else {
+                // if you have right child, that means this node, is furthest left of all the nodes
+                // in the right subtree
+                return helper(node.children[1], node.x);
+            }
+        }
+
+        helper(this, 0);
+        
+    }
+
+    /**
+     * Sets all the (x,y) coordinates in binary tree structure
+     * @param {float} rootXPos - x coordinate of the root node
+     * @param {float} rootYPos - y coordinate of the root node
+     * @param {float} size - radius of the nodes in pixels
+     * @param {float} baseLineWidth - base width of line that connects nodes in pixels
+     * @param {float} baseLineHeight - base height of line that connects nodes in pixels 
+     */
+    generateBinaryTreePositions(rootXPos, rootYPos, size, lineWidth, lineHeight) {
+        this.generateGridPosition();
+        /**
+         * Sets x and y position of each node
+         * @param {TreeNode} node - root node of tree structure
+         * @param {int} depth - depth level of current node
+         * @param {int} rootXGrid - x grid position
+         * @param {float} rootXPos - x coordinate of the root node
+         * @param {float} rootYPos - y coordinate of the root node
+         */
+        function helper (node, depth, rootXGrid, rootXPos, rootYPos) {
+            if (node === null || node.isNull()) {
+                return;
+            }   
+            node.x = (node.x - rootXGrid) * 75 + rootXPos;
+            node.y = (depth * 75) + rootYPos;
+            // update left and right subtree
+            if (node.children) {
+                helper(node.children[0], depth + 1, rootXGrid, rootXPos, rootYPos);
+                helper(node.children[1], depth + 1, rootXGrid, rootXPos, rootYPos);
+            }
+            
+        }
+
+        helper(this, 0, this.x, rootXPos, rootYPos);
+
+    }
+
 }
 
 export const NullTreeNode = new TreeNode(null, null);
+export const LineWidth = 50;
+export const LineHeight = 50;
