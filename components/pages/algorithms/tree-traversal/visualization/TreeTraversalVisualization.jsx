@@ -8,7 +8,10 @@ import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeCl
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import AnimationManager from '@components/animations/AnimationManager';
-import Tree from '@components/data-structures/tree/Tree';
+import BaseTree from '@components/data-structures/tree/BaseTree';
+import ClickableTree from '@components/data-structures/tree/ClickableTree';
+
+import * as d3 from 'd3';
 
 /**
  * Visualization section of tree traversal page
@@ -30,6 +33,22 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
     const handleActiveNodeChange = (node) => {
         setActiveNode(node);
     }
+    
+    useEffect(() => {
+
+        if (tree) {
+            d3.select(svgTreeRef.current).call(d3.zoom()
+            .extent([[0, 0], [visualizationRef.current.offsetWidth, visualizationRef.current.offsetHeight + 50]])
+            .scaleExtent([0.5, 8])
+            .filter(function filter(event) { // Only allows zoom and pan when holding down shift key (on non-mobile screens!)
+                return document.documentElement.clientWidth <= 640 || event.shiftKey;
+            })
+            .on('zoom', function zoomed({transform}) {
+                d3.select(svgTreeRef.current).select('g').attr('transform', transform);
+            }));
+        }
+
+    }, [tree]);
     
     /**
      * Effect 
@@ -62,6 +81,9 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
             // if (!updateStepsRef.current) {
             //     updateStepsRef.current = true;
             // }
+        }
+        else {
+            setNodes(null);
         }
     }, [tree]);
 
@@ -100,7 +122,15 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
                 <div id="tree"> 
                     <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
-                            { nodes && <Tree nodes={nodes} /> }
+                            { nodes && (
+                                <BaseTree nodes={nodes}>
+                                    {
+                                        ({ links }) => (
+                                            <ClickableTree nodes={nodes} links={links} activeUuid={activeUuid} setActiveNode={setActiveNode} />
+                                        )
+                                    }
+                                </BaseTree>
+                            )}
                         </g>
                     </svg>
                 </div>

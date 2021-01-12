@@ -47,11 +47,11 @@ function Tree({ nodes }) {
 
     return (
         <>
-            {/* {
+            {
                 links.map(({ id, ...lineProps }) => (
-                    <TreeLink isAnimated={} {...lineProps} />
+                    <TreeLink {...lineProps} />
                 ))
-            } */}
+            }
             {
                 nodes.map(({ name: value, x, y }) => (
                     <Node value={value} x={x} y={y} />
