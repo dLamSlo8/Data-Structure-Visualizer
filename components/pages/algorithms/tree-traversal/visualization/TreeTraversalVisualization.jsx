@@ -87,34 +87,21 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
         }
     }, [tree]);
 
-    /**
-     * Effect
-     * Styles the currently active node.
-     * 
-     * Dependency Reasoning
-     * rootNode - When the tree re-renders, active node is redrawn so it doesn't get overriden by re-render
-     */
-    useEffect(() => {
-        if (activeUuid) { 
-            styleActiveNode(activeUuid);
-        }
-    }, [tree, activeUuid]);
-
-    /**
-     * Effect
-     * Removes click handlers when in animating mode
-     */
-    useEffect(() => {
-        // isAnimatingMode is initially null, so we avoid hitting the inner false case on mount
-        if (isAnimatingMode !== null) {
-            if (isAnimatingMode) {
-                removeClickHandlers();
-            }
-            else {
-                setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
-            }
-        }
-    }, [isAnimatingMode]);
+    // /**
+    //  * Effect
+    //  * Removes click handlers when in animating mode
+    //  */
+    // useEffect(() => {
+    //     // isAnimatingMode is initially null, so we avoid hitting the inner false case on mount
+    //     if (isAnimatingMode !== null) {
+    //         if (isAnimatingMode) {
+    //             removeClickHandlers();
+    //         }
+    //         else {
+    //             setClickHandlers(d3StructureRef.current, handleActiveNodeChange);
+    //         }
+    //     }
+    // }, [isAnimatingMode]);
 
     return (
         tree ? (
@@ -126,7 +113,7 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
                                 <BaseTree nodes={nodes}>
                                     {
                                         ({ links }) => (
-                                            <ClickableTree nodes={nodes} links={links} activeUuid={activeUuid} setActiveNode={setActiveNode} />
+                                            <ClickableTree nodes={nodes} links={links} activeUuid={activeUuid} setActiveNode={setActiveNode} isAnimatingMode={isAnimatingMode} />
                                         )
                                     }
                                 </BaseTree>

@@ -8,7 +8,8 @@
             "@functions/*": ["functions/*"],
             "@icons/*": ["public/icons/*"],
             "@classes/*": ["classes/*"],
-            "@d3/*": ["d3/*"]
+            "@d3/*": ["d3/*"],
+            "@util/*": ["util/*"]
         }
     }
 }

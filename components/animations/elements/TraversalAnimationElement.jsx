@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { animated, to } from '@react-spring/web';
 
 // Responsibility: Render animation element
-function TreeTraversalAnimationElement({ xy }) {
+function TreeTraversalAnimationElement({ x, y }) {
     return (
         <g id="animate-indicator">
-            <animated.circle r="24" cx={xy?.to((x, y) => `${x}`)} cy={xy?.to((x, y) => `${y}`)} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
+            <animated.circle r="24" cx={x} cy={y} fillOpacity="0" strokeWidth="2" stroke="#0062FF"></animated.circle>
         </g>
     )
 }

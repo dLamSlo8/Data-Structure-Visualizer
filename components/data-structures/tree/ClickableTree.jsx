@@ -5,8 +5,7 @@ import TreeNode from '@classes/tree-node';
 import { default as Node } from './TreeNode';
 import TreeLink from './TreeLink';
 
-function ClickableTree({ nodes, links, setActiveNode, activeUuid }) {
-    console.log(links);
+function ClickableTree({ nodes, links, setActiveNode, activeUuid, isAnimatingMode }) {
     return (
         <>
         { // Links before the nodes b/c we want them to be stacked lower (remember stacking is based on order in svg)
@@ -21,7 +20,7 @@ function ClickableTree({ nodes, links, setActiveNode, activeUuid }) {
                 y={y} 
                 value={value} 
                 gProps={{
-                    onClick: () => setActiveNode({
+                    onClick: () => !isAnimatingMode && setActiveNode({
                         uuid,
                         current: value,
                         left: children ? (children[0].name) : null,
