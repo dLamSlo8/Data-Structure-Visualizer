@@ -131,7 +131,7 @@ export default class TreeNode {
      * @param {float} baseLineWidth - base width of line that connects nodes in pixels
      * @param {float} baseLineHeight - base height of line that connects nodes in pixels 
      */
-    generateBinaryTreePositions(rootXPos, rootYPos, size, lineWidth, lineHeight) {
+    generateBinaryTreePositions(rootXPos, rootYPos, size, baseLineWidth, baseLineHeight) {
         this.generateGridPosition();
         /**
          * Sets x and y position of each node
@@ -140,22 +140,24 @@ export default class TreeNode {
          * @param {int} rootXGrid - x grid position
          * @param {float} rootXPos - x coordinate of the root node
          * @param {float} rootYPos - y coordinate of the root node
+         * @param {float} baseLineWidth - base width of line that connects nodes in pixels
+         * @param {float} baseLineHeight - base height of line that connects nodes in pixels 
          */
-        function helper (node, depth, rootXGrid, rootXPos, rootYPos) {
+        function helper (node, depth, rootXGrid, rootXPos, rootYPos, baseLineWidth, baseLineHeight) {
             if (node === null || node.isNull()) {
                 return;
             }   
-            node.x = (node.x - rootXGrid) * 75 + rootXPos;
-            node.y = (depth * 75) + rootYPos;
+            node.x = (node.x - rootXGrid) * baseLineWidth + rootXPos;
+            node.y = (depth * baseLineHeight) + rootYPos;
             // update left and right subtree
             if (node.children) {
-                helper(node.children[0], depth + 1, rootXGrid, rootXPos, rootYPos);
-                helper(node.children[1], depth + 1, rootXGrid, rootXPos, rootYPos);
+                helper(node.children[0], depth + 1, rootXGrid, rootXPos, rootYPos, baseLineWidth, baseLineHeight);
+                helper(node.children[1], depth + 1, rootXGrid, rootXPos, rootYPos, baseLineWidth, baseLineHeight);
             }
             
         }
 
-        helper(this, 0, this.x, rootXPos, rootYPos);
+        helper(this, 0, this.x, rootXPos, rootYPos, baseLineWidth, baseLineHeight);
 
     }
 

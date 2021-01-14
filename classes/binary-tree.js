@@ -9,13 +9,38 @@ export default class BinaryTree {
     /**
      * 
      * @param {TreeNode} [root = null] - (optional) root node of tree structure
+     * @param {BinaryTree} - (optional) tree structure to copy
      */
     constructor(root, tree) {
+        this.uuidToNodeMap = {};
+        // if you have a tree, do copy constructor
         if (tree) {
             this.root = new TreeNode(null, null, tree.root);
+            this.uuidToNodeMap = tree.uuidToNodeMap;
         }
         else {
             this.root = root || null;
+
+            // if root element exists, set node mapping
+            if (root) {
+                let q = [];
+                q.push(root);
+                while (q.length > 0) {
+                    let first = q.shift();
+                    
+                    this.uuidToNodeMap[first.uuid] = first;
+                    if (first.children) {
+                        if (!first.children[0].isNull()) {
+                            q.push(first.children[0]);
+                        }
+            
+                        if (!first.children[1].isNull()) {
+                            q.push(first.children[1]);
+                        }
+                    }
+                }
+
+            }
         }
     }
 
@@ -288,8 +313,9 @@ export default class BinaryTree {
          * Deletes the subtree of node with given uuid
          * @param {TreeNode} node - root node of tree structure
          * @param {string} uuid - uuid of root node of subtree to delete
+         * @param {BinaryTree} tree - the binary tree we are working with
          */
-        function helper(node, uuid) {
+        function helper(node, uuid, tree) {
             if (node === null) {
                 return null;
             }
@@ -300,14 +326,35 @@ export default class BinaryTree {
             }
 
             if (node.uuid === uuid) {
+                // removes this node and all its children from the uuidToNodeMap
+
+                let q = []
+                q.push(node);
+                while (q.length > 0) {
+                    let first = q.shift();
+                    let firstUuid = first.uuid;
+                    delete tree.uuidToNodeMap.firstUuid
+                    if (first.children) {
+                        if (!first.children[0].isNull()) {
+                            q.push(first.children[0]);
+                        }
+            
+                        if (!first.children[1].isNull()) {
+                            q.push(first.children[1]);
+                        }
+                    }
+                }
+
+
                 return NullTreeNode;
             }
 
             // if child exists
             if (node.children) {
+                
                 // go through left and right
-                let left = helper(node.children[0], uuid);
-                let right = helper(node.children[1], uuid);
+                let left = helper(node.children[0], uuid, tree);
+                let right = helper(node.children[1], uuid, tree);
 
                 // if no child left, set children back to null
                 if ((left === null || left.isNull()) && (right === null || right.isNull())) {
@@ -326,9 +373,10 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        this.root = helper(this.root, uuid);
+        this.root = helper(this.root, uuid, this);
 
         this.root = !this.root.isNull() ? this.root : null;
+
     }
 
     /**
@@ -346,23 +394,27 @@ export default class BinaryTree {
          * @param {boolean} isLeft - whether to add to left or right subtree
          * @param {string} matchUUID - uuid of node we want to add to
          * @param {string} [createUUID = null] - (optional) uuid of node created
+         * @param {BinaryTree} tree - tree to update node mapping for
          */
-        function helper(node, value, isLeft, matchUUID, createUUID) {
+        function helper(node, value, isLeft, matchUUID, createUUID, tree) {
             if (node === null || node.isNull()) {
                 return;
             }
 
             if (node.uuid === matchUUID) {
+                // add node to uuid mapping
+                let newNode = new TreeNode(value, createUUID);
+                tree.uuidToNodeMap[newNode.uuid] = newNode;
                 if (isLeft) {
                     if (node.children) {
                         if (node.children[0] && node.children[0].name !== null) {
                             throw ("A left child for this node already exists.")
                         }
     
-                        node.children[0] = new TreeNode(value, createUUID);
+                        node.children[0] = newNode;
                     }
                     else {
-                        node.children = [new TreeNode(value, createUUID), new TreeNode(null, null)];
+                        node.children = [newNode, new TreeNode(null, null)];
                     }
                 } else {
                     if (node.children) {
@@ -370,17 +422,17 @@ export default class BinaryTree {
                             throw ("A right child for this node already exists.")
                         }
 
-                        node.children[1] = new TreeNode(value, createUUID);
+                        node.children[1] = newNode;
                     }
                     else {
-                        node.children = [new TreeNode(null, null), new TreeNode(value, createUUID)];
+                        node.children = [new TreeNode(null, null), newNode];
                     }
                 }
                 return;
             }
             if (node.children) {
-                helper(node.children[0], value, isLeft, matchUUID, createUUID);
-                helper(node.children[1], value, isLeft, matchUUID, createUUID);
+                helper(node.children[0], value, isLeft, matchUUID, createUUID, tree);
+                helper(node.children[1], value, isLeft, matchUUID, createUUID, tree);
             }
         }
 
@@ -388,7 +440,7 @@ export default class BinaryTree {
             throw ("Please insert a node into the tree.")
         }
 
-        helper(this.root, value, isLeft, matchUUID, createUUID);
+        helper(this.root, value, isLeft, matchUUID, createUUID, this);
     }
 
     /**

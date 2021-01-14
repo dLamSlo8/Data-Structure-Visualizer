@@ -10,7 +10,6 @@ import Tree from '@components/data-structures/tree/Tree';
 import TestTreeNode from '@components/data-structures/tree/TestTreeNode';
 
 export default function TreeTestVisualization({ root }) {
-    console.log(root);
     const { visualizationRef } = useContext(D3Context);
     const [rootNode, setRootNode] = useState(null);
 
@@ -21,15 +20,15 @@ export default function TreeTestVisualization({ root }) {
         let root = new TreeNode(1, "a");
         root.setLeft(new TreeNode(2, "b"));
         root.setRight(new TreeNode(3, "c"));
-        root.children[0].setRight(new TreeNode(3, "d"))
-        root.children[1].setLeft(new TreeNode(4, "e"));
-        root.children[1].children[0].setLeft(new TreeNode(5, "f"));
-        root.children[1].children[0].children[0].setLeft(new TreeNode(5, "g"));
-        root.children[1].children[0].children[0].children[0].setLeft(new TreeNode(5, "h"));
-        root.children[1].children[0].children[0].children[0].setRight(new TreeNode(5, "i"));
+        root.children[0].setRight(new TreeNode(4, "d"))
+        root.children[1].setLeft(new TreeNode(5, "e"));
+        root.children[1].children[0].setLeft(new TreeNode(6, "f"));
+        root.children[1].children[0].children[0].setLeft(new TreeNode(7, "g"));
+        root.children[1].children[0].children[0].children[0].setLeft(new TreeNode(8, "h"));
+        root.children[1].children[0].children[0].children[0].setRight(new TreeNode(9, "i"));
 
-        root.generateBinaryTreePositions(350, 0, 0, 0, 0);
-
+        root.generateBinaryTreePositions(350, 100, 0, 75, 75);
+        console.log(root);
         setRootNode(root);
     }   
 
