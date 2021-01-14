@@ -1,3 +1,4 @@
+import { DEFAULT_NODE_RADIUS, DEFAULT_NODE_SPACING } from '@util/globals/tree';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -131,7 +132,7 @@ export default class TreeNode {
      * @param {float} baseLineWidth - base width of line that connects nodes in pixels
      * @param {float} baseLineHeight - base height of line that connects nodes in pixels 
      */
-    generateBinaryTreePositions(rootXPos, rootYPos, size, lineWidth, lineHeight) {
+    generateBinaryTreePositions(rootXPos, rootYPos, size=DEFAULT_NODE_RADIUS, lineWidth, lineHeight) {
         this.generateGridPosition();
         /**
          * Sets x and y position of each node
@@ -145,8 +146,8 @@ export default class TreeNode {
             if (node === null || node.isNull()) {
                 return;
             }   
-            node.x = (node.x - rootXGrid) * 75 + rootXPos;
-            node.y = (depth * 75) + rootYPos;
+            node.x = (node.x - rootXGrid) * DEFAULT_NODE_SPACING + rootXPos;
+            node.y = (depth * DEFAULT_NODE_SPACING) + rootYPos;
             // update left and right subtree
             if (node.children) {
                 helper(node.children[0], depth + 1, rootXGrid, rootXPos, rootYPos);
