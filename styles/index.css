@@ -1596,15 +1596,6 @@ button {
   border-bottom: 15px solid black;
 }
 
-g.active-node > circle {
-  fill: #0062FF;
-  stroke: none;
-}
-
-g.active-node > text {
-  fill: white;
-}
-
 @media (min-width: 640px){
 }
 

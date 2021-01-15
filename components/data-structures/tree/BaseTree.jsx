@@ -1,57 +1,41 @@
-import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import TreeNode from '@classes/tree-node';
 
-function BaseTree({ nodes, children: render }) {
-    const [links, setLinks] = useState([]);
+import {default as Node} from './tree-node/TreeNode';
+import TreeLink from './TreeLink';
 
-    /**
-     * Effect
-     * Generate links based on root node
-     */
-    useEffect(() => {
-        let root = nodes[0];
-        let links = [];
 
-        function getLinks(root) {
-            if (root.children) {
-                if (root.children[0] && !root.children[0].isNull()) {
-                    links.push({
-                        // id: root.links[0],
-                        x1: root.x,
-                        y1: root.y,
-                        x2: root.children[0].x,
-                        y2: root.children[0].y
-                    });
-                    getLinks(root.children[0]);
-                }
-    
-                if (root.children[1] && !root.children[1].isNull()) {
-                    links.push({
-                        // id: root.links[0],
-                        x1: root.x,
-                        y1: root.y,
-                        x2: root.children[1].x,
-                        y2: root.children[1].y
-                    });
-                    getLinks(root.children[1]);
-                }
+function BaseTree({ nodes, links }) {
+    return (
+        <>
+            { // Links before the nodes b/c we want them to be stacked lower (remember stacking is based on order in svg)
+                links.length && links.map(({ ...lineProps }) => (
+                    <TreeLink {...lineProps} />
+                ))
             }
-        }
-
-        if (root.children) {
-            getLinks(root);
-        }
-        setLinks(links);
-    }, [nodes]);
-    
-    return render({ links });
+            { 
+                nodes.map(({ uuid, x, y, name: value, children }) => (
+                    <Node 
+                    x={x} 
+                    y={y} 
+                    value={value} 
+                    gProps={{
+                        onClick: () => !isAnimatingMode && setActiveNode({
+                            uuid,
+                            current: value,
+                            left: children ? (children[0].name) : null,
+                            right: children ? (children[1].name) : null
+                        })
+                    }} />
+                ))
+            }
+        </>
+    )
 }
 
 BaseTree.propTypes = {
-    nodes: PropTypes.arrayOf(TreeNode).isRequired,
-    children: PropTypes.node.isRequired
+    nodes: PropTypes.arrayOf(TreeNode).isRequired
 };
 
 export default BaseTree;

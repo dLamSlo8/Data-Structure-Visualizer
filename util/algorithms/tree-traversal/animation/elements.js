@@ -4,7 +4,7 @@ import TraversalAnimationElement from '@components/animations/elements/Traversal
 export default function getElementGenerator(traversalType, tree) {
     let nodes = Object.values(tree.getNodeMapping());
 
-    return (algorithmRes) => {
+    return () => {
         let nonDataStructureArr = [{
             id: 'traversal-ring',
             component: TraversalAnimationElement,

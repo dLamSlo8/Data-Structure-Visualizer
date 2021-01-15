@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 import TreeNode from '@classes/tree-node';
 
-import { default as Node } from './TreeNode';
+import { default as Node } from './tree-node/TreeNode';
 import TreeLink from './TreeLink';
 
 function ClickableTree({ nodes, links, setActiveNode, activeUuid, isAnimatingMode }) {

@@ -8,7 +8,7 @@ import { generateD3Tree, drawD3Tree, styleActiveNode, setClickHandlers, removeCl
 
 import VisualizationLayout from '@components/layouts/VisualizationLayout';
 import AnimationManager from '@components/animations/AnimationManager';
-import BaseTree from '@components/data-structures/tree/BaseTree';
+import TreeWrapper from '@components/data-structures/tree/TreeWrapper';
 import ClickableTree from '@components/data-structures/tree/ClickableTree';
 
 import * as d3 from 'd3';
@@ -110,13 +110,13 @@ function TreeTraversalVisualization({ tree, activeUuid, setActiveNode }) {
                     <svg cursor="grab" width={visualizationRef.current.offsetWidth} height={visualizationRef.current.offsetHeight} ref={svgTreeRef}>
                         <g transform="translate(0, 60)" ref={gRef}>
                             { nodes && (
-                                <BaseTree nodes={nodes}>
+                                <TreeWrapper nodes={nodes}>
                                     {
                                         ({ links }) => (
                                             <ClickableTree nodes={nodes} links={links} activeUuid={activeUuid} setActiveNode={setActiveNode} isAnimatingMode={isAnimatingMode} />
                                         )
                                     }
-                                </BaseTree>
+                                </TreeWrapper>
                             )}
                         </g>
                     </svg>
