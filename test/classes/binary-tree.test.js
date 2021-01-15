@@ -1,6 +1,7 @@
 import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
 import BinaryTree from "../../classes/binary-tree.js";
 
+
 describe ("Test constructor", () => {
     it ("Should set uuidToNodeMap array on creation", () => {
         // test no elements in root
@@ -416,6 +417,7 @@ describe("Test deleteSubtree method", () => {
             "116" : expected.children[1].children[0],
             "117" : expected.children[1].children[1]
         }
+
 
         input.deleteSubtree("112");
         expect(input.root).toMatchObject(expected);

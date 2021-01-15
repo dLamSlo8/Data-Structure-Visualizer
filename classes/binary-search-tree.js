@@ -1,10 +1,12 @@
 import TreeNode, { NullTreeNode } from "./tree-node.js";
+import Edge from "./edge.js"
 
 
 /**
  * Binary Search Tree class. Maintains property that left subtree of each node
  * is less than or equal to root and right subtree is greater than root.
  * @property {TreeNode} root - root node of binary search tree
+ * @property {Map} uuidToNodeMap - map of uuid to nodes in tree
  */
 
 export default class BinarySearchTree {
@@ -13,13 +15,43 @@ export default class BinarySearchTree {
      * @param {TreeNode} [root = null] - root node of tree structure
      */
     constructor(root, tree) {
+        this.uuidToNodeMap = {};
+        // if we pass in a tree, use the copy constructor
         if (tree) {
-            this.root = tree.root ? new TreeNode(null, null, tree.root) : null;
+            // if we have a root set the root
+            if (tree.root) {
+                this.root = new TreeNode(null, null, tree.node);
+                this.uuidToNodeMap = tree.uuidToNodeMap;
+            }
+            else {
+                this.root = null;
+            }
         }
         else {
             this.root = root || null;
+
+            // if root element exists, set node mapping
+            if (root) {
+                let q = [];
+                q.push(root);
+                while (q.length > 0) {
+                    let first = q.shift();
+                    
+                    this.uuidToNodeMap[first.uuid] = first;
+                    if (first.children) {
+                        if (!first.children[0].isNull()) {
+                            q.push(first.children[0]);
+                        }
+            
+                        if (!first.children[1].isNull()) {
+                            q.push(first.children[1]);
+                        }
+                    }
+                }
+            }
         }
     }
+
     
     /**
      * Inserts a new node into the tree. Break ties by inserting into left subtree.
@@ -97,6 +129,7 @@ export default class BinarySearchTree {
 
         let moves = [];
         helper(this.root, value, uuid, moves);
+
         return moves;
     }
 
@@ -185,6 +218,7 @@ export default class BinarySearchTree {
             if (value === node.name) {
                 if (node.children == null) {
                     type['type'] = 0;
+                    
                     return NullTreeNode;
                 }
                 else if (node.children[0] === null || node.children[0].isNull()) {
@@ -203,10 +237,14 @@ export default class BinarySearchTree {
                     tmp.children = [];
                     tmp.children[0] = node.children[0];
                     tmp.children[1] = node.children[1];
+                    // if node has edges, set an edge
+                    tmp.edges[0] = node.edges[0] !== null ? new Edge(tmp.uuid + "left") : null;
+                    tmp.edges[1] = node.edges[1] !== null ? new Edge(tmp.uuid + "right") : null;
                     node.children = null;
                     type['type'] = 2;
                     return tmp;
                 }
+
             }
             else if (value < node.name) {
                 if (node.children !== null) {
@@ -222,6 +260,11 @@ export default class BinarySearchTree {
                         node.children = null;
                     } else {
                         node.setLeft(newNode);
+                    }
+
+                    // sets the left edge to be null if we deleted its left child
+                    if (newNode.isNull()) {
+                        node.edges[0] = null;
                     }
                     
                 } else {
@@ -243,6 +286,11 @@ export default class BinarySearchTree {
                         node.children = null;
                     } else {
                         node.setRight(newNode);
+                    }
+                    
+                    // sets the right edge to be null if we deleted its right child
+                    if (newNode.isNull()) {
+                        node.edges[1] = null;
                     }
                 } else {
                     // node.setRight(helper(null, value, moves));
@@ -313,6 +361,7 @@ export default class BinarySearchTree {
                     //     isRightChild.children = null;
                     // } else{
                         isRightChild.children[1] = NullTreeNode;
+                        isRightChild.edges[1] = null;
                     // }
                 }
                 else if (isRightChild === null && isLeftChild !== null) {
@@ -320,8 +369,10 @@ export default class BinarySearchTree {
                     if (isLeftChild.children[1].isNull()) {
                         isLeftChild.children = null;
                     } else{
+                        
                         isLeftChild.children[0] = NullTreeNode;
                     }
+                    isLeftChild.edges[0] = null;
                 }
 
                 return node

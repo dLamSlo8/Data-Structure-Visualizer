@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-
+import Edge from './edge.js';
 
 /**
  * TreeNode helper class used for tree data structures.
@@ -7,6 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
  * @property {int} name - value of node
  * @property {string} uuid - uuid of node
  * @property {Array} children - children nodes (i.e. index 0 is left, index 1 is right)
+ * @property {Array} edges - list of edges to children nodes
  */
 export default class TreeNode {
 
@@ -17,27 +18,30 @@ export default class TreeNode {
      * @param {TreeNode} [node = null] - (optional) node to make copy of 
      */
     constructor(value, uuid, node) {
+        this.edges = [null, null];
         if (node) {
-            let { name, uuid, children } = node;
+            let { name, uuid, children, edges } = node;
             this.name = name;
             this.uuid = uuid;
+            this.children = children;
+            this.edges = edges;
 
-            if (children !== null) {
-                // need to check if children is a null treenode
-                if (children[0].isNull()) {
-                    this.setRight(children[1]);
-                }
-                else if (children[1].isNull()) {
-                    this.setLeft(children[0]);
-                } 
-                else {
-                    this.children = children;
-                }
+            // if (children !== null) {
+            //     // need to check if children is a null treenode
+            //     if (children[0].isNull()) {
+            //         this.setRight(children[1]);
+            //     }
+            //     else if (children[1].isNull()) {
+            //         this.setLeft(children[0]);
+            //     } 
+            //     else {
+            //         this.children = children;
+            //     }
                 
-            }
-            else {
-                this.children = null;
-            }
+            // }
+            // else {
+            //     this.children = null;
+            // }
         } else {
             this.name = value;
             // if uuid and value null, the node should be null
@@ -63,6 +67,8 @@ export default class TreeNode {
         } else {
             this.children = [node, NullTreeNode];
         }
+        // set the edge of this node to point to the left child 
+        this.edges[0] = new Edge(this.uuid + "left"); 
     }
 
     /**
@@ -75,6 +81,8 @@ export default class TreeNode {
         } else {
             this.children = [NullTreeNode, node];
         }
+        // set the edge of this node to point to the right child 
+        this.edges[1] = new Edge(this.uuid + "right"); 
     }
 
     /**
@@ -147,14 +155,37 @@ export default class TreeNode {
             if (node === null || node.isNull()) {
                 return;
             }   
-            node.x = (node.x - rootXGrid) * baseLineWidth + rootXPos;
-            node.y = (depth * baseLineHeight) + rootYPos;
+
             // update left and right subtree
             if (node.children) {
                 helper(node.children[0], depth + 1, rootXGrid, rootXPos, rootYPos, baseLineWidth, baseLineHeight);
                 helper(node.children[1], depth + 1, rootXGrid, rootXPos, rootYPos, baseLineWidth, baseLineHeight);
             }
-            
+
+            node.x = (node.x - rootXGrid) * baseLineWidth + rootXPos;
+            node.y = (depth * baseLineHeight) + rootYPos;
+
+            // sets the edge positions
+            if (node.children) {
+                // sets left edge position
+                if (!node.children[0].isNull()) {
+                    let leftChild = node.children[0]
+                    let leftEdge = node.edges[0]
+                    if (leftEdge !== null) {
+                        leftEdge.setPosition(node.x, leftChild.x, node.y, leftChild.y);
+                    }
+                }
+
+                // sets right edge position
+                if (!node.children[1].isNull()) {
+                    let rightChild = node.children[1]
+                    let rightEdge = node.edges[1]
+                    if (rightEdge !== null) {
+                        rightEdge.setPosition(node.x, rightChild.x, node.y, rightChild.y);
+                    }
+                }
+            }
+
         }
 
         helper(this, 0, this.x, rootXPos, rootYPos, baseLineWidth, baseLineHeight);

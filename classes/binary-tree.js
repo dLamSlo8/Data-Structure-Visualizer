@@ -1,9 +1,12 @@
 import TreeNode, { NullTreeNode } from "./tree-node.js";
+import Edge from "./edge.js";
+
 
 /**
  * Binary Tree class
  * 
  * @property {TreeNode} root - root node of tree structure
+ * @property {Map} uuidToNodeMap - map of uuid to nodes in tree
  */
 export default class BinaryTree {
     /**
@@ -327,7 +330,6 @@ export default class BinaryTree {
 
             if (node.uuid === uuid) {
                 // removes this node and all its children from the uuidToNodeMap
-
                 let q = []
                 q.push(node);
                 while (q.length > 0) {
@@ -345,7 +347,7 @@ export default class BinaryTree {
                     }
                 }
 
-
+                
                 return NullTreeNode;
             }
 
@@ -356,6 +358,14 @@ export default class BinaryTree {
                 let left = helper(node.children[0], uuid, tree);
                 let right = helper(node.children[1], uuid, tree);
 
+                // set edges to null if we removed
+                if (left.isNull()) {
+                    node.edges[0] = null;
+                }
+                if (right.isNull()) {
+                    node.edges[1] = null;
+                }
+
                 // if no child left, set children back to null
                 if ((left === null || left.isNull()) && (right === null || right.isNull())) {
                     node.children = null;
@@ -364,6 +374,7 @@ export default class BinaryTree {
                     node.children[0] = left;
                     node.children[1] = right;
                 }
+                
             }
             
             return node;
@@ -406,6 +417,7 @@ export default class BinaryTree {
                 let newNode = new TreeNode(value, createUUID);
                 tree.uuidToNodeMap[newNode.uuid] = newNode;
                 if (isLeft) {
+                    node.edges[0] = new Edge(node.uuid + "left");
                     if (node.children) {
                         if (node.children[0] && node.children[0].name !== null) {
                             throw ("A left child for this node already exists.")
@@ -417,6 +429,7 @@ export default class BinaryTree {
                         node.children = [newNode, new TreeNode(null, null)];
                     }
                 } else {
+                    node.edges[1] = new Edge(node.uuid + "right");
                     if (node.children) {
                         if (node.children[1] && node.children[1].name !== null) {
                             throw ("A right child for this node already exists.")

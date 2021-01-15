@@ -448,8 +448,11 @@ describe ("Test deleteNode method", () => {
         expected.children[0].children[1].setRight(new TreeNode(5,"6"))
 
         result = input.deleteNode(2);
+
+
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
+        
 
 
         // testing delete on right side with deleted element having two children
@@ -485,6 +488,7 @@ describe ("Test deleteNode method", () => {
         expected.children[1].children[0].setLeft(new TreeNode(14,"5"));
 
         result = input.deleteNode(15);
+
 
         expect(result).toEqual(expectedMoves);
         expect(input.root).toMatchObject(expected);
