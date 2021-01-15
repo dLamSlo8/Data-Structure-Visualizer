@@ -2,6 +2,44 @@ import TreeNode, { NullTreeNode } from "../../classes/tree-node.js";
 import BinaryTree from "../../classes/binary-tree.js";
 
 
+describe ("Test constructor", () => {
+    it ("Should set uuidToNodeMap array on creation", () => {
+        // test no elements in root
+        let result = new BinaryTree();
+
+        let expectedMap = {};
+
+        expect(result.root).toBeNull();
+        expect(result.uuidToNodeMap).toMatchObject(expectedMap);
+
+        let root = new TreeNode(1, "a");
+        root.setLeft(new TreeNode(2, "b"));
+        root.setRight(new TreeNode(3, "c"));
+        root.children[0].setRight(new TreeNode(4, "d"));
+        root.children[1].setLeft(new TreeNode(5, "e"));
+        
+        let expectedRoot = new TreeNode(1, "a");
+        expectedRoot.setLeft(new TreeNode(2, "b"));
+        expectedRoot.setRight(new TreeNode(3, "c"));
+        expectedRoot.children[0].setRight(new TreeNode(4, "d"));
+        expectedRoot.children[1].setLeft(new TreeNode(5, "e"));
+
+        expectedMap = {
+            "a": expectedRoot,
+            "b": expectedRoot.children[0],
+            "c": expectedRoot.children[1],
+            "d": expectedRoot.children[0].children[1],
+            "e": expectedRoot.children[1].children[0]
+        }
+        
+        result = new BinaryTree(root);
+
+
+        expect(result.root).toMatchObject(expectedRoot);
+        expect(result.uuidToNodeMap).toMatchObject(expectedMap);
+    })
+})
+
 describe ("Test inOrderTraversal method", () => {
     it ("Should throw an error when missing root", () => {
         let input = new BinaryTree();
@@ -333,25 +371,29 @@ describe("Test deleteSubtree method", () => {
 
     it ("Should return empty tree when deleting root", () => {
         let root = new TreeNode(15, "a");
-
+    
+        let expectedMap = {}
         let input = new BinaryTree(root);
 
         input.deleteSubtree("a");
 
         expect(input.root).toBeNull();
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
-        root = new TreeNode(1, "123");
-        root.setLeft(new TreeNode(2));
-        root.children[0].setLeft(new TreeNode(4));
-        root.children[0].setRight(new TreeNode(7));
-        root.setRight(new TreeNode(3));
-        root.children[1].setLeft(new TreeNode(6));
-        root.children[1].setRight(new TreeNode(10));
+        root = new TreeNode(1, "a");
+        root.setLeft(new TreeNode(2, "b"));
+        root.children[0].setLeft(new TreeNode(4, "c"));
+        root.children[0].setRight(new TreeNode(7, "d"));
+        root.setRight(new TreeNode(3, "e"));
+        root.children[1].setLeft(new TreeNode(6, "f"));
+        root.children[1].setRight(new TreeNode(10, "g"));
 
+        expectedMap = {}
         input = new BinaryTree(root);
 
-        input.deleteSubtree("123");
+        input.deleteSubtree("a");
         expect(input.root).toBeNull();
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
     })
 
     it ("Should remove proper subtree when given input", () => {
@@ -369,9 +411,17 @@ describe("Test deleteSubtree method", () => {
         expected.setRight(new TreeNode(3, "115"));
         expected.children[1].setLeft(new TreeNode(6, "116"));
         expected.children[1].setRight(new TreeNode(10, "117"));
+        let expectedMap = {
+            "111" : expected,
+            "115" : expected.children[1],
+            "116" : expected.children[1].children[0],
+            "117" : expected.children[1].children[1]
+        }
+
 
         input.deleteSubtree("112");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setLeft(new TreeNode(2, "112"));
@@ -390,8 +440,18 @@ describe("Test deleteSubtree method", () => {
         expected.setRight(new TreeNode(3, "115"));
         expected.children[1].setLeft(new TreeNode(6, "116"));
 
+        expectedMap = {
+            "111" : expected,
+            "112" : expected.children[0],
+            "113" : expected.children[0].children[0],
+            "114" : expected.children[0].children[1],
+            "115" : expected.children[1],
+            "116" : expected.children[1].children[0],
+        }
+
         input.deleteSubtree("117");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setRight(new TreeNode(3, "115"));
@@ -404,9 +464,15 @@ describe("Test deleteSubtree method", () => {
         expected = new TreeNode(1, "111");
         expected.setRight(new TreeNode(3, "115"));
         expected.children[1].setLeft(new TreeNode(6, "116"));
+        expectedMap = {
+            "111" : expected,
+            "115" : expected.children[1],
+            "116" : expected.children[1].children[0]
+        }
 
         input.deleteSubtree("117");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setRight(new TreeNode(3, "115"));
@@ -414,9 +480,13 @@ describe("Test deleteSubtree method", () => {
         input = new BinaryTree(root);
 
         expected = new TreeNode(1, "111");
+        expectedMap = {
+            "111" : expected
+        }
 
         input.deleteSubtree("115");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
     })
 })
 
@@ -450,9 +520,15 @@ describe ("Test addNode method", () => {
 
         let expected = new TreeNode(1, "111");
         expected.setLeft(new TreeNode(-1, "26"));
+
+        let expectedMap = {
+            "111": expected,
+            "26": expected.children[0],
+        }
         
         input.addNode(-1, true, "111", "26");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setLeft(new TreeNode(2, "112"));
@@ -473,8 +549,20 @@ describe ("Test addNode method", () => {
         expected.children[1].setLeft(new TreeNode(6, "116"));
         expected.children[1].setRight(new TreeNode(10, "117"));
 
+        expectedMap = {
+            "111": expected,
+            "112": expected.children[0],
+            "113": expected.children[0].children[0],
+            "100": expected.children[0].children[0].children[1],
+            "114": expected.children[0].children[1],
+            "115": expected.children[1],
+            "116": expected.children[1].children[0],
+            "117": expected.children[1].children[1],
+        }
+
         input.addNode(0, false, "113", "100");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setLeft(new TreeNode(-1, "26"));
@@ -485,8 +573,15 @@ describe ("Test addNode method", () => {
         expected.setLeft(new TreeNode(-1, "26"));
         expected.setRight(new TreeNode(5, "abc"));
 
+        expectedMap = {
+            "111": expected,
+            "26": expected.children[0],
+            "abc": expected.children[1],
+        }
+
         input.addNode(5, false, "111", "abc");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         root = new TreeNode(1, "111");
         root.setRight(new TreeNode(-1, "26"));
@@ -497,8 +592,15 @@ describe ("Test addNode method", () => {
         expected.setLeft(new TreeNode(5, "abc"));
         expected.setRight(new TreeNode(-1, "26"));
 
+        expectedMap = {
+            "111": expected,
+            "abc": expected.children[0],
+            "26": expected.children[1],
+        }
+
         input.addNode(5, true, "111", "abc");
         expect(input.root).toMatchObject(expected);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
     })
 })
 
