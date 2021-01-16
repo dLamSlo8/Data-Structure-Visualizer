@@ -14,7 +14,12 @@ describe ("Test constructor", () => {
 
         let expectedElements = [expected];
 
+        let expectedMap = {
+            "a": expected,
+        }
+
         expect(result.elements).toEqual(expectedElements);
+        expect(result.uuidToNodeMap).toEqual(expectedMap);
 
         root = new TreeNode(10, "a");
         root.setLeft(new TreeNode(8, "b"));
@@ -35,8 +40,16 @@ describe ("Test constructor", () => {
             expected.children[0], expected.children[1],
             expected.children[0].children[0]
         ];
+        
+        expectedMap = {
+            "a": expected,
+            "b": expected.children[0],
+            "c": expected.children[0].children[0],
+            "d": expected.children[1]
+        }
 
         expect(result.elements).toEqual(expectedElements);
+        expect(result.uuidToNodeMap).toEqual(expectedMap);
 
         root = new TreeNode(10, "a");
         root.setLeft(new TreeNode(8, "b"));
@@ -59,7 +72,16 @@ describe ("Test constructor", () => {
             expected.children[0], expected.children[1],
             expected.children[0].children[0], expected.children[0].children[1]
         ];
+
+        expectedMap = {
+            "a": expected,
+            "b": expected.children[0],
+            "c": expected.children[0].children[0],
+            "e": expected.children[0].children[1],
+            "d": expected.children[1]
+        }
         expect(result.elements).toEqual(expectedElements);
+        expect(result.uuidToNodeMap).toEqual(expectedMap);
     })
 
     it ("Should make a copy of original heap for copy constructor", () => {
@@ -294,12 +316,16 @@ describe ("Test remove method", () => {
         let expectedNode = new TreeNode(10, "a"); 
         let expectedMoves = [[], []];
         let expectedElements = [];
+        let expectedMap = {
+            "a" : expectedNode
+        }
 
         let result = input.remove();
 
         expect(result[0]).toMatchObject(expectedNode);
         expect(result[1]).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
         // delete no bubble
         root = new TreeNode(10, "a");
@@ -317,6 +343,9 @@ describe ("Test remove method", () => {
             [1]
         ];
         expectedElements = [expectedNode];
+        expectedMap = {
+            "b" : expectedNode
+        }
 
         result = input.remove();
 
@@ -326,6 +355,8 @@ describe ("Test remove method", () => {
         expect(result[0]).toMatchObject(expected);
         expect(result[1]).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
+
 
         root = new TreeNode(10, "a");
         root.setLeft(new TreeNode(12, "b"));
@@ -355,6 +386,12 @@ describe ("Test remove method", () => {
             expectedNode.children[0], expectedNode.children[1],
             expectedNode.children[0].children[0]
         ];
+        expectedMap = {
+            "b" : expectedNode,
+            "c" : expectedNode.children[0],
+            "d" : expectedNode.children[0].children[0],
+            "e" : expectedNode.children[1]
+        }
 
         result = input.remove();
 
@@ -364,6 +401,7 @@ describe ("Test remove method", () => {
         expect(result[0]).toMatchObject(expected);
         expect(result[1]).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
 
 
         // delete and bubble down left
@@ -412,12 +450,26 @@ describe ("Test remove method", () => {
             expectedNode.children[0].children[0].children[0], expectedNode.children[0].children[0].children[1], expectedNode.children[0].children[1].children[0]
         ];
 
+        expectedMap = {
+            "b": expectedNode,
+            "f": expectedNode.children[0],
+            "c": expectedNode.children[0].children[0],
+            "d": expectedNode.children[0].children[0].children[0],
+            "e": expectedNode.children[0].children[0].children[1],
+            "g": expectedNode.children[0].children[1],
+            "h": expectedNode.children[0].children[1].children[0],
+            "i": expectedNode.children[1],
+            "j": expectedNode.children[1].children[0],
+            "k": expectedNode.children[1].children[1],
+        }
+
         updateIdx(expectedNode);
         expected.idx = 0;
 
         expect(result[0]).toMatchObject(expected);
         expect(result[1]).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
     })
 })
 
@@ -434,11 +486,16 @@ describe ("Test insert method", () => {
         let expectedElements = [
             expected
         ];
+        let expectedMap = {
+            "a" : expected
+        }
 
         let result = input.insert(10, "a");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
+
 
         // insert left no bubble
         let root = new TreeNode(10, "a");
@@ -455,11 +512,17 @@ describe ("Test insert method", () => {
             expected,
             expected.children[0]
         ];
+        expectedMap = {
+            "a" : expected,
+            "b" : expected.children[0]
+        }
 
         result = input.insert(12, "b");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
+
 
         // insert right no bubble
         root = new TreeNode(10, "a");
@@ -478,11 +541,18 @@ describe ("Test insert method", () => {
             expected,
             expected.children[0], expected.children[1],
         ];
+        expectedMap = {
+            "a" : expected,
+            "b" : expected.children[0],
+            "c" : expected.children[1]
+        }
 
         result = input.insert(14, "c");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
+
 
         root = new TreeNode(10, "a");
         root.setLeft(new TreeNode(10, "b"));
@@ -512,11 +582,21 @@ describe ("Test insert method", () => {
             expected.children[0], expected.children[1],
             expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0]
         ];
+        expectedMap = {
+            "a" : expected,
+            "b" : expected.children[0],
+            "c" : expected.children[0].children[0],
+            "d" : expected.children[0].children[1],
+            "f" : expected.children[1],
+            "e" : expected.children[1].children[0]
+        }
 
         result = input.insert(15, "f");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
+
 
         root = new TreeNode(10, "a");
         root.setLeft(new TreeNode(10, "b"));
@@ -549,11 +629,22 @@ describe ("Test insert method", () => {
             expected.children[0], expected.children[1],
             expected.children[0].children[0], expected.children[0].children[1], expected.children[1].children[0], expected.children[1].children[1]
         ];
+        
+        expectedMap = {
+            "g": expected,
+            "b": expected.children[0],
+            "c": expected.children[0].children[0],
+            "d": expected.children[0].children[1],
+            "a": expected.children[1],
+            "f": expected.children[1].children[0],
+            "e": expected.children[1].children[1]
+        }
 
         result = input.insert(-1, "g");
 
         expect(result).toEqual(expectedMoves);
         expect(input.elements).toEqual(expectedElements);
+        expect(input.uuidToNodeMap).toMatchObject(expectedMap);
     })
 })
 

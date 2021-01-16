@@ -1,4 +1,4 @@
-import { DEFAULT_NODE_RADIUS, DEFAULT_NODE_SPACING } from '@util/globals/tree';
+// import { DEFAULT_NODE_RADIUS, DEFAULT_NODE_SPACING } from '@util/globals/tree';
 import { v4 as uuidv4 } from 'uuid';
 import Edge from './edge.js';
 
@@ -69,7 +69,7 @@ export default class TreeNode {
             this.children = [node, NullTreeNode];
         }
         // set the edge of this node to point to the left child 
-        this.edges[0] = new Edge(this.uuid + "left"); 
+        this.edges[0] = new Edge(this.uuid + "l"); 
     }
 
     /**
@@ -83,7 +83,7 @@ export default class TreeNode {
             this.children = [NullTreeNode, node];
         }
         // set the edge of this node to point to the right child 
-        this.edges[1] = new Edge(this.uuid + "right"); 
+        this.edges[1] = new Edge(this.uuid + "r"); 
     }
 
     /**

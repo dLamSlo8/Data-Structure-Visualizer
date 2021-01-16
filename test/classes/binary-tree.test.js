@@ -3,7 +3,7 @@ import BinaryTree from "../../classes/binary-tree.js";
 
 
 describe ("Test constructor", () => {
-    it ("Should set uuidToNodeMap array on creation", () => {
+    it ("Should set uuidToNodeMap on creation", () => {
         // test no elements in root
         let result = new BinaryTree();
 

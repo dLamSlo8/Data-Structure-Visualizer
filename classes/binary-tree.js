@@ -51,24 +51,24 @@ export default class BinaryTree {
      * TEMPORARY function for getting node mapping (i.e. uuid -> node).
      * Will use this while waiting for the node mapping member variable to be developed.
      */
-    getNodeMapping = () => {
-        function helper(node, res) {
-            if (!node || node.isNull()) {
-                return ;
-            } 
+    // getNodeMapping = () => {
+    //     function helper(node, res) {
+    //         if (!node || node.isNull()) {
+    //             return ;
+    //         } 
 
-            res[node.uuid] = node;
-            if (node.children) {
-                helper(node.children[0], res);
-                helper(node.children[1], res);
-            }
-        }
+    //         res[node.uuid] = node;
+    //         if (node.children) {
+    //             helper(node.children[0], res);
+    //             helper(node.children[1], res);
+    //         }
+    //     }
 
-        let res = {};
+    //     let res = {};
 
-        helper(this.root, res);
-        return res;
-    }
+    //     helper(this.root, res);
+    //     return res;
+    // }
 
     /**
      * @return {Array} array of inorder traversal, 0 index includes array of 
@@ -439,7 +439,7 @@ export default class BinaryTree {
                 let newNode = new TreeNode(value, createUUID);
                 tree.uuidToNodeMap[newNode.uuid] = newNode;
                 if (isLeft) {
-                    node.edges[0] = new Edge(node.uuid + "left");
+                    node.edges[0] = new Edge(node.uuid + "l");
                     if (node.children) {
                         if (node.children[0] && node.children[0].name !== null) {
                             throw ("A left child for this node already exists.")
@@ -451,7 +451,7 @@ export default class BinaryTree {
                         node.children = [newNode, new TreeNode(null, null)];
                     }
                 } else {
-                    node.edges[1] = new Edge(node.uuid + "right");
+                    node.edges[1] = new Edge(node.uuid + "r");
                     if (node.children) {
                         if (node.children[1] && node.children[1].name !== null) {
                             throw ("A right child for this node already exists.")

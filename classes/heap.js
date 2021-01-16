@@ -1,10 +1,12 @@
 import TreeNode, { NullTreeNode } from "./tree-node.js";
+import Edge from "./edge.js";
 
 
 /**
  * Binary Heap. Root node of tree structure is highest priority.
  * @property {function} comparator - function used to determine heap priority
  * @property {Array} elements - array of TreeNodes in heap
+ * @property {Map} uuidToNodeMap - map of uuid to nodes in tree
  */
 export default class Heap {
     /**
@@ -20,13 +22,16 @@ export default class Heap {
             this.elements = heap.elements;
             this.comparator = heap.comparator;
             this.isMin = heap.isMin;
+            this.uuidToNodeMap = heap.uuidToNodeMap;
         }
         else {
             this.elements = [];
+            this.uuidToNodeMap = {};
 
             if (root !== null && root !== undefined) {
                 let idx = 0;
                 this.elements = [root];
+                this.uuidToNodeMap[root.uuid] = root;
                 // make !sure heap is com.isNull()
                 // go through level order
                 while (idx < this.elements.length) {
@@ -35,7 +40,9 @@ export default class Heap {
                     this.elements[idx].idx = idx;
                     if (curr.children) {
                         this.elements.push(curr.children[0]);
+                        this.uuidToNodeMap[curr.children[0].uuid] = curr.children[0];
                         if (!curr.children[1].isNull()) {
+                            this.uuidToNodeMap[curr.children[1].uuid] = curr.children[1];
                             this.elements.push(curr.children[1]);
                         }
                     }
@@ -74,13 +81,19 @@ export default class Heap {
 
         let lastElement = this.elements.pop();
 
+        // removes the node from uuidToNodeMap
+        let uuidNode = priorityNode.uuid;
+        delete this.uuidToNodeMap.uuidNode;
+
         // if root has no children, only one element in heap, so root should be empty
         if (priorityNode.children === null) {
+            priorityNode.edges = [null, null];
             return [priorityNode, [[], []]];
         }        
 
         // reassign lastElement to root and set its children
         this.elements[0] = lastElement;
+        
         // set idx to end
         lastElement.idx = 0;
 
@@ -100,6 +113,16 @@ export default class Heap {
         // if both children are null, then set children to null
         lastElement.children = nullCount === 2 ? null: priorityNode.children;
 
+        // update edges of new root
+        if (lastElement.children !== null) {
+            lastElement.edges[0] = lastElement.children[0].isNull() ? null : new Edge(lastElement.uuid + "l");
+            lastElement.edges[1] = lastElement.children[1].isNull() ? null : new Edge(lastElement.uuid + "r");
+        }
+        else{
+            lastElement.edges = [null, null];
+        }
+    
+
         // update parent of last element to be nothing
         // get parent of length since elements has one less element because we removed,
         // so length should have been index where last element used to be
@@ -117,6 +140,9 @@ export default class Heap {
 
         // empty out children
         priorityNode.children = null;
+
+        // removed node shouldn't have edges anymore
+        priorityNode.edges = [null, null];
         return [priorityNode, moves];
     }
 
@@ -126,6 +152,7 @@ export default class Heap {
      * @param {Array} moves - array to store moves we took
      */
     bubbleDown(index, moves) {
+        // console.log(this.elements);
         if (index >= this.elements.length) {
             return;
         }
@@ -172,6 +199,7 @@ export default class Heap {
 
         // add new node to end
         this.elements.push(newNode);
+        this.uuidToNodeMap[newNode.uuid] = newNode;
 
 
         this.updateParentChildren(this.elements.length - 1);
@@ -246,6 +274,16 @@ export default class Heap {
         // swap nodes
         [this.elements[idx1], this.elements[idx2]] = [this.elements[idx2], this.elements[idx1]];
 
+        // swap edges
+        [this.elements[idx1].edges, this.elements[idx2].edges] = [this.elements[idx2].edges, this.elements[idx1].edges];
+
+        // update uuid of edges
+        this.elements[idx1].edges[0] = this.elements[idx1].edges[0] === null ? null : new Edge(this.elements[idx1].uuid + "l");
+        this.elements[idx1].edges[1] = this.elements[idx1].edges[1] === null ? null : new Edge(this.elements[idx1].uuid + "r");
+
+        this.elements[idx2].edges[0] = this.elements[idx2].edges[0] === null ? null : new Edge(this.elements[idx2].uuid + "l");
+        this.elements[idx2].edges[1] = this.elements[idx2].edges[1] === null ? null : new Edge(this.elements[idx2].uuid + "r");
+
         // update
         this.elements[idx1].children = childrenForParent;
         this.elements[idx2].children = childrenForChild;
@@ -287,6 +325,7 @@ export default class Heap {
         let nullCount = 0;
         for (let i = 0; i < parent.children.length; i++) {
             if (parent.children[i] === child) {
+                parent.edges[i] = null;
                 parent.children[i] = NullTreeNode;
             }
             if (parent.children[i].isNull()) {
